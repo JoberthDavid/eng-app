@@ -60,7 +60,7 @@
               <td>{{ project.description }}</td>
               <td>{{ project.highway }}</td>
               <td>{{ project.uf }}</td>
-              <td>{{ project.budgets }}</td>
+              <td>{{ project.budgets.length }}</td>
               <td>
                 <a [routerLink]="['/projects', project.code]">
                   Abrir

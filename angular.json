@@ -92,7 +92,9 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "browsers": "FirefoxHeadless",
+            "karmaConfig": "karma.conf.js"
           }
         }
       }

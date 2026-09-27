@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { ProjectDetail } from '../../../models/project.model';
 import { ProjectService } from '../../../services/project.service';
 
 

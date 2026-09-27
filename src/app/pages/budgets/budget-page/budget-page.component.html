@@ -1,0 +1,123 @@
+@if (budget) {
+  <div class="page">
+
+    <header class="page-header">
+      <div>
+        <a class="back-link" [routerLink]="['/projects', projectId]">
+          ← {{ projectId }}
+        </a>
+
+        <p class="eyebrow">ORÇAMENTO</p>
+
+        <h1>{{ budget.id }}</h1>
+
+        <p class="subtitle">
+          Projeto {{ budget.projectId }}
+        </p>
+      </div>
+    </header>
+
+    <section class="summary">
+
+      <article class="card">
+        <span class="label">Data-base</span>
+        <strong>{{ budget.referenceDate }}</strong>
+      </article>
+
+      <article class="card">
+        <span class="label">Metodologia</span>
+        <strong>{{ budget.methodology }}</strong>
+      </article>
+
+      <article class="card">
+        <span class="label">Sistema</span>
+        <strong>{{ budget.typeSystem }}</strong>
+      </article>
+
+      <article class="card">
+        <span class="label">Status</span>
+        <strong>{{ budget.status }}</strong>
+      </article>
+
+      <article class="card">
+        <span class="label">Serviços</span>
+        <strong>{{ budget.services.length }}</strong>
+      </article>
+
+      <article class="card">
+        <span class="label">Custo total</span>
+        <strong>{{ budget.totalCost }}</strong>
+      </article>
+
+    </section>
+
+    <section class="table-card">
+
+      <div class="section-header">
+        <h2>Serviços</h2>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Serviço</th>
+              <th>Unidade</th>
+              <th>Quantidade</th>
+              <th>Valor unitário</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (budget.services.length > 0) {
+              @for (service of budget.services; track service.code) {
+                <tr class="service-row">
+                  <td>{{ service.code }}</td>
+                  <td>{{ service.description }}</td>
+                  <td>{{ service.unit }}</td>
+                  <td>{{ service.quantity }}</td>
+                  <td>—</td>
+                  <td>—</td>
+                </tr>
+
+                @for (composition of service.compositions; track composition.code + composition.referenceDate) {
+                  <tr class="composition-row">
+                    <td></td>
+                    <td>
+                      ↳ {{ composition.code }}
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ composition.referenceDate }}</td>
+                    <td>{{ composition.factor }}</td>
+                  </tr>
+                }
+              }
+            } @else {
+              <tr>
+                <td colspan="6">
+                  Nenhum serviço carregado.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+  </div>
+} @else {
+  <div class="not-found">
+    <h1>Orçamento não encontrado</h1>
+
+    <p>
+      O orçamento solicitado não existe no projeto informado.
+    </p>
+
+    <a routerLink="/projects">
+      Voltar para projetos
+    </a>
+  </div>
+}

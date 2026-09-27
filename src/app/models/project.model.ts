@@ -1,21 +1,9 @@
-export interface ProjectBudget {
-  referenceDate: string;
-  status: string;
-  total: string;
-}
+import { Budget } from './budget.model';
 
-export interface ProjectSummary {
+export interface Project {
   code: string;
   description: string;
   uf: string;
   highway: string;
-  budgets: number;
-}
-
-export interface ProjectDetail {
-  code: string;
-  description: string;
-  uf: string;
-  highway: string;
-  budgets: ProjectBudget[];
+  budgets: Budget[];
 }

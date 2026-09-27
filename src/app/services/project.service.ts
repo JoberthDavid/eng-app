@@ -1,37 +1,69 @@
 import { Injectable } from '@angular/core';
 
-import {
-  ProjectDetail,
-  ProjectSummary
-} from '../models/project.model';
+import { Project } from '../models/project.model';
+import { Budget } from '../models/budget.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
 
-  private readonly projects: ProjectDetail[] = [
+  private readonly projects: Project[] = [
     {
       code: 'PRJ-001',
       description: 'Conservação rodoviária',
       uf: 'GO',
       highway: 'BR-060',
       budgets: [
-        {
-          referenceDate: '01/07/2026',
-          status: 'Rascunho',
-          total: '—'
-        },
-        {
-          referenceDate: '01/06/2026',
-          status: 'Calculado',
-          total: 'R$ 1.248.530,42'
-        },
-        {
-          referenceDate: '01/05/2026',
-          status: 'Finalizado',
-          total: 'R$ 1.196.420,15'
-        }
+      {
+        id: 'BUD-001',
+        projectId: '',
+        referenceDate: '01/07/2026',
+        methodology: 'SC',
+        typeSystem: 'ON',
+        status: 'Rascunho',
+        totalCost: '—',
+        services: []
+      },
+      {
+        id: 'BUD-002',
+        projectId: '',
+        referenceDate: '01/06/2026',
+        methodology: 'SC',
+        typeSystem: 'ON',
+        status: 'Calculado',
+        totalCost: 'R$ 1.248.530,42',
+        services: [
+          {
+            code: 'SERV-001',
+            description: 'Execução de serviço de conservação rodoviária',
+            unit: 'm²',
+            quantity: 1250,
+            compositions: [
+              {
+                code: 'COMP-001',
+                referenceDate: '01/06/2026',
+                factor: 1
+              },
+              {
+                code: 'COMP-002',
+                referenceDate: '01/05/2026',
+                factor: 0.35
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'BUD-003',
+        projectId: '',
+        referenceDate: '01/05/2026',
+        methodology: 'SC',
+        typeSystem: 'ON',
+        status: 'Finalizado',
+        totalCost: 'R$ 1.196.420,15',
+        services: []
+      },
       ]
     },
     {
@@ -40,16 +72,26 @@ export class ProjectService {
       uf: 'DF',
       highway: 'BR-040',
       budgets: [
-        {
-          referenceDate: '01/07/2026',
-          status: 'Calculado',
-          total: 'R$ 845.200,00'
-        },
-        {
-          referenceDate: '01/06/2026',
-          status: 'Finalizado',
-          total: 'R$ 811.450,00'
-        }
+      {
+        id: 'BUD-004',
+        projectId: '',
+        referenceDate: '01/07/2026',
+        methodology: 'SC',
+        typeSystem: 'ON',
+        status: 'Calculado',
+        totalCost: 'R$ 845.200,00',
+        services: []
+      },
+      {
+        id: 'BUD-005',
+        projectId: '',
+        referenceDate: '01/06/2026',
+        methodology: 'SC',
+        typeSystem: 'ON',
+        status: 'Finalizado',
+        totalCost: 'R$ 811.450,00',
+        services: []
+      },
       ]
     },
     {
@@ -58,26 +100,26 @@ export class ProjectService {
       uf: 'GO',
       highway: 'BR-153',
       budgets: [
-        {
-          referenceDate: '01/05/2026',
-          status: 'Finalizado',
-          total: 'R$ 876.240,18'
-        }
+      {
+        id: 'BUD-006',
+        projectId: '',
+        referenceDate: '01/05/2026',
+        methodology: 'SC',
+        typeSystem: 'ON',
+        status: 'Finalizado',
+        totalCost: 'R$ 876.240,18',
+        services: []
+      }
       ]
     }
   ];
 
-  getProjects(): ProjectSummary[] {
-    return this.projects.map(project => ({
-      code: project.code,
-      description: project.description,
-      uf: project.uf,
-      highway: project.highway,
-      budgets: project.budgets.length
-    }));
+  getProjects(): Project[] {
+    return this.projects;
   }
 
-  getProject(id: string): ProjectDetail | null {
+  getProject(id: string): Project | null {
     return this.projects.find(project => project.code === id) ?? null;
   }
+
 }
