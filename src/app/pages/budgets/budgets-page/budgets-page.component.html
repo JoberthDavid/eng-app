@@ -1,0 +1,70 @@
+<div class="page">
+
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">ENG-APP</p>
+      <h1>{{ pageTitle }}</h1>
+      <p class="subtitle">
+        Gerenciamento de orçamentos de engenharia
+      </p>
+    </div>
+
+    <button type="button" (click)="newBudget()">
+      + Novo orçamento
+    </button>
+  </header>
+
+  @if (message) {
+    <div class="message">
+      {{ message }}
+    </div>
+  }
+
+  <section class="summary">
+    <article class="card">
+      <span class="label">Orçamentos</span>
+      <strong>{{ budgets.length }}</strong>
+    </article>
+
+    <article class="card">
+      <span class="label">Calculados</span>
+      <strong>1</strong>
+    </article>
+
+    <article class="card">
+      <span class="label">Finalizados</span>
+      <strong>1</strong>
+    </article>
+  </section>
+
+  <section class="table-card">
+    <div class="section-header">
+      <h2>Orçamentos recentes</h2>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Projeto</th>
+            <th>Data-base</th>
+            <th>Status</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (budget of budgets; track budget.project) {
+            <tr>
+              <td>{{ budget.project }}</td>
+              <td>{{ budget.referenceDate }}</td>
+              <td>{{ budget.status }}</td>
+              <td>{{ budget.total }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>

@@ -1,0 +1,31 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.content {
+  min-width: 0;
+  min-height: 100vh;
+}
+
+.content-header {
+  display: flex;
+  align-items: center;
+
+  height: 58px;
+  padding: 0 28px;
+
+  border-bottom: 1px solid #e1e5e9;
+  background: #ffffff;
+
+  color: #30363d;
+
+  font-size: 14px;
+  font-weight: 600;
+}

@@ -1,0 +1,96 @@
+@if (project) {
+
+  <div class="page">
+
+    <header class="page-header">
+
+      <div>
+        <a class="back-link" routerLink="/projects">
+          ← Projetos
+        </a>
+
+        <p class="eyebrow">{{ project.code }}</p>
+
+        <h1>{{ project.description }}</h1>
+
+        <p class="subtitle">
+          {{ project.highway }} · {{ project.uf }}
+        </p>
+      </div>
+
+    </header>
+
+    <section class="summary">
+
+      <article class="card">
+        <span class="label">Rodovia</span>
+        <strong>{{ project.highway }}</strong>
+      </article>
+
+      <article class="card">
+        <span class="label">UF</span>
+        <strong>{{ project.uf }}</strong>
+      </article>
+
+      <article class="card">
+        <span class="label">Orçamentos</span>
+        <strong>{{ project.budgets.length }}</strong>
+      </article>
+
+    </section>
+
+    <section class="table-card">
+
+      <div class="section-header">
+        <h2>Orçamentos do projeto</h2>
+      </div>
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Data-base</th>
+              <th>Status</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            @for (budget of project.budgets; track budget.referenceDate) {
+              <tr>
+                <td>{{ budget.referenceDate }}</td>
+                <td>{{ budget.status }}</td>
+                <td>{{ budget.total }}</td>
+              </tr>
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </div>
+
+} @else {
+
+  <div class="not-found">
+
+    <h1>Projeto não encontrado</h1>
+
+    <p>
+      O projeto solicitado não existe nos dados disponíveis.
+    </p>
+
+    <a routerLink="/projects">
+      Voltar para projetos
+    </a>
+
+  </div>
+
+}

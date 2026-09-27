@@ -1,0 +1,78 @@
+<div class="page">
+
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">ENG-APP</p>
+      <h1>{{ pageTitle }}</h1>
+      <p class="subtitle">
+        Projetos de engenharia e infraestrutura rodoviária
+      </p>
+    </div>
+
+    <button type="button">
+      + Novo projeto
+    </button>
+  </header>
+
+  <section class="summary">
+
+    <article class="card">
+      <span class="label">Projetos</span>
+      <strong>{{ projects.length }}</strong>
+    </article>
+
+    <article class="card">
+      <span class="label">Orçamentos</span>
+      <strong>6</strong>
+    </article>
+
+    <article class="card">
+      <span class="label">UFs</span>
+      <strong>2</strong>
+    </article>
+
+  </section>
+
+  <section class="table-card">
+
+    <div class="section-header">
+      <h2>Projetos cadastrados</h2>
+    </div>
+
+    <div class="table-wrapper">
+
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Projeto</th>
+            <th>Rodovia</th>
+            <th>UF</th>
+            <th>Orçamentos</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (project of projects; track project.code) {
+            <tr>
+              <td>{{ project.code }}</td>
+              <td>{{ project.description }}</td>
+              <td>{{ project.highway }}</td>
+              <td>{{ project.uf }}</td>
+              <td>{{ project.budgets }}</td>
+              <td>
+                <a [routerLink]="['/projects', project.code]">
+                  Abrir
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+    </div>
+
+  </section>
+
+</div>

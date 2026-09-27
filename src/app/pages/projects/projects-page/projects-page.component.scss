@@ -1,0 +1,111 @@
+:host {
+  display: block;
+}
+
+.page {
+  min-height: 100%;
+  padding: 32px;
+  background: #f6f7f9;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+}
+
+.subtitle {
+  margin: 0;
+  opacity: 0.7;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.card {
+  padding: 20px;
+  border: 1px solid #e2e5e9;
+  border-radius: 12px;
+  background: white;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  opacity: 0.65;
+}
+
+.card strong {
+  font-size: 28px;
+}
+
+.table-card {
+  overflow: hidden;
+  border: 1px solid #e2e5e9;
+  border-radius: 12px;
+  background: white;
+}
+
+.section-header {
+  padding: 20px 20px 12px;
+}
+
+.section-header h2 {
+  margin: 0;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 16px 20px;
+  text-align: left;
+  border-top: 1px solid #eceef1;
+}
+
+th {
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0.65;
+}
+
+td {
+  font-size: 14px;
+}
