@@ -1,6 +1,10 @@
 <div
   class="tree-node-container"
-  [style.--tree-level]="node.level"
+  [class.root-container]="node.referenceType === 'ROOT'"
+  [class.child-container]="node.referenceType !== 'ROOT'"
+  [class.selected-container]="
+    node.composition.code === selectedCode
+  "
 >
 
   <button
