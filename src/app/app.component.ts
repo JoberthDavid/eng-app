@@ -1,5 +1,17 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {
+  Component,
+  DestroyRef,
+  inject
+} from '@angular/core';
+
+import {
+  NavigationEnd,
+  Router,
+  RouterOutlet
+} from '@angular/router';
+
+import { filter } from 'rxjs';
+
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 
 @Component({
@@ -15,9 +27,45 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
 export class AppComponent {
   appName = 'ENG-APP';
   appSubtitle = 'Engenharia';
+
   currentSection = 'Projetos';
 
-  onMenuSelected(section: string): void {
-    this.currentSection = section;
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+
+  constructor() {
+    const subscription = this.router.events
+      .pipe(
+        filter(
+          event => event instanceof NavigationEnd
+        )
+      )
+      .subscribe(() => {
+        this.currentSection =
+          this.getSectionFromRoute(this.router.url);
+      });
+
+    this.destroyRef.onDestroy(() => {
+      subscription.unsubscribe();
+    });
+
+    this.currentSection =
+      this.getSectionFromRoute(this.router.url);
+  }
+
+  private getSectionFromRoute(url: string): string {
+    if (url.startsWith('/budgets')) {
+      return 'Orçamentos';
+    }
+
+    if (url.startsWith('/compositions')) {
+      return 'Composições';
+    }
+
+    if (url.startsWith('/projects')) {
+      return 'Projetos';
+    }
+
+    return 'Projetos';
   }
 }

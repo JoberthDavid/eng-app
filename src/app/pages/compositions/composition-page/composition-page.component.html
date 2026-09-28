@@ -1,0 +1,190 @@
+@if (compositionTree) {
+
+  @if (!isChildSelection) {
+
+    <!-- ================================================= -->
+    <!-- MODO NORMAL — COMPOSIÇÃO PRINCIPAL                -->
+    <!-- ================================================= -->
+
+    <div class="composition-page">
+
+      <header class="page-header">
+
+        <div>
+          <span class="page-eyebrow">
+            COMPOSIÇÃO
+          </span>
+
+          <h1>
+            {{ composition?.code }}
+          </h1>
+
+          <p>
+            Detalhamento da composição
+          </p>
+        </div>
+
+      </header>
+
+
+      @if (composition) {
+
+        <!-- ============================================= -->
+        <!-- RESUMO DA COMPOSIÇÃO                           -->
+        <!-- ============================================= -->
+
+    <section class="summary">
+
+      <div class="summary-card">
+        <span class="label">Data-base</span>
+        <strong>{{ composition.referenceDate }}</strong>
+      </div>
+
+      <div class="summary-card">
+        <span class="label">Fator</span>
+        <strong>{{ composition.factor }}</strong>
+      </div>
+
+      <div class="summary-card">
+        <span class="label">Custo unitário</span>
+        <strong>{{ composition.unitCost }}</strong>
+      </div>
+
+      <div class="summary-card">
+        <span class="label">Custo total</span>
+        <strong>{{ composition.totalCost }}</strong>
+      </div>
+
+    </section>
+
+
+        <!-- ============================================= -->
+        <!-- COMPOSIÇÃO PRINCIPAL                           -->
+        <!-- ============================================= -->
+
+        <section class="root-composition-card">
+
+          <div class="root-composition-title">
+
+            <span>
+              COMPOSIÇÃO PRINCIPAL
+            </span>
+
+            <strong>
+              {{ composition.code }}
+            </strong>
+
+          </div>
+
+
+          <app-composition-panel
+            [composition]="composition"
+            [scrollable]="false"
+          />
+
+        </section>
+
+      }
+
+    </div>
+
+  } @else {
+
+    <!-- ================================================= -->
+    <!-- MODO NAVEGAÇÃO — AX / TF                          -->
+    <!-- ================================================= -->
+
+    <div class="composition-workspace">
+
+      <!-- =============================================== -->
+      <!-- PAINEL SUPERIOR — COMPOSIÇÃO PAI                 -->
+      <!-- =============================================== -->
+
+      <section class="composition-panel">
+
+        <header class="panel-title">
+
+          <span>
+            Composição pai
+          </span>
+
+          @if (parentNode) {
+
+            <strong>
+              {{ parentNode.composition.code }}
+            </strong>
+
+          } @else {
+
+            <strong>
+              Composição principal
+            </strong>
+
+          }
+
+        </header>
+
+
+        <div class="panel-body">
+
+          <app-composition-panel
+            [composition]="
+              parentNode?.composition ?? composition
+            "
+            [scrollable]="true"
+          />
+
+        </div>
+
+      </section>
+
+
+      <!-- =============================================== -->
+      <!-- PAINEL INFERIOR — COMPOSIÇÃO SELECIONADA         -->
+      <!-- =============================================== -->
+
+      <section class="composition-panel">
+
+        <header class="panel-title">
+
+          <span>
+            Composição selecionada
+          </span>
+
+          @if (childNode) {
+
+            <strong>
+              {{ childNode.composition.code }}
+            </strong>
+
+          }
+
+        </header>
+
+
+        <div class="panel-body">
+
+          @if (childNode) {
+
+            <app-composition-panel
+              [composition]="childNode.composition"
+              [scrollable]="true"
+            />
+
+          } @else {
+
+            <div class="no-child">
+              Nenhuma composição selecionada.
+            </div>
+
+          }
+
+        </div>
+
+      </section>
+
+    </div>
+
+  }
+
+}

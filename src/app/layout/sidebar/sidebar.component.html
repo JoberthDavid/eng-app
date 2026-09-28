@@ -15,7 +15,7 @@
       routerLink="/projects"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
-      (click)="selectMenu('Projetos')"
+
     >
       <span>Projetos</span>
     </a>
@@ -24,12 +24,26 @@
       routerLink="/budgets"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
-      (click)="selectMenu('Orçamentos')"
+
     >
       <span>Orçamentos</span>
     </a>
 
   </nav>
+
+  @if (compositionTree()) {
+    <section class="composition-navigation">
+      <span class="composition-navigation-title">
+        Composição
+      </span>
+
+      <app-composition-tree
+        [root]="compositionTree()"
+        [selectedCode]="selectedCompositionCode"
+        (compositionSelected)="onCompositionSelected($event)"
+      />
+    </section>
+  }
 
   <div class="sidebar-footer">
     <span>v0.1</span>

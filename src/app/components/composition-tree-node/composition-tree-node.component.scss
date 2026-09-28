@@ -1,0 +1,178 @@
+// ============================================================
+// TREE NODE
+// ============================================================
+
+:host {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+}
+
+
+// ============================================================
+// CONTAINER
+// ============================================================
+
+.tree-node-container {
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+}
+
+
+// ============================================================
+// NÓ
+// ============================================================
+
+.tree-node {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  min-width: 0;
+  height: 28px;
+
+  margin: 0;
+  padding: 0 6px;
+
+  box-sizing: border-box;
+
+  border: 0;
+  border-radius: 5px;
+
+  background: transparent;
+
+  color: #d5dbe1;
+
+  cursor: pointer;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1;
+
+  text-align: left;
+
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+
+// ============================================================
+// HOVER
+// ============================================================
+
+.tree-node:hover {
+  background: rgba(255, 255, 255, 0.07);
+
+  color: #ffffff;
+}
+
+
+// ============================================================
+// RAIZ
+// ============================================================
+
+.tree-node.root-node {
+  height: 30px;
+
+  color: #ffffff;
+
+  font-weight: 600;
+}
+
+
+// ============================================================
+// NÓ SELECIONADO
+// ============================================================
+
+.tree-node.selected-node {
+  background: rgba(255, 255, 255, 0.10);
+
+  color: #ffffff;
+
+  font-weight: 600;
+}
+
+
+// ============================================================
+// CÓDIGO
+// ============================================================
+
+.node-code {
+  display: block;
+
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: inherit;
+
+  font-size: 11px;
+  font-weight: inherit;
+  line-height: 1;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+// ============================================================
+// FILHOS
+// ============================================================
+
+.tree-children {
+  position: relative;
+
+  margin-left: 13px;
+  padding-left: 13px;
+}
+
+
+// ============================================================
+// LINHA VERTICAL
+// ============================================================
+
+.tree-children::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 1px;
+
+  background: #66717c;
+
+  opacity: 0.45;
+}
+
+
+// ============================================================
+// NÓS FILHOS
+// ============================================================
+
+.tree-children .tree-node {
+  height: 27px;
+}
+
+
+// ============================================================
+// RESPONSIVIDADE
+// ============================================================
+
+@media (max-width: 1100px) {
+
+  .tree-node {
+    font-size: 11px;
+  }
+
+  .node-code {
+    font-size: 11px;
+  }
+}

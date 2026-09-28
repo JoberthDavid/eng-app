@@ -3,6 +3,7 @@ import { BudgetsPageComponent } from './pages/budgets/budgets-page/budgets-page.
 import { ProjectPageComponent } from './pages/projects/project-page/project-page.component';
 import { ProjectsPageComponent } from './pages/projects/projects-page/projects-page.component';
 import { BudgetPageComponent } from './pages/budgets/budget-page/budget-page.component';
+import { CompositionPageComponent } from './pages/compositions/composition-page/composition-page.component';
 
 
 export const routes: Routes = [
@@ -27,4 +28,8 @@ export const routes: Routes = [
     path: 'projects/:id/budgets/:budgetId',
     component: BudgetPageComponent
   },
+  {
+    path: 'compositions/:code',
+  component: CompositionPageComponent
+}
 ];

@@ -1,0 +1,13 @@
+@if (root) {
+
+  <div class="tree">
+
+    <app-composition-tree-node
+      [node]="root"
+      [selectedCode]="selectedCode"
+      (nodeSelected)="onNodeSelected($event)"
+    />
+
+  </div>
+
+}

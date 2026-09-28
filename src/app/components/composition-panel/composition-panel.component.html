@@ -1,0 +1,236 @@
+@if (composition) {
+  <div
+  class="panel-content" [class.scrollable]="scrollable">
+
+    <header class="panel-header">
+      <div>
+        <span class="eyebrow">Composição</span>
+
+        <h2>
+          {{ composition.code }}
+        </h2>
+      </div>
+
+      <div class="panel-summary">
+        <span>
+          Data-base:
+          <strong>{{ composition.referenceDate }}</strong>
+        </span>
+
+        <span>
+          Custo:
+          <strong>{{ composition.unitCost }}</strong>
+        </span>
+      </div>
+    </header>
+
+    <section class="input-section">
+      <div class="section-header">
+        <h3>Equipamentos</h3>
+        <span>{{ getEquipments().length }}</span>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>Unidade</th>
+            <th>Quantidade</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (
+            equipment of getEquipments();
+            track equipment.id
+          ) {
+            <tr>
+              <td>{{ equipment.genericItem }}</td>
+              <td>{{ equipment.genericDescription }}</td>
+              <td>{{ equipment.unit }}</td>
+              <td>{{ equipment.inputQuantity }}</td>
+            </tr>
+          }
+
+          @if (getEquipments().length === 0) {
+            <tr>
+              <td colspan="4">
+                Nenhum equipamento.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <section class="input-section">
+      <div class="section-header">
+        <h3>Mão de obra</h3>
+        <span>{{ getLabor().length }}</span>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>Unidade</th>
+            <th>Quantidade</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (
+            labor of getLabor();
+            track labor.id
+          ) {
+            <tr>
+              <td>{{ labor.genericItem }}</td>
+              <td>{{ labor.genericDescription }}</td>
+              <td>{{ labor.unit }}</td>
+              <td>{{ labor.inputQuantity }}</td>
+            </tr>
+          }
+
+          @if (getLabor().length === 0) {
+            <tr>
+              <td colspan="4">
+                Nenhuma mão de obra.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <section class="input-section">
+      <div class="section-header">
+        <h3>Materiais</h3>
+        <span>{{ getMaterials().length }}</span>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>Unidade</th>
+            <th>Quantidade</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (
+            material of getMaterials();
+            track material.id
+          ) {
+            <tr>
+              <td>{{ material.genericItem }}</td>
+              <td>{{ material.genericDescription }}</td>
+              <td>{{ material.unit }}</td>
+              <td>{{ material.inputQuantity }}</td>
+            </tr>
+          }
+
+          @if (getMaterials().length === 0) {
+            <tr>
+              <td colspan="4">
+                Nenhum material.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <section class="input-section">
+      <div class="section-header">
+        <h3>Composições auxiliares</h3>
+        <span>
+          {{ composition.auxiliaryCompositions.length }}
+        </span>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>Unidade</th>
+            <th>Quantidade</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (
+            auxiliary of composition.auxiliaryCompositions;
+            track auxiliary.code
+          ) {
+            <tr>
+              <td>{{ auxiliary.code }}</td>
+              <td>{{ auxiliary.description }}</td>
+              <td>{{ auxiliary.unit }}</td>
+              <td>{{ auxiliary.quantity }}</td>
+            </tr>
+          }
+
+          @if (composition.auxiliaryCompositions.length === 0) {
+            <tr>
+              <td colspan="4">
+                Nenhuma composição auxiliar.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <section class="input-section">
+      <div class="section-header">
+        <h3>Tempos fixos</h3>
+        <span>
+          {{ composition.fixedTimeCompositions.length }}
+        </span>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>Unidade</th>
+            <th>Quantidade</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (
+            fixedTime of composition.fixedTimeCompositions;
+            track fixedTime.code
+          ) {
+            <tr>
+              <td>{{ fixedTime.code }}</td>
+              <td>{{ fixedTime.description }}</td>
+              <td>{{ fixedTime.unit }}</td>
+              <td>{{ fixedTime.quantity }}</td>
+            </tr>
+          }
+
+          @if (composition.fixedTimeCompositions.length === 0) {
+            <tr>
+              <td colspan="4">
+                Nenhum tempo fixo.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+
+  </div>
+} @else {
+  <div class="empty-panel">
+    Nenhuma composição selecionada.
+  </div>
+}

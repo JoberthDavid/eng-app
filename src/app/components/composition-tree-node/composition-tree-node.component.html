@@ -1,0 +1,44 @@
+<div
+  class="tree-node-container"
+  [style.--tree-level]="node.level"
+>
+
+  <button
+    type="button"
+    class="tree-node"
+    [class.root-node]="node.referenceType === 'ROOT'"
+    [class.selected-node]="
+      node.composition.code === selectedCode
+    "
+    (click)="selectNode()"
+  >
+
+    <span class="node-code">
+      {{ node.composition.code }}
+    </span>
+
+  </button>
+
+
+  @if (node.children.length > 0) {
+
+    <div class="tree-children">
+
+      @for (
+        child of node.children;
+        track child.composition.code
+      ) {
+
+        <app-composition-tree-node
+          [node]="child"
+          [selectedCode]="selectedCode"
+          (nodeSelected)="nodeSelected.emit($event)"
+        />
+
+      }
+
+    </div>
+
+  }
+
+</div>

@@ -103,6 +103,12 @@
   color: #ffffff;
 }
 
+.navigation,
+.composition-navigation {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
 .navigation a.active::before {
   content: "";
 
