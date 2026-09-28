@@ -21,4 +21,30 @@ export interface CompositionItem {
   code: string;
   referenceDate: string;
   factor: number;
+
+  unitCost: string;
+  totalCost: string;
+
+  auxiliaryCompositions: CompositionReference[];
+  fixedTimeCompositions: CompositionReference[];
+
+  inputs: CompositionInput[];
+}
+
+export interface CompositionReference {
+  code: string;
+  description: string;
+  unit: string;
+  quantity: number;
+}
+
+export interface CompositionInput {
+  id: number;
+  inputGroup: string;
+  genericItem: string;
+  genericDescription: string;
+  unit: string;
+  inputQuantity: number;
+  inputUse: number | null;
+  proprietaryItem: string | null;
 }

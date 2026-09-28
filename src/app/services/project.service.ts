@@ -43,12 +43,58 @@ export class ProjectService {
               {
                 code: 'COMP-001',
                 referenceDate: '01/06/2026',
-                factor: 1
+                factor: 1,
+                unitCost: 'R$ 125,40',
+                totalCost: 'R$ 125,40',
+                auxiliaryCompositions: [
+                  {
+                    code: 'COMP-AUX-001',
+                    description: 'Atividade auxiliar de demonstração',
+                    unit: 'un',
+                    quantity: 1
+                  }
+                ],
+                fixedTimeCompositions: [
+                  {
+                    code: 'COMP-TF-001',
+                    description: 'Tempo fixo de demonstração',
+                    unit: 'h',
+                    quantity: 0.5
+                  }
+                ],
+                inputs: [
+                  {
+                    id: 1,
+                    inputGroup: 'MA',
+                    genericItem: 'INS-001',
+                    genericDescription: '...',
+                    unit: '...',
+                    inputQuantity: 10,
+                    inputUse: 0.1,
+                    proprietaryItem: null
+                  }
+                ]
               },
               {
                 code: 'COMP-002',
                 referenceDate: '01/05/2026',
-                factor: 0.35
+                factor: 0.35,
+                unitCost: 'R$ 200,00',
+                totalCost: 'R$ 70,00',
+                auxiliaryCompositions: [],
+                fixedTimeCompositions: [],
+                inputs: [
+                  {
+                    id: 2,
+                    inputGroup: 'MO',
+                    genericItem: 'INS-001',
+                    genericDescription: '...',
+                    unit: '...',
+                    inputQuantity: 50,
+                    inputUse: 0.2,
+                    proprietaryItem: null
+                  }
+                ]
               }
             ]
           }

@@ -69,8 +69,10 @@
               <th>Total</th>
             </tr>
           </thead>
+
           <tbody>
             @if (budget.services.length > 0) {
+
               @for (service of budget.services; track service.code) {
                 <tr class="service-row">
                   <td>{{ service.code }}</td>
@@ -81,19 +83,146 @@
                   <td>—</td>
                 </tr>
 
-                @for (composition of service.compositions; track composition.code + composition.referenceDate) {
-                  <tr class="composition-row">
-                    <td></td>
-                    <td>
-                      ↳ {{ composition.code }}
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td>{{ composition.referenceDate }}</td>
-                    <td>{{ composition.factor }}</td>
-                  </tr>
-                }
+                <tr class="composition-container">
+                  <td colspan="6">
+
+                    <div class="composition-section-title">
+                      Composições ({{ service.compositions.length }})
+                    </div>
+
+                    @for (
+                      composition of service.compositions;
+                      track composition.code + composition.referenceDate
+                    ) {
+
+                      <details class="composition">
+
+                        <summary>
+                          {{ composition.code }}
+                        </summary>
+
+                        <table class="composition-table">
+                          <thead>
+                            <tr>
+                              <th>Código</th>
+                              <th>Data-base</th>
+                              <th>Fator</th>
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            <tr class="composition-row">
+                              <td>{{ composition.code }}</td>
+                              <td>{{ composition.referenceDate }}</td>
+                              <td>{{ composition.factor }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+
+                        <div class="input-section">
+                          <div class="input-section-title">
+                            Insumos ({{ composition.inputs.length }})
+                          </div>
+
+                          <table class="input-table">
+                            <thead>
+                              <tr>
+                                <th>Código</th>
+                                <th>Descrição</th>
+                                <th>Unidade</th>
+                                <th>Quantidade</th>
+                              </tr>
+                            </thead>
+
+                            <tbody>
+                              @for (
+                                input of composition.inputs;
+                                track input.id
+                              ) {
+                                <tr>
+                                  <td>{{ input.genericItem }}</td>
+                                  <td>{{ input.genericDescription }}</td>
+                                  <td>{{ input.unit }}</td>
+                                  <td>{{ input.inputQuantity }}</td>
+                                </tr>
+                              }
+                            </tbody>
+                          </table>
+                        </div>
+
+                            <div class="input-section">
+                              @if (composition.auxiliaryCompositions.length > 0) {
+                                <div class="input-section">
+                                  <div class="input-section-title">
+                                    Composições auxiliares ({{ composition.auxiliaryCompositions.length }})
+                                  </div>
+
+                                  <table class="input-table">
+                                    <thead>
+                                      <tr>
+                                        <th>Código</th>
+                                        <th>Descrição</th>
+                                        <th>Unidade</th>
+                                        <th>Quantidade</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      @for (
+                                        auxiliary of composition.auxiliaryCompositions;
+                                        track auxiliary.code
+                                      ) {
+                                        <tr>
+                                          <td>{{ auxiliary.code }}</td>
+                                          <td>{{ auxiliary.description }}</td>
+                                          <td>{{ auxiliary.unit }}</td>
+                                          <td>{{ auxiliary.quantity }}</td>
+                                        </tr>
+                                      }
+                                    </tbody>
+                                  </table>
+                                </div>
+                              }
+
+                              @if (composition.fixedTimeCompositions.length > 0) {
+                                <div class="input-section">
+                                  <div class="input-section-title">
+                                    Tempos fixos ({{ composition.fixedTimeCompositions.length }})
+                                  </div>
+
+                                  <table class="input-table">
+                                    <thead>
+                                      <tr>
+                                        <th>Código</th>
+                                        <th>Descrição</th>
+                                        <th>Unidade</th>
+                                        <th>Quantidade</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      @for (
+                                        fixedTime of composition.fixedTimeCompositions;
+                                        track fixedTime.code
+                                      ) {
+                                        <tr>
+                                          <td>{{ fixedTime.code }}</td>
+                                          <td>{{ fixedTime.description }}</td>
+                                          <td>{{ fixedTime.unit }}</td>
+                                          <td>{{ fixedTime.quantity }}</td>
+                                        </tr>
+                                      }
+                                    </tbody>
+                                  </table>
+                                </div>
+                              }
+                          </div>
+                      </details>
+                    }
+
+                  </td>
+                </tr>
               }
+
             } @else {
               <tr>
                 <td colspan="6">
@@ -110,6 +239,7 @@
   </div>
 } @else {
   <div class="not-found">
+
     <h1>Orçamento não encontrado</h1>
 
     <p>
@@ -119,5 +249,6 @@
     <a routerLink="/projects">
       Voltar para projetos
     </a>
+
   </div>
 }
