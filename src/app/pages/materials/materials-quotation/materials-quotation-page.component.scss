@@ -1,0 +1,387 @@
+:host {
+  display: block;
+}
+
+
+.page {
+  max-width: 1600px;
+
+  margin: 0 auto;
+
+  padding:
+    28px 24px 48px;
+}
+
+
+.page-header {
+  margin-bottom: 20px;
+
+  .eyebrow {
+    margin-bottom: 5px;
+
+    color: #697586;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: .08em;
+
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+
+    color: #18212b;
+
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 7px 0 0;
+
+    color: #697586;
+
+    font-size: 13px;
+  }
+}
+
+
+/*
+ * BARRA DE PESQUISA
+ */
+
+.toolbar {
+  display: flex;
+
+  align-items: end;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 14px;
+}
+
+
+.search {
+  width: 380px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+
+  label {
+    color: #344054;
+
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  input {
+    height: 38px;
+
+    padding:
+      0 11px;
+
+    border:
+      1px solid #cfd6de;
+
+    border-radius: 6px;
+
+    outline: none;
+
+    font-size: 12px;
+
+    &:focus {
+      border-color: #667085;
+    }
+  }
+}
+
+
+.summary {
+  display: flex;
+
+  gap: 8px;
+
+  span {
+    padding:
+      7px 11px;
+
+    border:
+      1px solid #dce2e8;
+
+    border-radius: 20px;
+
+    background: #ffffff;
+
+    color: #475467;
+
+    font-size: 11px;
+    font-weight: 600;
+  }
+}
+
+
+/*
+ * TABELA
+ */
+
+.card {
+  overflow: hidden;
+
+  border:
+    1px solid #dce2e8;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+}
+
+
+.table-scroll {
+  width: 100%;
+
+  max-height: calc(100vh - 220px);
+
+  overflow: auto;
+}
+
+
+table {
+  width: max-content;
+
+  min-width: 100%;
+
+  border-collapse: separate;
+
+  border-spacing: 0;
+
+  font-size: 10px;
+}
+
+
+thead th {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 5;
+
+  padding:
+    9px 8px;
+
+  border-right:
+    1px solid #ffffff;
+
+  border-bottom:
+    1px solid #525b66;
+
+  background: #737b84;
+
+  color: #ffffff;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  line-height: 1.2;
+
+  text-align: center;
+
+  white-space: normal;
+
+  min-width: 72px;
+}
+
+
+tbody td {
+  padding:
+    6px 8px;
+
+  border-right:
+    1px solid #e2e6ea;
+
+  border-bottom:
+    1px solid #e2e6ea;
+
+  background: #ffffff;
+
+  color: #344054;
+
+  white-space: nowrap;
+
+  vertical-align: middle;
+}
+
+
+tbody tr:hover td {
+  background: #f8fafb;
+}
+
+
+/*
+ * COLUNAS FIXAS
+ */
+
+.sticky {
+  position: sticky;
+
+  z-index: 3;
+
+  background: #ffffff;
+}
+
+
+thead .sticky {
+  z-index: 8;
+
+  background: #737b84;
+}
+
+
+.code {
+  left: 0;
+
+  min-width: 70px;
+
+  width: 70px;
+}
+
+
+.material {
+  left: 70px;
+
+  min-width: 150px;
+
+  width: 150px;
+}
+
+
+.material-cell {
+  font-weight: 700;
+
+  color: #18212b;
+
+  vertical-align: top;
+}
+
+
+.supplier {
+  min-width: 190px;
+
+  text-align: left;
+
+  font-weight: 600;
+}
+
+
+.number {
+  min-width: 80px;
+
+  text-align: right;
+
+  font-variant-numeric:
+    tabular-nums;
+}
+
+
+.total-cost {
+  font-weight: 700;
+
+  color: #18212b;
+}
+
+
+/*
+ * LINHA ADOTADA
+ */
+
+tr.adopted td {
+  background: #f0f7f2;
+
+  font-weight: 600;
+}
+
+
+tr.adopted:hover td {
+  background: #e7f1e9;
+}
+
+
+.adopted-cell {
+  min-width: 65px;
+
+  text-align: center;
+}
+
+
+.adopted-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 22px;
+
+  height: 22px;
+
+  border-radius: 50%;
+
+  background: #35623e;
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/*
+ * SCROLLBAR
+ */
+
+.table-scroll::-webkit-scrollbar {
+  width: 10px;
+
+  height: 10px;
+}
+
+
+.table-scroll::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+
+  background: #aab2bc;
+}
+
+
+.table-scroll::-webkit-scrollbar-track {
+  background: #f1f3f5;
+}
+
+
+/*
+ * RESPONSIVIDADE
+ */
+
+@media (max-width: 900px) {
+
+  .page {
+    padding:
+      20px 14px 36px;
+  }
+
+  .toolbar {
+    align-items: stretch;
+
+    flex-direction: column;
+  }
+
+  .search {
+    width: 100%;
+  }
+
+}

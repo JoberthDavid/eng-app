@@ -1,0 +1,387 @@
+<div class="page">
+
+  <header class="page-header">
+
+    <div>
+
+      <div class="eyebrow">
+        ORÇAMENTO
+      </div>
+
+      <h1>
+        Materiais cotados
+      </h1>
+
+      <p>
+        Cotações de materiais, atualização monetária,
+        transporte e determinação do custo adotado.
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <!-- CONTROLES -->
+
+  <section class="toolbar">
+
+    <div class="search">
+
+      <label>
+        Pesquisar
+      </label>
+
+      <input
+        type="search"
+        [(ngModel)]="search"
+        placeholder="Código, material ou fornecedor..."
+      />
+
+    </div>
+
+
+    <div class="summary">
+
+      <span>
+        {{ filteredMaterials.length }}
+        materiais
+      </span>
+
+      <span>
+        {{ adoptedQuotationCount }}
+        adotados
+      </span>
+
+    </div>
+
+  </section>
+
+
+  <!-- TABELA -->
+
+  <section class="card">
+
+    <div class="table-scroll">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th class="sticky code">
+              Código
+            </th>
+
+            <th class="sticky material">
+              Material
+            </th>
+
+            <th>
+              Fornecedor
+            </th>
+
+            <th>
+              Preço unitário / und
+            </th>
+
+            <th>
+              Und
+            </th>
+
+            <th>
+              Und SICRO
+            </th>
+
+            <th>
+              Mês cotação
+            </th>
+
+            <th>
+              Índice reajuste
+            </th>
+
+            <th>
+              Conversor unidade
+            </th>
+
+            <th>
+              Preço unitário /
+              und SICRO
+            </th>
+
+            <th>
+              Índice mês
+              cotação
+            </th>
+
+            <th>
+              Índice data-base
+            </th>
+
+            <th>
+              Reajuste
+            </th>
+
+            <th>
+              Preço reajustado /
+              und SICRO
+            </th>
+
+            <th>
+              Código
+              transporte LN
+            </th>
+
+            <th>
+              Código
+              transporte RP
+            </th>
+
+            <th>
+              Código
+              transporte PV
+            </th>
+
+            <th>
+              Custo LN
+            </th>
+
+            <th>
+              Custo RP
+            </th>
+
+            <th>
+              Custo PV
+            </th>
+
+            <th>
+              Custo total
+            </th>
+
+            <th>
+              Adotado
+            </th>
+
+            <th>
+              Transporte
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <ng-container
+            *ngFor="
+              let material of filteredMaterials
+            "
+          >
+
+            <tr
+              *ngFor="
+                let quotation of material.quotations;
+                let first = first
+              "
+              [class.adopted]="quotation.adopted"
+            >
+
+              <!-- CÓDIGO -->
+
+              <td
+                class="sticky code material-cell"
+                *ngIf="first"
+                [attr.rowspan]="material.quotations.length"
+              >
+                {{ material.code }}
+              </td>
+
+
+              <!-- MATERIAL -->
+
+              <td
+                class="sticky material material-cell"
+                *ngIf="first"
+                [attr.rowspan]="material.quotations.length"
+              >
+                {{ material.material }}
+              </td>
+
+
+              <!-- FORNECEDOR -->
+
+              <td class="supplier">
+                {{ quotation.supplier }}
+              </td>
+
+
+              <td class="number">
+                {{
+                  formatNumber(
+                    quotation.unitPrice,
+                    4
+                  )
+                }}
+              </td>
+
+
+              <td>
+                {{ quotation.unit }}
+              </td>
+
+
+              <td>
+                {{ quotation.sicroUnit }}
+              </td>
+
+
+              <td>
+                {{ quotation.quotationMonth }}
+              </td>
+
+
+              <td>
+                {{ quotation.adjustmentIndex }}
+              </td>
+
+
+              <td class="number">
+                {{
+                  formatNumber(
+                    quotation.unitConverter
+                  )
+                }}
+              </td>
+
+
+              <td class="number">
+                {{
+                  formatNumber(
+                    quotation.sicroUnitPrice,
+                    4
+                  )
+                }}
+              </td>
+
+
+              <td class="number">
+                {{
+                  formatNumber(
+                    quotation.quotationMonthIndex
+                  )
+                }}
+              </td>
+
+
+              <td class="number">
+                {{
+                  formatNumber(
+                    quotation.baseDateIndex
+                  )
+                }}
+              </td>
+
+
+              <td class="number">
+                {{
+                  formatNumber(
+                    quotation.adjustment,
+                    5
+                  )
+                }}
+              </td>
+
+
+              <td class="number">
+                {{
+                  formatNumber(
+                    quotation.adjustedSicroUnitPrice,
+                    4
+                  )
+                }}
+              </td>
+
+
+              <td>
+                {{ quotation.transportLnCode }}
+              </td>
+
+
+              <td>
+                {{ quotation.transportRpCode }}
+              </td>
+
+
+              <td>
+                {{ quotation.transportPvCode }}
+              </td>
+
+
+              <td class="number">
+                {{
+                  formatNumber(
+                    quotation.costLn
+                  )
+                }}
+              </td>
+
+
+              <td class="number">
+                {{
+                  formatNumber(
+                    quotation.costRp
+                  )
+                }}
+              </td>
+
+
+              <td class="number">
+                {{
+                  formatNumber(
+                    quotation.costPv
+                  )
+                }}
+              </td>
+
+
+              <td class="number total-cost">
+                {{
+                  formatNumber(
+                    quotation.totalCost
+                  )
+                }}
+              </td>
+
+
+              <td class="adopted-cell">
+
+                <span
+                  *ngIf="quotation.adopted"
+                  class="adopted-badge"
+                >
+                  ✓
+                </span>
+
+              </td>
+
+
+              <td>
+                {{ quotation.transportType }}
+              </td>
+
+            </tr>
+
+          </ng-container>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+</div>

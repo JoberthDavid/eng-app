@@ -18,6 +18,9 @@ import { CompositionPageComponent }
 import { MaterialsPageComponent }
   from './pages/materials/materials-page/materials-page.component';
 
+import { MaterialsQuotationPageComponent }
+  from './pages/materials/materials-quotation/materials-quotation.component';
+
 import { NerPageComponent } from './pages/brush_cutting/ner-page/ner-page.component';
 
 import { BdiPageComponent }
@@ -60,6 +63,12 @@ export const routes: Routes = [
     path: 'materials',
     component: MaterialsPageComponent
   },
+
+  {
+    path: 'materials-quotation',
+    component: MaterialsQuotationPageComponent
+  },
+
   {
     path: 'ner',
     component: NerPageComponent
