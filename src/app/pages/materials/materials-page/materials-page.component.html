@@ -1,0 +1,178 @@
+<div class="materials-page">
+
+  <header class="page-header">
+
+    <div>
+
+      <span class="page-eyebrow">
+        CATÁLOGO
+      </span>
+
+      <h1>
+        Materiais
+      </h1>
+
+      <p>
+        Materiais disponíveis para utilização nos orçamentos.
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <section class="toolbar">
+
+    <div class="filter search-filter">
+
+      <label for="material-search">
+        Código / descrição
+      </label>
+
+      <input
+        id="material-search"
+        type="search"
+        placeholder="Pesquisar código ou descrição"
+        [value]="filters.searchTerm"
+        (input)="onSearch($event)"
+      />
+
+    </div>
+
+
+    <div class="filter">
+
+      <label for="material-uf">
+        UF
+      </label>
+
+      <select
+        id="material-uf"
+        [value]="filters.uf"
+        (change)="onUfChange($event)"
+      >
+
+        <option value="">
+          Todas
+        </option>
+
+        <option value="DF">
+          DF
+        </option>
+
+        <option value="GO">
+          GO
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="filter">
+
+      <label for="material-reference-date">
+        Data-base
+      </label>
+
+      <select
+        id="material-reference-date"
+        [value]="filters.referenceDate"
+        (change)="onReferenceDateChange($event)"
+      >
+
+        <option value="">
+          Todas
+        </option>
+
+        <option value="2026-06-01">
+          01/06/2026
+        </option>
+
+        <option value="2026-05-01">
+          01/05/2026
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="clear-filters"
+      (click)="clearFilters()"
+    >
+      Limpar
+    </button>
+
+  </section>
+
+
+  <section class="materials-card">
+
+    <div class="table-header">
+
+      <span>Código</span>
+      <span>Descrição</span>
+      <span>Unidade</span>
+      <span>UF</span>
+      <span>Data-base</span>
+      <span>Valor</span>
+
+    </div>
+
+
+    @for (
+      material of materials;
+      track material.code
+    ) {
+
+      <a
+        class="material-row"
+        [routerLink]="[
+          '/materials',
+          material.code
+        ]"
+      >
+
+        <span class="material-code">
+          {{ material.code }}
+        </span>
+
+        <span class="material-description">
+          {{ material.description }}
+        </span>
+
+        <span>
+          {{ material.unit }}
+        </span>
+
+        <span>
+          {{ material.uf }}
+        </span>
+
+        <span>
+          {{ material.referenceDate }}
+        </span>
+
+        <span class="material-value">
+          R$ {{ material.referenceValue }}
+        </span>
+
+      </a>
+
+    }
+
+
+    @if (materials.length === 0) {
+
+      <div class="empty-state">
+        Nenhum material encontrado.
+      </div>
+
+    }
+
+  </section>
+
+</div>

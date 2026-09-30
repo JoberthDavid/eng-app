@@ -32,47 +32,69 @@
     </article>
 
   </section>
+<section class="projects-card">
 
-  <section class="table-card">
-
-    <div class="section-header">
+  <div class="section-header">
+    <div>
+      <span class="page-eyebrow">LISTAGEM</span>
       <h2>Projetos cadastrados</h2>
     </div>
 
-    <div class="table-wrapper">
+    <span class="count">
+      {{ projects.length }}
+    </span>
+  </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Projeto</th>
-            <th>Rodovia</th>
-            <th>UF</th>
-            <th>Orçamentos</th>
-            <th>Ação</th>
-          </tr>
-        </thead>
+  <table>
 
-        <tbody>
-          @for (project of projects; track project.code) {
-            <tr>
-              <td>{{ project.code }}</td>
-              <td>{{ project.description }}</td>
-              <td>{{ project.highway }}</td>
-              <td>{{ project.uf }}</td>
-              <td>{{ project.budgets.length }}</td>
-              <td>
-                <a [routerLink]="['/projects', project.code]">
-                  Abrir
-                </a>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Descrição</th>
+        <th>UF</th>
+        <th>Data-base</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
 
-    </div>
+    <tbody>
 
-  </section>
+      @for (project of projects; track project.id) {
+
+        <tr>
+
+          <td>
+            <strong>{{ project.code }}</strong>
+          </td>
+
+          <td>
+            {{ project.description }}
+          </td>
+
+          <td>
+            {{ project.uf }}
+          </td>
+
+          <td>
+            {{ project.referenceDate }}
+          </td>
+
+          <td>
+            <a
+              [routerLink]="['/projects', project.id]"
+            >
+              Abrir
+            </a>
+          </td>
+
+        </tr>
+
+      }
+
+    </tbody>
+
+  </table>
+
+</section>
 
 </div>

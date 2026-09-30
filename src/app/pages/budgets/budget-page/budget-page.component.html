@@ -1,254 +1,571 @@
 @if (budget) {
-  <div class="page">
+
+  <div class="budget-page">
 
     <header class="page-header">
+
       <div>
-        <a class="back-link" [routerLink]="['/projects', projectId]">
-          ← {{ projectId }}
-        </a>
 
-        <p class="eyebrow">ORÇAMENTO</p>
+        <span class="page-eyebrow">
+          ORÇAMENTO
+        </span>
 
-        <h1>{{ budget.id }}</h1>
+        <h1>
+          {{ budget.id }}
+        </h1>
 
-        <p class="subtitle">
-          Projeto {{ budget.projectId }}
+        <p>
+          {{ budget.highway }}
+          ·
+          {{ budget.referenceDate }}
         </p>
+
       </div>
+
+      <a
+        class="back-link"
+        [routerLink]="['/projects', budget.projectId]"
+      >
+        ← {{ budget.projectId }}
+      </a>
+
     </header>
+
 
     <section class="summary">
 
-      <article class="card">
-        <span class="label">Data-base</span>
-        <strong>{{ budget.referenceDate }}</strong>
-      </article>
+      <div class="summary-card">
 
-      <article class="card">
-        <span class="label">Metodologia</span>
-        <strong>{{ budget.methodology }}</strong>
-      </article>
+        <span class="label">
+          Rodovia
+        </span>
 
-      <article class="card">
-        <span class="label">Sistema</span>
-        <strong>{{ budget.typeSystem }}</strong>
-      </article>
+        <strong>
+          {{ budget.highway }}
+        </strong>
 
-      <article class="card">
-        <span class="label">Status</span>
-        <strong>{{ budget.status }}</strong>
-      </article>
+      </div>
 
-      <article class="card">
-        <span class="label">Serviços</span>
-        <strong>{{ budget.services.length }}</strong>
-      </article>
 
-      <article class="card">
-        <span class="label">Custo total</span>
-        <strong>{{ budget.totalCost }}</strong>
-      </article>
+      <div class="summary-card">
+
+        <span class="label">
+          Data-base
+        </span>
+
+        <strong>
+          {{ budget.referenceDate }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <span class="label">
+          Metodologia
+        </span>
+
+        <strong>
+          {{ budget.methodology }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <span class="label">
+          Sistema
+        </span>
+
+        <strong>
+          {{ budget.typeSystem }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <span class="label">
+          Status
+        </span>
+
+        <strong>
+          {{ budget.status }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <span class="label">
+          Total
+        </span>
+
+        <strong>
+          {{ budget.totalCost }}
+        </strong>
+
+      </div>
 
     </section>
 
-    <section class="table-card">
+
+    @if (showCreateServiceForm) {
+      <section class="form-card">
+
+        <div class="form-card-header">
+          <span class="page-eyebrow">NOVO SERVIÇO</span>
+          <h2>Adicionar serviço</h2>
+        </div>
+
+        <form
+          [formGroup]="serviceForm"
+          (ngSubmit)="createService()"
+        >
+
+          <div class="form-grid">
+
+            
+            <div class="form-field">
+              <label for="service-code">
+                Código
+              </label>
+
+              <input
+                id="service-code"
+                type="text"
+                formControlName="code"
+                placeholder="Ex.: 01"
+              />
+            </div>
+
+            <div class="form-field form-field-wide">
+              <label for="service-description">
+                Descrição
+              </label>
+
+              <input
+                id="service-description"
+                type="text"
+                formControlName="description"
+                placeholder="Descrição do serviço"
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="service-unit">
+                Unidade
+              </label>
+
+              <input
+                id="service-unit"
+                type="text"
+                formControlName="unit"
+                placeholder="m²"
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="service-quantity">
+                Quantidade
+              </label>
+
+              <input
+                id="service-quantity"
+                type="number"
+                min="0"
+                step="any"
+                formControlName="quantity"
+              />
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+
+            <button
+              type="button"
+              class="secondary-action"
+              (click)="cancelCreateService()"
+            >
+              Cancelar
+            </button>
+
+            <button
+              type="submit"
+              class="primary-action"
+            >
+              Criar serviço
+            </button>
+
+          </div>
+
+        </form>
+
+      </section>
+    }
+
+
+    <section class="services-card">
 
       <div class="section-header">
-        <h2>Serviços</h2>
+
+        <div>
+          <span class="page-eyebrow">
+            SERVIÇOS
+          </span>
+
+          <h2>
+            Serviços do orçamento
+          </h2>
+        </div>
+
+        <button
+          type="button"
+          class="primary-action"
+          (click)="openCreateService()"
+        >
+          + Novo serviço
+        </button>
+
       </div>
 
-      <div class="table-wrapper">
+      @if (budget.services.length > 0) {
+
         <table>
+
           <thead>
             <tr>
               <th>Código</th>
-              <th>Serviço</th>
+              <th>Descrição</th>
               <th>Unidade</th>
               <th>Quantidade</th>
-              <th>Valor unitário</th>
-              <th>Total</th>
+              <th>Composições</th>
+              <th>Ação</th>
             </tr>
           </thead>
 
           <tbody>
-            @if (budget.services.length > 0) {
 
-              @for (service of budget.services; track service.code) {
-                <tr class="service-row">
-                  <td>{{ service.code }}</td>
-                  <td>{{ service.description }}</td>
-                  <td>{{ service.unit }}</td>
-                  <td>{{ service.quantity }}</td>
-                  <td>—</td>
-                  <td>—</td>
-                </tr>
+            @for (
+              service of budget.services;
+              track service.code
+            ) {
 
-                <tr class="composition-container">
-                  <td colspan="6">
+              <tr>
 
-                    <div class="composition-section-title">
-                      Composições ({{ service.compositions.length }})
-                    </div>
+                <td>
+                  <button
+                    type="button"
+                    class="expand-service"
+                    (click)="toggleService(service)"
+                    [attr.aria-expanded]="expandedServiceCode === service.code"
+                    [attr.aria-label]="
+                      expandedServiceCode === service.code
+                        ? 'Recolher serviço'
+                        : 'Expandir serviço'
+                    "
+                  >
+                    <span>
+                      {{ expandedServiceCode === service.code ? '▴' : '▾' }}
+                    </span>
 
-                    @for (
-                      composition of service.compositions;
-                      track composition.code + composition.referenceDate
-                    ) {
+                    <strong>{{ service.code }}</strong>
+                  </button>
+                </td>
 
-                      <details class="composition">
+                <td>
+                  {{ service.description }}
+                </td>
 
-                        <summary>
-                          {{ composition.code }}
-                        </summary>
+                <td>
+                  {{ service.unit }}
+                </td>
 
-                        <table class="composition-table">
-                          <thead>
-                            <tr>
-                              <th>Código</th>
-                              <th>Data-base</th>
-                              <th>Fator</th>
-                            </tr>
-                          </thead>
+                <td>
+                  {{ service.quantity }}
+                </td>
 
-                          <tbody>
-                            <tr class="composition-row">
-                              <td>{{ composition.code }}</td>
-                              <td>{{ composition.referenceDate }}</td>
-                              <td>{{ composition.factor }}</td>
-                            </tr>
-                          </tbody>
-                        </table>
+              <td>
+                <strong>
+                  {{ service.compositions.length }}
+                </strong>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="table-action"
+                  (click)="openAddComposition(service)"
+                >
+                  + Composição
+                </button>
+              </td>
 
+              </tr>
+              @if (expandedServiceCode === service.code) {
+  <tr class="composition-detail-row">
+    <td colspan="6">
 
-                        <div class="input-section">
-                          <div class="input-section-title">
-                            Insumos ({{ composition.inputs.length }})
-                          </div>
+      <div class="composition-detail">
 
-                          <table class="input-table">
-                            <thead>
-                              <tr>
-                                <th>Código</th>
-                                <th>Descrição</th>
-                                <th>Unidade</th>
-                                <th>Quantidade</th>
-                              </tr>
-                            </thead>
+        <div class="composition-detail-header">
+          <span>COMPOSIÇÕES DO SERVIÇO</span>
+          <strong>{{ service.compositions.length }}</strong>
+        </div>
 
-                            <tbody>
-                              @for (
-                                input of composition.inputs;
-                                track input.id
-                              ) {
-                                <tr>
-                                  <td>{{ input.genericItem }}</td>
-                                  <td>{{ input.genericDescription }}</td>
-                                  <td>{{ input.unit }}</td>
-                                  <td>{{ input.inputQuantity }}</td>
-                                </tr>
-                              }
-                            </tbody>
-                          </table>
-                        </div>
+        @if (service.compositions.length > 0) {
 
-                            <div class="input-section">
-                              @if (composition.auxiliaryCompositions.length > 0) {
-                                <div class="input-section">
-                                  <div class="input-section-title">
-                                    Composições auxiliares ({{ composition.auxiliaryCompositions.length }})
-                                  </div>
+          <table class="composition-table">
+            <thead>
+              <tr>
+                <th>CÓDIGO</th>
+                <th>DESCRIÇÃO</th>
+                <th>DATA-BASE</th>
+                <th>FATOR</th>
+                <th>CUSTO UNITÁRIO</th>
+                <th>CUSTO TOTAL</th>
+                <th>AÇÃO</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (
+                composition of service.compositions;
+                track composition.code
+              ) {
+                <tr>
+                  <td>
+                    <strong>{{ composition.code }}</strong>
+                  </td>
 
-                                  <table class="input-table">
-                                    <thead>
-                                      <tr>
-                                        <th>Código</th>
-                                        <th>Descrição</th>
-                                        <th>Unidade</th>
-                                        <th>Quantidade</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      @for (
-                                        auxiliary of composition.auxiliaryCompositions;
-                                        track auxiliary.code
-                                      ) {
-                                        <tr>
-                                          <td>{{ auxiliary.code }}</td>
-                                          <td>{{ auxiliary.description }}</td>
-                                          <td>{{ auxiliary.unit }}</td>
-                                          <td>{{ auxiliary.quantity }}</td>
-                                        </tr>
-                                      }
-                                    </tbody>
-                                  </table>
-                                </div>
-                              }
+                  <td>
+                    {{ composition.description }}
+                  </td>
 
-                              @if (composition.fixedTimeCompositions.length > 0) {
-                                <div class="input-section">
-                                  <div class="input-section-title">
-                                    Tempos fixos ({{ composition.fixedTimeCompositions.length }})
-                                  </div>
+                  <td>
+                    {{ composition.referenceDate }}
+                  </td>
 
-                                  <table class="input-table">
-                                    <thead>
-                                      <tr>
-                                        <th>Código</th>
-                                        <th>Descrição</th>
-                                        <th>Unidade</th>
-                                        <th>Quantidade</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      @for (
-                                        fixedTime of composition.fixedTimeCompositions;
-                                        track fixedTime.code
-                                      ) {
-                                        <tr>
-                                          <td>{{ fixedTime.code }}</td>
-                                          <td>{{ fixedTime.description }}</td>
-                                          <td>{{ fixedTime.unit }}</td>
-                                          <td>{{ fixedTime.quantity }}</td>
-                                        </tr>
-                                      }
-                                    </tbody>
-                                  </table>
-                                </div>
-                              }
-                          </div>
-                      </details>
-                    }
+                  <td>
+                    {{ composition.factor }}
+                  </td>
 
+                  <td>
+                    {{ composition.unitCost }}
+                  </td>
+
+                  <td>
+                    {{ composition.totalCost }}
+                  </td>
+
+                  <td>
+                    <a
+                      class="table-action"
+                      [routerLink]="['/compositions', composition.code]"
+                    >
+                      Abrir composição
+                    </a>
                   </td>
                 </tr>
               }
+            </tbody>
 
-            } @else {
-              <tr>
-                <td colspan="6">
-                  Nenhum serviço carregado.
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+          </table>
+
+        } @else {
+
+          <div class="composition-empty">
+            Nenhuma composição adicionada a este serviço.
+          </div>
+
+        }
+
       </div>
+
+    </td>
+  </tr>
+}
+
+            }
+
+          </tbody>
+
+        </table>
+
+      } @else {
+
+        <div class="empty-state">
+
+          <strong>
+            Nenhum serviço cadastrado.
+          </strong>
+
+          <span>
+            Adicione o primeiro serviço a este orçamento.
+          </span>
+
+        </div>
+
+      }
 
     </section>
 
-  </div>
-} @else {
-  <div class="not-found">
 
-    <h1>Orçamento não encontrado</h1>
+@if (showAddCompositionForm) {
+
+  <section class="service-form-card">
+
+    <div class="section-header">
+
+      <div>
+        <span class="page-eyebrow">
+          NOVA COMPOSIÇÃO
+        </span>
+
+        <h2>
+          Adicionar composição
+        </h2>
+
+        @if (selectedService) {
+          <p>
+            Serviço:
+            <strong>
+              {{ selectedService.code }}
+              ·
+              {{ selectedService.description }}
+            </strong>
+          </p>
+        }
+
+      </div>
+
+    </div>
+
+
+    <form
+      [formGroup]="compositionForm"
+      (ngSubmit)="addComposition()"
+    >
+
+      <div class="form-grid">
+
+        <div class="form-field form-field-wide">
+
+          <label for="composition-code">
+            Composição
+          </label>
+
+          <select
+            id="composition-code"
+            formControlName="code"
+            (change)="onCompositionSelected($event)"
+          >
+
+            <option value="">
+              Selecione uma composição
+            </option>
+
+            @for (
+              composition of compositions;
+              track composition.code
+            ) {
+
+              <option
+                [value]="composition.code"
+              >
+                {{ composition.code }}
+                
+              </option>
+
+            }
+
+          </select>
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="composition-reference-date">
+            Data-base
+          </label>
+
+          <input
+            id="composition-reference-date"
+            type="text"
+            formControlName="referenceDate"
+          />
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="composition-factor">
+            Fator
+          </label>
+
+          <input
+            id="composition-factor"
+            type="number"
+            min="0.000001"
+            step="any"
+            formControlName="factor"
+          />
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="secondary-action"
+          (click)="cancelAddComposition()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="submit"
+          class="primary-action"
+        >
+          Adicionar composição
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+}
+
+  </div>
+
+} @else {
+
+  <div class="empty-state">
+
+    <h2>
+      Orçamento não encontrado
+    </h2>
 
     <p>
-      O orçamento solicitado não existe no projeto informado.
+      O orçamento solicitado não existe no contexto informado.
     </p>
 
-    <a routerLink="/projects">
+    <a
+      [routerLink]="['/projects']"
+    >
       Voltar para projetos
     </a>
 
   </div>
+
 }

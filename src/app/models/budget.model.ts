@@ -5,6 +5,8 @@ export interface Budget {
   methodology: 'SC' | 'SN';
   typeSystem: 'ON' | 'DS' | 'NA';
   status: string;
+  highway: string;
+  SNV: string[];
   totalCost: string;
   services: ServiceItem[];
 }
@@ -19,6 +21,7 @@ export interface ServiceItem {
 
 export interface CompositionItem {
   code: string;
+  description: string;
   referenceDate: string;
   factor: number;
 

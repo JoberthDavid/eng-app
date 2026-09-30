@@ -1,77 +1,280 @@
 @if (project) {
-  <div class="page">
+
+  <div class="project-page">
+
     <header class="page-header">
+
       <div>
-        <a class="back-link" routerLink="/projects">
-          ← Projetos
-        </a>
-        <p class="eyebrow">{{ project.code }}</p>
-        <h1>{{ project.description }}</h1>
-        <p class="subtitle">
-          {{ project.highway }} · {{ project.uf }}
+        <span class="page-eyebrow">
+          PROJETO
+        </span>
+
+        <h1>
+          {{ project.code }}
+        </h1>
+
+        <p>
+          {{ project.description }}
         </p>
       </div>
+
     </header>
 
+
     <section class="summary">
-      <article class="card">
-        <span class="label">Rodovia</span>
-        <strong>{{ project.highway }}</strong>
-      </article>
 
-      <article class="card">
-        <span class="label">UF</span>
-        <strong>{{ project.uf }}</strong>
-      </article>
+      <div class="summary-card">
+        <span class="label">
+          UF
+        </span>
 
-      <article class="card">
-        <span class="label">Orçamentos</span>
-        <strong>{{ project.budgets.length }}</strong>
-      </article>
-    </section>
-
-    <section class="table-card">
-      <div class="section-header">
-        <h2>Orçamentos do projeto</h2>
+        <strong>
+          {{ project.uf }}
+        </strong>
       </div>
 
-      <div class="table-wrapper">
+      <div class="summary-card">
+        <span class="label">
+          Data-base
+        </span>
+
+        <strong>
+          {{ project.referenceDate }}
+        </strong>
+      </div>
+
+      <div class="summary-card">
+        <span class="label">
+          Orçamentos
+        </span>
+
+        <strong>
+          {{ project.budgets.length }}
+        </strong>
+      </div>
+
+    </section>
+
+
+    @if (showCreateBudgetForm) {
+      <section class="form-card">
+
+        <div class="form-card-header">
+          <span class="page-eyebrow">NOVO ORÇAMENTO</span>
+          <h2>Criar orçamento</h2>
+        </div>
+
+        <form
+          [formGroup]="budgetForm"
+          (ngSubmit)="createBudget()"
+        >
+
+          <div class="form-grid">
+
+            <div class="form-field">
+              <label for="budget-reference-date">
+                Data-base
+              </label>
+
+              <input
+                id="budget-reference-date"
+                type="date"
+                formControlName="referenceDate"
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="budget-methodology">
+                Metodologia
+              </label>
+
+              <select
+                id="budget-methodology"
+                formControlName="methodology"
+              >
+                <option value="SC">SC</option>
+                <option value="SN">SN</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="budget-type-system">
+                Sistema
+              </label>
+
+              <select
+                id="budget-type-system"
+                formControlName="typeSystem"
+              >
+                <option value="ON">ON</option>
+                <option value="DS">DS</option>
+                <option value="NA">NA</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="budget-highway">
+                Rodovia
+              </label>
+
+              <input
+                id="budget-highway"
+                type="text"
+                formControlName="highway"
+                placeholder="BR-040"
+              />
+            </div>
+
+            <div class="form-field form-field-wide">
+              <label for="budget-snv">
+                SNV
+              </label>
+
+              <input
+                id="budget-snv"
+                type="text"
+                formControlName="snv"
+                placeholder="Separe múltiplos SNVs por vírgula"
+              />
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="button"
+              class="secondary-action"
+              (click)="cancelCreateBudget()"
+            >
+              Cancelar
+            </button>
+
+            <button
+              type="submit"
+              class="primary-action"
+            >
+              Criar orçamento
+            </button>
+          </div>
+
+        </form>
+
+      </section>
+    }
+
+
+    <section class="budgets-card">
+
+      <div class="section-header">
+
+        <div>
+          <span class="page-eyebrow">
+            ORÇAMENTOS
+          </span>
+
+          <h2>
+            Orçamentos do projeto
+          </h2>
+        </div>
+
+
+        <button
+          type="button"
+          class="primary-action"
+          (click)="openCreateBudget()"
+        >
+          + Novo orçamento
+        </button>
+
+      </div>
+
+
+      @if (project.budgets.length > 0) {
+
         <table>
+
           <thead>
             <tr>
+              <th>Código</th>
+              <th>Rodovia</th>
               <th>Data-base</th>
+              <th>Metodologia</th>
+              <th>Sistema</th>
               <th>Status</th>
               <th>Total</th>
+              <th>Ação</th>
             </tr>
           </thead>
 
           <tbody>
-            @for (budget of project.budgets; track budget.id) {
+
+            @for (
+              budget of project.budgets;
+              track budget.id
+            ) {
+
               <tr>
+
                 <td>
-                  <a [routerLink]="['/projects', project.code, 'budgets', budget.id]">
-                    {{ budget.referenceDate }}
+                  <strong>
+                    {{ budget.id }}
+                  </strong>
+                </td>
+
+                <td>
+                  {{ budget.highway }}
+                </td>
+
+                <td>
+                  {{ budget.referenceDate }}
+                </td>
+
+                <td>
+                  {{ budget.methodology }}
+                </td>
+
+                <td>
+                  {{ budget.typeSystem }}
+                </td>
+
+                <td>
+                  {{ budget.status }}
+                </td>
+
+                <td>
+                  {{ budget.totalCost }}
+                </td>
+                <td>
+                  <a
+                    [routerLink]="['/budgets', budget.id]"
+                  >
+                    Abrir
                   </a>
                 </td>
-                <td>{{ budget.status }}</td>
-                <td>{{ budget.totalCost }}</td>
               </tr>
+
             }
+
           </tbody>
+
         </table>
-      </div>
+
+      } @else {
+
+        <div class="empty-state">
+          Nenhum orçamento cadastrado para este projeto.
+        </div>
+
+      }
+
     </section>
+
   </div>
+
 } @else {
-  <div class="not-found">
-    <h1>Projeto não encontrado</h1>
 
-    <p>
-      O projeto solicitado não existe nos dados disponíveis.
-    </p>
-
-    <a routerLink="/projects">
-      Voltar para projetos
-    </a>
+  <div class="empty-state">
+    Projeto não encontrado.
   </div>
+
 }

@@ -1,0 +1,344 @@
+// ============================================================
+// MATERIALS PAGE
+// ============================================================
+
+:host {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+
+  color: #27313c;
+}
+
+.materials-page {
+  width: 100%;
+  max-width: 1800px;
+
+  margin: 0 auto;
+  padding: 24px 32px 40px;
+
+  box-sizing: border-box;
+}
+
+
+// ============================================================
+// CABEÇALHO
+// ============================================================
+
+.page-header {
+  margin-bottom: 20px;
+}
+
+.page-eyebrow {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #697586;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  color: #27313c;
+
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.page-header p {
+  margin: 6px 0 0;
+
+  color: #697586;
+
+  font-size: 13px;
+}
+
+
+// ============================================================
+// BARRA DE PESQUISA
+// ============================================================
+
+.toolbar {
+  display: flex;
+  align-items: flex-end;
+
+  margin-bottom: 12px;
+}
+
+.search {
+  display: flex;
+  flex-direction: column;
+
+  width: 360px;
+}
+
+.search label {
+  margin-bottom: 5px;
+
+  color: #697586;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.search input {
+  height: 36px;
+
+  padding: 0 11px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d9e0e7;
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #27313c;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  outline: none;
+}
+
+.search input:focus {
+  border-color: #aeb9c4;
+}
+
+
+// ============================================================
+// TABELA
+// ============================================================
+
+.materials-card {
+  width: 100%;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #e1e6eb;
+  border-radius: 8px;
+}
+
+.table-header,
+.material-row {
+  display: grid;
+
+  grid-template-columns:
+    120px
+    minmax(260px, 1fr)
+    90px
+    70px
+    120px
+    120px;
+
+  column-gap: 12px;
+
+  align-items: center;
+
+  box-sizing: border-box;
+}
+
+.table-header {
+  min-height: 38px;
+
+  padding: 0 14px;
+
+  background: #f8fafb;
+
+  border-bottom: 1px solid #e1e6eb;
+}
+
+.table-header span {
+  color: #697586;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.material-row {
+  min-height: 42px;
+
+  padding: 0 14px;
+
+  border-bottom: 1px solid #eef1f4;
+
+  color: #27313c;
+
+  font-size: 11px;
+
+  text-decoration: none;
+
+  transition:
+    background-color 120ms ease;
+}
+
+.material-row:last-child {
+  border-bottom: 0;
+}
+
+.material-row:hover {
+  background: #f8fafb;
+}
+
+.material-row span {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.material-code {
+  font-weight: 700;
+}
+
+.material-description {
+  color: #27313c;
+}
+
+.material-value {
+  font-weight: 700;
+  text-align: right;
+}
+
+
+// ============================================================
+// ESTADO VAZIO
+// ============================================================
+
+.empty-state {
+  padding: 40px;
+
+  color: #697586;
+
+  font-size: 12px;
+
+  text-align: center;
+}
+
+
+// ============================================================
+// RESPONSIVIDADE
+// ============================================================
+
+@media (max-width: 900px) {
+
+  .toolbar {
+    flex-wrap: wrap;
+  }
+
+  .search-filter {
+    width: 100%;
+  }
+
+  .filter {
+    flex: 1 1 140px;
+  }
+}
+
+
+// ============================================================
+// FILTROS
+// ============================================================
+
+.toolbar {
+  display: flex;
+  align-items: flex-end;
+
+  gap: 12px;
+
+  margin-bottom: 12px;
+}
+
+.filter {
+  display: flex;
+  flex-direction: column;
+
+  width: 150px;
+}
+
+.search-filter {
+  width: 360px;
+}
+
+.filter label {
+  margin-bottom: 5px;
+
+  color: #697586;
+
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.filter input,
+.filter select {
+  width: 100%;
+  height: 36px;
+
+  padding: 0 11px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d9e0e7;
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #27313c;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  outline: none;
+}
+
+.filter input:focus,
+.filter select:focus {
+  border-color: #aeb9c4;
+}
+
+.clear-filters {
+  height: 36px;
+
+  padding: 0 14px;
+
+  border: 1px solid #d9e0e7;
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #697586;
+
+  cursor: pointer;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.clear-filters:hover {
+  background: #f8fafb;
+  color: #27313c;
+}
