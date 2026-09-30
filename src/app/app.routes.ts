@@ -18,6 +18,8 @@ import { CompositionPageComponent }
 import { MaterialsPageComponent }
   from './pages/materials/materials-page/materials-page.component';
 
+import { NerPageComponent } from './pages/brush_cutting/ner-page/ner-page.component';
+
 export const routes: Routes = [
 
   {
@@ -54,6 +56,10 @@ export const routes: Routes = [
   {
     path: 'materials',
     component: MaterialsPageComponent
-  }
+  },
+  {
+    path: 'ner',
+    component: NerPageComponent
+  },
 
 ];

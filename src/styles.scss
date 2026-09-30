@@ -29,3 +29,15 @@ select,
 textarea {
   font: inherit;
 }
+
+#ner-map {
+  width: 100%;
+  height: 390px;
+  min-height: 390px;
+  max-height: 390px;
+  overflow: hidden;
+}
+
+#ner-map.leaflet-container {
+  height: 390px;
+}

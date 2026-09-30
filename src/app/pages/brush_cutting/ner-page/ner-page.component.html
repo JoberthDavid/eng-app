@@ -1,0 +1,208 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <div class="eyebrow">Conservação rodoviária</div>
+      <h1>Nível de Esforço de Roçada</h1>
+      <p>Cálculo do NER a partir das estações pluviométricas mais próximas do ponto informado.</p>
+    </div>
+  </header>
+
+  <!-- PONTO DE CÁLCULO -->
+  <section class="card">
+    <div class="section-header">
+      <div>
+        <h2>Ponto de cálculo</h2>
+        <p>Clique no mapa para definir o ponto geográfico utilizado no cálculo.</p>
+      </div>
+    </div>
+
+    <div class="point-layout">
+      <div class="coordinates">
+        <div class="field">
+          <label for="latitude">Latitude</label>
+          <input 
+            id="latitude" 
+            type="number" 
+            step="0.000001" 
+            [(ngModel)]="latitude" 
+            (change)="latitude !== null && longitude !== null && setCalculationPoint(latitude, longitude)" 
+          />
+        </div>
+        
+        <div class="field">
+          <label for="longitude">Longitude</label>
+          <input 
+            id="longitude" 
+            type="number" 
+            step="0.000001" 
+            [(ngModel)]="longitude" 
+            (change)="latitude !== null && longitude !== null && setCalculationPoint(latitude, longitude)" 
+          />
+        </div>
+        
+        <div class="coordinate-help">
+          <strong>Como definir o ponto?</strong>
+          <span>Clique diretamente no mapa ou informe latitude e longitude.</span>
+        </div>
+        
+        <button
+          class="primary-button"
+          type="button"
+          [disabled]="latitude === null || longitude === null"
+          (click)="calculate()"
+        >
+          Calcular nível de esforço
+        </button>
+      </div>
+
+      <div id="ner-map" class="map"></div>
+    </div>
+  </section>
+
+  <!-- CONFIGURAÇÃO -->
+  <section class="card">
+    <div class="section-header">
+      <div>
+        <h2>Parâmetros do cálculo</h2>
+        <p>As estações são ordenadas automaticamente pela distância ao ponto informado.</p>
+      </div>
+    </div>
+
+    <div class="parameters">
+      <div class="field">
+        <label for="station-count">Estações consideradas</label>
+        <select id="station-count" [(ngModel)]="stationCount" (change)="onStationCountChange()">
+          <option [value]="2">2</option>
+          <option [value]="3">3</option>
+          <option [value]="4">4</option>
+          <option [value]="5">5</option>
+        </select>
+        <small>Serão utilizadas as estações mais próximas.</small>
+      </div>
+
+      <div class="field">
+        <label for="adjustment">Ajuste técnico</label>
+        <select id="adjustment" [(ngModel)]="adjustment" (change)="onAdjustmentChange()">
+          <option [value]="-1">-1 — reduzir um nível</option>
+          <option [value]="0">0 — sem ajuste</option>
+          <option [value]="1">+1 — aumentar um nível</option>
+        </select>
+        <small>Aplicável mediante justificativa técnica.</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESTAÇÕES -->
+  <section class="card" *ngIf="calculated">
+    <div class="section-header">
+      <div>
+        <h2>Estações consideradas</h2>
+        <p>Resultado da busca das estações mais próximas.</p>
+      </div>
+      <span class="result-badge">{{ consideredStations.length }} estações</span>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Estação</th>
+            <th>Município</th>
+            <th>UF</th>
+            <th>NERE</th>
+            <th>Distância</th>
+            <th>1 / di</th>
+            <th>NERE × 1 / di</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let station of consideredStations">
+            <td class="code">{{ station.code }}</td>
+            <td>{{ station.municipality }}</td>
+            <td>{{ station.state }}</td>
+            <td class="number">{{ formatNumber(station.nere) }}</td>
+            <td class="number">{{ formatNumber(station.distanceKm) }} km</td>
+            <td class="number">{{ station.weight | number:'1.6-6' }}</td>
+            <td class="number">{{ station.weightedNere | number:'1.6-6' }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5">Totais</td>
+            <td class="number">{{ sumWeights | number:'1.6-6' }}</td>
+            <td class="number">{{ sumWeightedNere | number:'1.6-6' }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <!-- RESULTADO -->
+  <section class="result-grid" *ngIf="calculated">
+    <div class="calculation-card">
+      <div class="card-title">Memória de cálculo</div>
+      <div class="formula">NERP = Σ(NERE × 1/di) / Σ(1/di)</div>
+      
+      <div class="calculation-line">
+        <span>Σ(NERE × 1/di)</span>
+        <strong>{{ sumWeightedNere | number:'1.6-6' }}</strong>
+      </div>
+      
+      <div class="calculation-line">
+        <span>Σ(1/di)</span>
+        <strong>{{ sumWeights | number:'1.6-6' }}</strong>
+      </div>
+      
+      <div class="calculation-line total">
+        <span>NERP calculado</span>
+        <strong>{{ formatNumber(nerp) }}</strong>
+      </div>
+    </div>
+
+    <div class="ner-card">
+      <div class="card-title">Nível de esforço</div>
+      <div class="ner-value">{{ ner ?? '—' }}</div>
+      <div class="ner-label">NER adotado</div>
+      
+      <div class="adjustment" *ngIf="adjustment !== 0">
+        Ajuste aplicado: {{ adjustment > 0 ? '+' : '' }}{{ adjustment }}
+      </div>
+    </div>
+  </section>
+
+  <!-- TODAS AS ESTAÇÕES -->
+  <details class="card all-stations" *ngIf="calculated">
+    <summary>Ver todas as estações avaliadas</summary>
+    
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Estação</th>
+            <th>Município</th>
+            <th>UF</th>
+            <th>NERE</th>
+            <th>Distância</th>
+            <th>Considerada</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let station of allStations; let index = index" [class.not-considered]="!station.considered">
+            <td>{{ index + 1 }}</td>
+            <td>{{ station.code }}</td>
+            <td>{{ station.municipality }}</td>
+            <td>{{ station.state }}</td>
+            <td class="number">{{ formatNumber(station.nere) }}</td>
+            <td class="number">{{ formatNumber(station.distanceKm) }} km</td>
+            <td>
+              <span class="status" [class.selected]="station.considered">
+                {{ station.considered ? 'Sim' : 'Não' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</div>

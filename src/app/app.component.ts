@@ -62,6 +62,10 @@ export class AppComponent {
       return 'Composições';
     }
 
+    if (url.startsWith('/ner')) {
+      return 'Nível de esforço';
+    }
+
     if (url.startsWith('/projects')) {
       return 'Projetos';
     }
