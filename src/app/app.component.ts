@@ -66,6 +66,10 @@ export class AppComponent {
       return 'Nível de esforço';
     }
 
+    if (url.startsWith('/bdi')) {
+      return 'BDI';
+    }
+
     if (url.startsWith('/projects')) {
       return 'Projetos';
     }

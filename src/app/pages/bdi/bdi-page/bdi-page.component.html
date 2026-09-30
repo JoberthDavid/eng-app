@@ -1,0 +1,601 @@
+<div class="page">
+
+  <!-- CABEÇALHO -->
+
+  <header class="page-header">
+
+    <div>
+
+      <div class="eyebrow">
+        ORÇAMENTO
+      </div>
+
+      <h1>
+        BDI
+      </h1>
+
+      <p>
+        Benefícios e Despesas Indiretas
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <!-- IDENTIFICAÇÃO -->
+
+  <section class="card">
+
+    <div class="section-header">
+
+      <div>
+
+        <h2>
+          Identificação
+        </h2>
+
+        <p>
+          Dados de referência do BDI.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="identification-grid">
+
+      <div class="field">
+
+        <label>
+          Rodovia
+        </label>
+
+        <input
+          [(ngModel)]="highway"
+        />
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Data-base
+        </label>
+
+        <input
+          [(ngModel)]="baseDate"
+        />
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          KM
+        </label>
+
+        <input
+          [(ngModel)]="km"
+        />
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          SNV
+        </label>
+
+        <input
+          [(ngModel)]="snv"
+        />
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Regime
+        </label>
+
+        <select
+          [(ngModel)]="regime"
+          (change)="calculate()"
+        >
+
+          <option value="onerado">
+            Onerado
+          </option>
+
+          <option value="desonerado">
+            Desonerado
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- PARÂMETROS -->
+
+  <section class="card">
+
+    <div class="section-header">
+
+      <div>
+
+        <h2>
+          Parâmetros do BDI
+        </h2>
+
+        <p>
+          Valores utilizados para composição do BDI.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="parameters-grid">
+
+
+      <div class="parameter-group">
+
+        <div class="group-title">
+          Benefícios
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Lucro (% do CD)
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            [(ngModel)]="profit"
+            (ngModelChange)="calculate()"
+          />
+
+        </div>
+
+      </div>
+
+
+      <div class="parameter-group">
+
+        <div class="group-title">
+          Despesas indiretas
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Administração central (% do CD)
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            [(ngModel)]="centralAdministration"
+            (ngModelChange)="calculate()"
+          />
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            SELIC anual (%)
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            [(ngModel)]="selicAnnual"
+            (ngModelChange)="calculate()"
+          />
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Riscos (% do PV)
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            [(ngModel)]="risks"
+            (ngModelChange)="calculate()"
+          />
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Seguros e garantias (% do PV)
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            [(ngModel)]="insurance"
+            (ngModelChange)="calculate()"
+          />
+
+        </div>
+
+      </div>
+
+
+      <div class="parameter-group">
+
+        <div class="group-title">
+          Tributos
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            COFINS (% do PV)
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            [(ngModel)]="cofins"
+            (ngModelChange)="calculate()"
+          />
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            ISS (%)
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            [(ngModel)]="iss"
+            (ngModelChange)="calculate()"
+          />
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Dedução de materiais no ISS (%)
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            [(ngModel)]="issMaterialDeduction"
+            (ngModelChange)="calculate()"
+          />
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            PIS (% do PV)
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            [(ngModel)]="pis"
+            (ngModelChange)="calculate()"
+          />
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- TABELA BDI -->
+
+  <section class="card">
+
+    <div class="section-header">
+
+      <div>
+
+        <h2>
+          Composição do BDI
+        </h2>
+
+        <p>
+          Estrutura de benefícios, despesas indiretas e tributos.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Grupo BDI
+            </th>
+
+            <th>
+              Descrição das parcelas
+            </th>
+
+            <th>
+              Variável
+            </th>
+
+            <th>
+              % sobre PV
+            </th>
+
+            <th>
+              % sobre CD
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="let row of rows"
+          >
+
+            <td>
+              {{ row.group }}
+            </td>
+
+            <td class="description">
+              {{ row.description }}
+            </td>
+
+            <td class="variable">
+              {{ row.variable }}
+            </td>
+
+            <td class="number">
+              {{ formatNumber(row.pvPercent) }}%
+            </td>
+
+            <td class="number">
+              {{ formatNumber(row.cdPercent) }}%
+            </td>
+
+          </tr>
+
+
+          <!-- BENEFÍCIOS TOTAL -->
+
+          <tr class="subtotal">
+
+            <td>
+              BENEFÍCIOS
+            </td>
+
+            <td>
+              Total
+            </td>
+
+            <td></td>
+
+            <td class="number">
+              {{ formatNumber(benefitsPv) }}%
+            </td>
+
+            <td class="number">
+              {{ formatNumber(benefitsCd) }}%
+            </td>
+
+          </tr>
+
+
+          <!-- DESPESAS INDIRETAS TOTAL -->
+
+          <tr class="subtotal">
+
+            <td>
+              DESPESAS INDIRETAS
+            </td>
+
+            <td>
+              Total
+            </td>
+
+            <td></td>
+
+            <td class="number">
+              {{ formatNumber(indirectPv) }}%
+            </td>
+
+            <td class="number">
+              {{ formatNumber(indirectCd) }}%
+            </td>
+
+          </tr>
+
+
+          <!-- TRIBUTOS TOTAL -->
+
+          <tr class="subtotal">
+
+            <td>
+              TRIBUTOS
+            </td>
+
+            <td>
+              Total
+            </td>
+
+            <td></td>
+
+            <td class="number">
+              {{ formatNumber(taxesPv) }}%
+            </td>
+
+            <td class="number">
+              {{ formatNumber(taxesCd) }}%
+            </td>
+
+          </tr>
+
+
+          <!-- TOTAL -->
+
+          <tr class="grand-total">
+
+            <td>
+              TOTAL GERAL
+            </td>
+
+            <td></td>
+
+            <td></td>
+
+            <td class="number">
+              {{ formatNumber(bdiOverPv) }}%
+            </td>
+
+            <td class="number">
+              {{ formatNumber(bdiOverCd) }}%
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+
+  <!-- RESULTADO -->
+
+  <section class="result-grid">
+
+
+    <div class="result-card">
+
+      <div class="result-label">
+        BDI SOBRE PV
+      </div>
+
+      <div class="result-value">
+        {{ formatNumber(bdiOverPv) }}%
+      </div>
+
+      <div class="result-description">
+        Percentual das parcelas indiretas
+        sobre o preço de venda.
+      </div>
+
+    </div>
+
+
+    <div class="result-card">
+
+      <div class="result-label">
+        BDI SOBRE CD
+      </div>
+
+      <div class="result-value">
+        {{ formatNumber(bdiOverCd) }}%
+      </div>
+
+      <div class="result-description">
+        Acréscimo aplicado ao custo direto.
+      </div>
+
+    </div>
+
+
+    <div class="result-card">
+
+      <div class="result-label">
+        PV / CD
+      </div>
+
+      <div class="result-value">
+        {{ formatNumber(pvOverCd, 4) }}
+      </div>
+
+      <div class="result-description">
+        Relação entre preço de venda
+        e custo direto.
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- MEMÓRIA DO ISS -->
+
+  <section class="note">
+
+    <strong>
+      Observação sobre o ISS
+    </strong>
+
+    <span>
+
+      Foi considerado ISS de
+      {{ formatNumber(iss) }}%
+      com dedução de materiais da base
+      de cálculo igual a
+      {{ formatNumber(issMaterialDeduction) }}%.
+
+      ISS efetivo:
+      {{ formatNumber(effectiveIss) }}%
+      sobre o preço de venda.
+
+    </span>
+
+  </section>
+
+</div>

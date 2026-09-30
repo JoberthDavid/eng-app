@@ -20,6 +20,9 @@ import { MaterialsPageComponent }
 
 import { NerPageComponent } from './pages/brush_cutting/ner-page/ner-page.component';
 
+import { BdiPageComponent }
+  from './pages/bdi/bdi-page/bdi-page.component';
+
 export const routes: Routes = [
 
   {
@@ -60,6 +63,11 @@ export const routes: Routes = [
   {
     path: 'ner',
     component: NerPageComponent
+  },
+
+  {
+    path: 'bdi',
+    component: BdiPageComponent
   },
 
 ];
