@@ -1,0 +1,591 @@
+@if (timeline && budgetId) {
+
+  <div class="cronograma-page">
+
+    <!-- ================================================== -->
+    <!-- CABEÇALHO -->
+    <!-- ================================================== -->
+
+    <header class="page-header">
+
+      <div>
+
+        <span class="page-eyebrow">
+          CRONOGRAMA
+        </span>
+
+        <h1>
+          Cronograma físico-financeiro
+        </h1>
+
+        <p>
+          Orçamento {{ budgetId }}
+          ·
+          Data-base {{ timeline.referenceDate }}
+        </p>
+
+      </div>
+
+
+      <div class="header-actions">
+
+        <a
+          class="secondary-action"
+          [routerLink]="[
+            '/budgets',
+            budgetId
+          ]"
+        >
+          ← Orçamento
+        </a>
+
+        <button
+          type="button"
+          class="secondary-action"
+          (click)="printReport()"
+        >
+          Imprimir / PDF
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- ================================================== -->
+    <!-- CONFIGURAÇÃO -->
+    <!-- ================================================== -->
+
+    <section class="configuration-card">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="page-eyebrow">
+            CONFIGURAÇÃO
+          </span>
+
+          <h2>
+            Parâmetros contratuais
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <form
+        [formGroup]="configurationForm"
+        (ngSubmit)="saveConfiguration()"
+      >
+
+        <div class="configuration-grid">
+
+          <div class="form-field">
+
+            <label for="contract-term">
+              Prazo contratual
+            </label>
+
+            <div class="input-with-suffix">
+
+              <input
+                id="contract-term"
+                type="text"
+                formControlName="contractTermMonths"
+              />
+
+              <span>
+                meses
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-field">
+
+            <label for="start-date">
+              Data de início
+            </label>
+
+            <input
+              id="start-date"
+              type="text"
+              formControlName="startDate"
+              placeholder="DD/MM/AAAA"
+            />
+
+          </div>
+
+
+          <div class="form-field">
+
+            <label>
+              Data-base
+            </label>
+
+            <div class="readonly-field">
+              {{ timeline.referenceDate }}
+            </div>
+
+          </div>
+
+
+          <div class="form-actions">
+
+            <button
+              type="submit"
+              class="primary-action"
+            >
+              Aplicar configuração
+            </button>
+
+          </div>
+
+        </div>
+
+      </form>
+
+    </section>
+
+
+    <!-- ================================================== -->
+    <!-- RESUMO -->
+    <!-- ================================================== -->
+
+    <section class="summary">
+
+      <div class="summary-card">
+
+        <span class="label">
+          Valor do orçamento
+        </span>
+
+        <strong>
+          {{ timeline.summary.totalCost }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <span class="label">
+          Prazo
+        </span>
+
+        <strong>
+          {{ timeline.summary.contractTermMonths }}
+          meses
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <span class="label">
+          Início
+        </span>
+
+        <strong>
+          {{ timeline.summary.startDate }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <span class="label">
+          Média mensal
+        </span>
+
+        <strong>
+          {{ timeline.summary.monthlyAverage }}
+        </strong>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================================================== -->
+    <!-- CONTROLES -->
+    <!-- ================================================== -->
+
+    <section class="toolbar">
+
+      <div>
+
+        <span class="page-eyebrow">
+          PERÍODO
+        </span>
+
+        <div class="year-tabs">
+
+          @for (
+            year of years;
+            track year
+          ) {
+
+            <button
+              type="button"
+              [class.active]="
+                selectedYear === year
+              "
+              (click)="selectYear(year)"
+            >
+              {{ year }}
+            </button>
+
+          }
+
+        </div>
+
+      </div>
+
+
+      <div>
+
+        <span class="page-eyebrow">
+          VISUALIZAÇÃO
+        </span>
+
+        <div class="view-tabs">
+
+          <button
+            type="button"
+            [class.active]="
+              view === 'PERCENTUAL'
+            "
+            (click)="
+              selectView('PERCENTUAL')
+            "
+          >
+            %
+          </button>
+
+          <button
+            type="button"
+            [class.active]="
+              view === 'FINANCEIRO'
+            "
+            (click)="
+              selectView('FINANCEIRO')
+            "
+          >
+            R$
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================================================== -->
+    <!-- CRONOGRAMA -->
+    <!-- ================================================== -->
+
+    <section class="table-card">
+
+      <header class="section-header">
+
+        <div>
+
+          <span class="page-eyebrow">
+            CRONOGRAMA
+          </span>
+
+          <h2>
+            Distribuição mensal
+          </h2>
+
+        </div>
+
+
+        <span class="view-label">
+
+          @if (view === 'PERCENTUAL') {
+            Percentual de execução
+          } @else {
+            Valor financeiro
+          }
+
+        </span>
+
+      </header>
+
+
+      <div class="table-scroll">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th class="sticky-code">
+                CÓDIGO
+              </th>
+
+              <th class="sticky-description">
+                DESCRIÇÃO
+              </th>
+
+              @for (
+                month of visibleMonths;
+                track month.number
+              ) {
+
+                <th class="month-header">
+                  {{ month.label }}
+                </th>
+
+              }
+
+              <th class="total-header">
+                TOTAL
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              row of visibleRows;
+              track row.code
+            ) {
+
+              <tr
+                [class.group-row]="
+                  row.type === 'GROUP'
+                "
+                [class.item-row]="
+                  row.type === 'ITEM'
+                "
+              >
+
+                <td class="sticky-code">
+
+                  @if (
+                    row.type === 'GROUP'
+                  ) {
+
+                    <button
+                      type="button"
+                      class="expand-button"
+                      (click)="
+                        toggleGroup(row.code)
+                      "
+                    >
+
+                      <span>
+                        {{
+                          isExpanded(row.code)
+                            ? '▾'
+                            : '▸'
+                        }}
+                      </span>
+
+                      <strong>
+                        {{ row.code }}
+                      </strong>
+
+                    </button>
+
+                  } @else {
+
+                    {{ row.code }}
+
+                  }
+
+                </td>
+
+
+                <td
+                  class="sticky-description"
+                  [class.group-description]="
+                    row.type === 'GROUP'
+                  "
+                >
+
+                  {{ row.description }}
+
+                </td>
+
+
+                @for (
+                  month of visibleMonths;
+                  track month.number
+                ) {
+
+                  <td
+                    class="month-value"
+                    [class.group-value]="
+                      row.type === 'GROUP'
+                    "
+                  >
+                    {{ getMonthValue(row, month) }}
+                  </td>
+
+                }
+
+
+                <td class="total-value">
+
+                  {{ row.totalCost }}
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================================================== -->
+    <!-- CURVA S - ESTRUTURA -->
+    <!-- ================================================== -->
+
+    <section class="curve-card">
+
+      <header class="section-header">
+
+        <div>
+
+          <span class="page-eyebrow">
+            CURVA S
+          </span>
+
+          <h2>
+            Evolução acumulada
+          </h2>
+
+        </div>
+
+      </header>
+
+
+      <div class="curve-placeholder">
+
+        <div class="curve-axis">
+
+          <span>
+            100%
+          </span>
+
+          <span>
+            75%
+          </span>
+
+          <span>
+            50%
+          </span>
+
+          <span>
+            25%
+          </span>
+
+          <span>
+            0%
+          </span>
+
+        </div>
+
+
+        <div class="curve-area">
+
+          <div class="curve-message">
+
+            <strong>
+              Curva S
+            </strong>
+
+            <span>
+              O gráfico será alimentado pela distribuição
+              acumulada calculada pela API Python.
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================================================== -->
+    <!-- RELATÓRIO -->
+    <!-- ================================================== -->
+
+    <section class="report-card">
+
+      <div>
+
+        <span class="page-eyebrow">
+          DOCUMENTO TÉCNICO
+        </span>
+
+        <h2>
+          Relatório do cronograma
+        </h2>
+
+        <p>
+          Esta estrutura será posteriormente conectada
+          ao gerador oficial de PDF do sistema.
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="primary-action"
+        (click)="requestPdfReport()"
+      >
+        Gerar relatório
+      </button>
+
+    </section>
+
+  </div>
+
+} @else {
+
+  <div class="empty-state">
+
+    <h2>
+      Cronograma não encontrado
+    </h2>
+
+    <p>
+      O orçamento informado não possui um cronograma
+      disponível.
+    </p>
+
+    <a
+      [routerLink]="['/budgets']"
+    >
+      Voltar para orçamentos
+    </a>
+
+  </div>
+
+}
