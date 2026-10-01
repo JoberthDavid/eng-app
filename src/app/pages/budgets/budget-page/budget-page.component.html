@@ -224,13 +224,27 @@
           </h2>
         </div>
 
-        <button
-          type="button"
-          class="primary-action"
-          (click)="openCreateService()"
-        >
-          + Novo serviço
-        </button>
+        <div class="section-actions">
+
+          <a
+            class="secondary-action"
+            [routerLink]="[
+              '/abc/compositions',
+              budget.id
+            ]"
+          >
+            Curva ABC
+          </a>
+
+          <button
+            type="button"
+            class="primary-action"
+            (click)="openCreateService()"
+          >
+            + Novo serviço
+          </button>
+
+        </div>
 
       </div>
 

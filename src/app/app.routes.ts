@@ -21,10 +21,23 @@ import { MaterialsPageComponent }
 import { MaterialsQuotationPageComponent }
   from './pages/materials/materials-quotation/materials-quotation.component';
 
+import { BituminousMaterialsComponent }
+  from './pages/materials/bituminous-materials/bituminous-materials.component'
+
 import { NerPageComponent } from './pages/brush_cutting/ner-page/ner-page.component';
 
 import { BdiPageComponent }
   from './pages/bdi/bdi-page/bdi-page.component';
+
+import { FitPageComponent }
+  from './pages/fit/fit-page/fit-page.component';
+
+import { AbcCompositionsPageComponent }
+  from './pages/abc/compositions/abc-compositions-page.component';
+
+import { OccurrencesMapComponent }
+  from './pages/materials/occurrences-map/occurrences-map.component'
+  
 
 export const routes: Routes = [
 
@@ -55,6 +68,11 @@ export const routes: Routes = [
   },
 
   {
+    path: 'abc/compositions/:budgetId',
+    component: AbcCompositionsPageComponent
+  },
+
+  {
     path: 'compositions/:code',
     component: CompositionPageComponent
   },
@@ -70,13 +88,28 @@ export const routes: Routes = [
   },
 
   {
-    path: 'ner',
+    path: 'bituminous-material',
+    component: BituminousMaterialsComponent
+  },
+
+  {
+    path: 'mowing-workload-level',
     component: NerPageComponent
   },
 
   {
     path: 'bdi',
     component: BdiPageComponent
+  },
+
+  {
+    path: 'fit',
+    component: FitPageComponent
+  },
+
+  {
+    path: 'occurrences',
+    component: OccurrencesMapComponent
   },
 
 ];
