@@ -1,6 +1,11 @@
-@if (result) {
+@if (budgetId && hasResult) {
 
   <div class="abc-page">
+
+
+    <!-- ================================================== -->
+    <!-- CABEÇALHO -->
+    <!-- ================================================== -->
 
     <header class="page-header">
 
@@ -11,13 +16,12 @@
         </span>
 
         <h1>
-          Curva ABC de composições
+          Curvas ABC
         </h1>
 
         <p>
-          Composições consolidadas a partir
-          dos serviços do orçamento
-          {{ result.budgetId }}.
+          Análise de {{ tabLabel }}
+          do orçamento {{ budgetId }}.
         </p>
 
       </div>
@@ -27,7 +31,7 @@
         class="back-link"
         [routerLink]="[
           '/budgets',
-          result.budgetId
+          budgetId
         ]"
       >
         ← Orçamento
@@ -36,364 +40,805 @@
     </header>
 
 
-    <!-- ================================================= -->
+    <!-- ================================================== -->
+    <!-- ABAS -->
+    <!-- ================================================== -->
+
+    <nav class="abc-tabs">
+
+      <button
+        type="button"
+        [class.active]="
+          isTab('COMPOSITIONS')
+        "
+        (click)="
+          selectTab('COMPOSITIONS')
+        "
+      >
+        Composições
+      </button>
+
+
+      <button
+        type="button"
+        [class.active]="
+          isTab('MATERIALS')
+        "
+        (click)="
+          selectTab('MATERIALS')
+        "
+      >
+        Materiais
+      </button>
+
+
+      <button
+        type="button"
+        [class.active]="
+          isTab('EQUIPMENT')
+        "
+        (click)="
+          selectTab('EQUIPMENT')
+        "
+      >
+        Equipamentos
+      </button>
+
+
+      <button
+        type="button"
+        [class.active]="
+          isTab('LABOR')
+        "
+        (click)="
+          selectTab('LABOR')
+        "
+      >
+        Mão de obra
+      </button>
+
+    </nav>
+
+
+    <!-- ================================================== -->
     <!-- RESUMO -->
-    <!-- ================================================= -->
+    <!-- ================================================== -->
 
-    <section class="summary">
+    @if (currentSummary) {
 
-      <div class="summary-card">
+      <section class="summary">
 
-        <span class="label">
-          Orçamento
-        </span>
+        <div class="summary-card">
 
-        <strong>
-          {{ result.budgetId }}
-        </strong>
-
-      </div>
-
-
-      <div class="summary-card">
-
-        <span class="label">
-          Data-base
-        </span>
-
-        <strong>
-          {{ result.referenceDate }}
-        </strong>
-
-      </div>
-
-
-      <div class="summary-card">
-
-        <span class="label">
-          Valor analisado
-        </span>
-
-        <strong>
-          {{ result.totalCost }}
-        </strong>
-
-      </div>
-
-
-      <div class="summary-card">
-
-        <span class="label">
-          Composições
-        </span>
-
-        <strong>
-          {{ result.compositionCount }}
-        </strong>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================================================= -->
-    <!-- CLASSES ABC -->
-    <!-- ================================================= -->
-
-    <section class="classification-summary">
-
-      <div class="class-card class-a">
-
-        <span>
-          Classe A
-        </span>
-
-        <strong>
-          {{ result.classACount }}
-        </strong>
-
-        <small>
-          {{ result.classAParticipation }}
-        </small>
-
-      </div>
-
-
-      <div class="class-card class-b">
-
-        <span>
-          Classe B
-        </span>
-
-        <strong>
-          {{ result.classBCount }}
-        </strong>
-
-        <small>
-          {{ result.classBParticipation }}
-        </small>
-
-      </div>
-
-
-      <div class="class-card class-c">
-
-        <span>
-          Classe C
-        </span>
-
-        <strong>
-          {{ result.classCCount }}
-        </strong>
-
-        <small>
-          {{ result.classCParticipation }}
-        </small>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================================================= -->
-    <!-- CURVA -->
-    <!-- ================================================= -->
-
-    <section class="curve-card">
-
-      <header class="section-header">
-
-        <div>
-
-          <span class="page-eyebrow">
-            CURVA
+          <span class="label">
+            Orçamento
           </span>
 
-          <h2>
-            Participação acumulada
-          </h2>
+          <strong>
+            {{ budgetId }}
+          </strong>
 
         </div>
 
-      </header>
 
+        <div class="summary-card">
 
-      <div class="curve-list">
+          <span class="label">
+            Data-base
+          </span>
 
-        @for (
-          item of result.items;
-          track item.code
-        ) {
+          @switch (selectedTab) {
 
-          <div class="curve-row">
-
-            <div class="curve-label">
+            @case ('COMPOSITIONS') {
 
               <strong>
-                {{ item.code }}
+                {{ compositions?.referenceDate }}
               </strong>
-
-              <span>
-                {{ item.accumulatedParticipation }}
-              </span>
-
-            </div>
-
-
-            <div class="curve-track">
-
-              <div
-                class="curve-fill"
-                [style.width]="
-                  item.accumulatedParticipation
-                "
-              ></div>
-
-            </div>
-
-          </div>
-
-        }
-
-      </div>
-
-    </section>
-
-
-    <!-- ================================================= -->
-    <!-- TABELA -->
-    <!-- ================================================= -->
-
-    <section class="table-card">
-
-      <header class="section-header">
-
-        <div>
-
-          <span class="page-eyebrow">
-            COMPOSIÇÕES
-          </span>
-
-          <h2>
-            Detalhamento da Curva ABC
-          </h2>
-
-        </div>
-
-      </header>
-
-
-      <div class="table-scroll">
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>
-                ORDEM
-              </th>
-
-              <th>
-                CÓDIGO
-              </th>
-
-              <th>
-                COMPOSIÇÃO
-              </th>
-
-              <th>
-                UN.
-              </th>
-
-              <th>
-                QUANTIDADE
-              </th>
-
-              <th>
-                FATOR
-              </th>
-
-              <th>
-                CUSTO UNITÁRIO
-              </th>
-
-              <th>
-                CUSTO TOTAL
-              </th>
-
-              <th>
-                PARTICIPAÇÃO
-              </th>
-
-              <th>
-                ACUMULADO
-              </th>
-
-              <th>
-                CLASSE
-              </th>
-
-            </tr>
-
-          </thead>
-
-
-          <tbody>
-
-            @for (
-              item of result.items;
-              track item.code;
-              let i = $index
-            ) {
-
-              <tr>
-
-                <td>
-                  {{ i + 1 }}
-                </td>
-
-
-                <td>
-
-                  <strong>
-                    {{ item.code }}
-                  </strong>
-
-                </td>
-
-
-                <td>
-                  {{ item.description }}
-                </td>
-
-
-                <td>
-                  {{ item.unit }}
-                </td>
-
-
-                <td class="number">
-                  {{ item.quantity }}
-                </td>
-
-
-                <td class="number">
-                  {{ item.factor }}
-                </td>
-
-
-                <td class="number">
-                  {{ item.unitCost }}
-                </td>
-
-
-                <td class="number strong">
-                  {{ item.totalCost }}
-                </td>
-
-
-                <td class="number">
-                  {{ item.participation }}
-                </td>
-
-
-                <td class="number">
-                  {{ item.accumulatedParticipation }}
-                </td>
-
-
-                <td>
-
-                  <span
-                    class="class-badge"
-                    [class.a]="
-                      item.classification === 'A'
-                    "
-                    [class.b]="
-                      item.classification === 'B'
-                    "
-                    [class.c]="
-                      item.classification === 'C'
-                    "
-                  >
-                    {{ item.classification }}
-                  </span>
-
-                </td>
-
-              </tr>
 
             }
 
-          </tbody>
+            @case ('MATERIALS') {
 
-        </table>
+              <strong>
+                {{ materials?.referenceDate }}
+              </strong>
 
-      </div>
+            }
 
-    </section>
+            @case ('EQUIPMENT') {
+
+              <strong>
+                {{ equipment?.referenceDate }}
+              </strong>
+
+            }
+
+            @case ('LABOR') {
+
+              <strong>
+                {{ labor?.referenceDate }}
+              </strong>
+
+            }
+
+          }
+
+        </div>
+
+
+        <div class="summary-card">
+
+          <span class="label">
+            Valor total
+          </span>
+
+          <strong>
+            {{ currentSummary.totalCost }}
+          </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+          <span class="label">
+            Itens
+          </span>
+
+          <strong>
+            {{ currentSummary.itemCount }}
+          </strong>
+
+        </div>
+
+      </section>
+
+    }
+
+
+    <!-- ================================================== -->
+    <!-- CLASSES -->
+    <!-- ================================================== -->
+
+    @if (showClassSummary && currentSummary) {
+
+      <section class="classification-summary">
+
+        <div class="class-card class-a">
+
+          <span>
+            Classe A
+          </span>
+
+          <strong>
+            {{ currentSummary.classACount }}
+          </strong>
+
+          <small>
+            {{ currentSummary.classAParticipation }}
+          </small>
+
+        </div>
+
+
+        <div class="class-card class-b">
+
+          <span>
+            Classe B
+          </span>
+
+          <strong>
+            {{ currentSummary.classBCount }}
+          </strong>
+
+          <small>
+            {{ currentSummary.classBParticipation }}
+          </small>
+
+        </div>
+
+
+        <div class="class-card class-c">
+
+          <span>
+            Classe C
+          </span>
+
+          <strong>
+            {{ currentSummary.classCCount }}
+          </strong>
+
+          <small>
+            {{ currentSummary.classCParticipation }}
+          </small>
+
+        </div>
+
+      </section>
+
+    }
+
+
+    <!-- ================================================== -->
+    <!-- TABELA -->
+    <!-- ================================================== -->
+
+    @switch (selectedTab) {
+
+
+      <!-- ================================================ -->
+      <!-- COMPOSIÇÕES -->
+      <!-- ================================================ -->
+
+      @case ('COMPOSITIONS') {
+
+        <section class="table-card">
+
+          <header class="section-header">
+
+            <div>
+
+              <span class="page-eyebrow">
+                COMPOSIÇÕES
+              </span>
+
+              <h2>
+                Detalhamento da Curva ABC
+              </h2>
+
+            </div>
+
+          </header>
+
+
+          <div class="table-scroll">
+
+            <table>
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    ORDEM
+                  </th>
+
+                  <th>
+                    CÓDIGO
+                  </th>
+
+                  <th>
+                    COMPOSIÇÃO
+                  </th>
+
+                  <th>
+                    UN.
+                  </th>
+
+                  <th>
+                    QUANTIDADE
+                  </th>
+
+                  <th>
+                    FATOR
+                  </th>
+
+                  <th>
+                    CUSTO UNITÁRIO
+                  </th>
+
+                  <th>
+                    CUSTO TOTAL
+                  </th>
+
+                  <th>
+                    PARTICIPAÇÃO
+                  </th>
+
+                  <th>
+                    ACUMULADO
+                  </th>
+
+                  <th>
+                    CLASSE
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                @for ( item of compositions?.items ?? [];
+                  track item.code;
+                  let i = $index
+                ) {
+
+                  <tr
+                    [class.abc-a]="
+                      item.classification === 'A'
+                    "
+                    [class.abc-b]="
+                      item.classification === 'B'
+                    "
+                  >
+
+                    <td>
+                      {{ i + 1 }}
+                    </td>
+
+                    <td>
+                      <strong>
+                        {{ item.code }}
+                      </strong>
+                    </td>
+
+                    <td>
+                      {{ item.description }}
+                    </td>
+
+                    <td>
+                      {{ item.unit }}
+                    </td>
+
+                    <td class="number">
+                      {{ item.quantity }}
+                    </td>
+
+                    <td class="number">
+                      {{ item.factor }}
+                    </td>
+
+                    <td class="number">
+                      {{ item.unitCost }}
+                    </td>
+
+                    <td class="number strong">
+                      {{ item.totalCost }}
+                    </td>
+
+                    <td class="number">
+                      {{ item.participation }}
+                    </td>
+
+                    <td class="number">
+                      {{ item.accumulatedParticipation }}
+                    </td>
+
+                    <td>
+                      <span class="class-badge">
+                        {{ item.classification }}
+                      </span>
+                    </td>
+
+                  </tr>
+
+                }
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </section>
+
+      }
+
+
+      <!-- ================================================ -->
+      <!-- MATERIAIS -->
+      <!-- ================================================ -->
+
+      @case ('MATERIALS') {
+
+        <section class="table-card">
+
+          <header class="section-header">
+
+            <div>
+
+              <span class="page-eyebrow">
+                MATERIAIS
+              </span>
+
+              <h2>
+                Curva ABC de materiais
+              </h2>
+
+            </div>
+
+          </header>
+
+
+          <div class="table-scroll">
+
+            <table>
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    ITEM
+                  </th>
+
+                  <th>
+                    CÓDIGO
+                  </th>
+
+                  <th>
+                    DESCRIÇÃO
+                  </th>
+
+                  <th>
+                    QUANTIDADE
+                  </th>
+
+                  <th>
+                    CUSTO TOTAL
+                  </th>
+
+                  <th>
+                    PERCENTUAL DO TOTAL
+                  </th>
+
+                  <th>
+                    PERCENTUAL ACUMULADO
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                @for ( item of materials?.items ?? [];
+                    track item.code
+                  ) {
+
+                    <tr
+                      [class.abc-a]="
+                        item.classification === 'A'
+                      "
+                      [class.abc-b]="
+                        item.classification === 'B'
+                      "
+                    >
+
+                      <td>
+                        {{ item.item }}
+                      </td>
+
+                      <td>
+                        <strong>
+                          {{ item.code }}
+                        </strong>
+                      </td>
+
+                      <td>
+                        {{ item.description }}
+                      </td>
+
+                      <td class="number">
+                        {{ item.quantity }}
+                      </td>
+
+                      <td class="number strong">
+                        {{ item.totalCost }}
+                      </td>
+
+                      <td class="number">
+                        {{ item.participation }}
+                      </td>
+
+                      <td class="number">
+                        {{ item.accumulatedParticipation }}
+                      </td>
+
+                      <td>
+                        <span class="class-badge">
+                          {{ item.classification }}
+                        </span>
+                      </td>
+
+                    </tr>
+
+                  }
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </section>
+
+      }
+
+
+      <!-- ================================================ -->
+      <!-- EQUIPAMENTOS -->
+      <!-- ================================================ -->
+
+      @case ('EQUIPMENT') {
+
+        <section class="table-card">
+
+          <header class="section-header">
+
+            <div>
+
+              <span class="page-eyebrow">
+                EQUIPAMENTOS
+              </span>
+
+              <h2>
+                Curva ABC de equipamentos
+              </h2>
+
+            </div>
+
+          </header>
+
+
+          <div class="table-scroll">
+
+            <table class="equipment-table">
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    ITEM
+                  </th>
+
+                  <th>
+                    CÓDIGO
+                  </th>
+
+                  <th>
+                    DESCRIÇÃO
+                  </th>
+
+                  <th>
+                    QUANTIDADE PRODUTIVA
+                  </th>
+
+                  <th>
+                    QUANTIDADE IMPRODUTIVA
+                  </th>
+
+                  <th>
+                    QUANTIDADE HORA TOTAL
+                  </th>
+
+                  <th>
+                    CUSTO TOTAL
+                  </th>
+
+                  <th>
+                    PERCENTUAL DO TOTAL
+                  </th>
+
+                  <th>
+                    PERCENTUAL ACUMULADO
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                @for ( item of equipment?.items ?? [];
+                  track item.code
+                ) {
+
+                  <tr
+                    [class.abc-a]="
+                      item.classification === 'A'
+                    "
+                    [class.abc-b]="
+                      item.classification === 'B'
+                    "
+                  >
+
+                    <td>
+                      {{ item.item }}
+                    </td>
+
+                    <td>
+                      <strong>
+                        {{ item.code }}
+                      </strong>
+                    </td>
+
+                    <td>
+                      {{ item.description }}
+                    </td>
+
+                    <td class="number">
+                      {{ item.productiveQuantity }}
+                    </td>
+
+                    <td class="number">
+                      {{ item.unproductiveQuantity }}
+                    </td>
+
+                    <td class="number">
+                      {{ item.totalHours }}
+                    </td>
+
+                    <td class="number strong">
+                      {{ item.totalCost }}
+                    </td>
+
+                    <td class="number">
+                      {{ item.participation }}
+                    </td>
+
+                    <td class="number">
+                      {{ item.accumulatedParticipation }}
+                    </td>
+
+                    <td>
+                      <span class="class-badge">
+                        {{ item.classification }}
+                      </span>
+                    </td>
+
+                  </tr>
+
+                }
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </section>
+
+      }
+
+
+      <!-- ================================================ -->
+      <!-- MÃO DE OBRA -->
+      <!-- ================================================ -->
+
+      @case ('LABOR') {
+
+        <section class="table-card">
+
+          <header class="section-header">
+
+            <div>
+
+              <span class="page-eyebrow">
+                MÃO DE OBRA
+              </span>
+
+              <h2>
+                Curva ABC de mão de obra
+              </h2>
+
+            </div>
+
+          </header>
+
+
+          <div class="table-scroll">
+
+            <table>
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    ITEM
+                  </th>
+
+                  <th>
+                    CÓDIGO
+                  </th>
+
+                  <th>
+                    DESCRIÇÃO
+                  </th>
+
+                  <th>
+                    QUANTIDADE
+                  </th>
+
+                  <th>
+                    CUSTO TOTAL
+                  </th>
+
+                  <th>
+                    PERCENTUAL DO TOTAL
+                  </th>
+
+                  <th>
+                    PERCENTUAL ACUMULADO
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                @for ( item of labor?.items ?? [];
+                  track item.code
+                ) {
+
+                  <tr
+                    [class.abc-a]="
+                      item.classification === 'A'
+                    "
+                    [class.abc-b]="
+                      item.classification === 'B'
+                    "
+                  >
+
+                    <td>
+                      {{ item.item }}
+                    </td>
+
+                    <td>
+                      <strong>
+                        {{ item.code }}
+                      </strong>
+                    </td>
+
+                    <td>
+                      {{ item.description }}
+                    </td>
+
+                    <td class="number">
+                      {{ item.quantity }}
+                    </td>
+
+                    <td class="number strong">
+                      {{ item.totalCost }}
+                    </td>
+
+                    <td class="number">
+                      {{ item.participation }}
+                    </td>
+
+                    <td class="number">
+                      {{ item.accumulatedParticipation }}
+                    </td>
+
+                    <td>
+                      <span class="class-badge">
+                        {{ item.classification }}
+                      </span>
+                    </td>
+
+                  </tr>
+
+                }
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </section>
+
+      }
+
+    }
 
   </div>
 
@@ -406,8 +851,7 @@
     </h2>
 
     <p>
-      Não foi possível carregar
-      a Curva ABC solicitada.
+      Não foi possível carregar as curvas ABC.
     </p>
 
     <a

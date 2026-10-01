@@ -13,6 +13,7 @@
 
 .abc-page {
   width: 100%;
+
   max-width: 1800px;
 
   margin: 0 auto;
@@ -29,13 +30,16 @@
 
 .page-header {
   display: flex;
+
   align-items: flex-start;
+
   justify-content: space-between;
 
   gap: 24px;
 
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
+
 
 .page-eyebrow {
   display: block;
@@ -45,6 +49,7 @@
   color: #697586;
 
   font-size: 10px;
+
   font-weight: 700;
 
   line-height: 1.2;
@@ -54,20 +59,19 @@
   text-transform: uppercase;
 }
 
-.page-header h1,
-.section-header h2 {
+
+.page-header h1 {
   margin: 0;
 
   color: #27313c;
 
-  font-weight: 700;
-}
-
-.page-header h1 {
   font-size: 26px;
+
+  font-weight: 700;
 
   line-height: 1.15;
 }
+
 
 .page-header p {
   margin: 6px 0 0;
@@ -77,10 +81,12 @@
   font-size: 13px;
 }
 
+
 .back-link {
   color: #475467;
 
   font-size: 12px;
+
   font-weight: 600;
 
   text-decoration: none;
@@ -88,8 +94,73 @@
   white-space: nowrap;
 }
 
+
 .back-link:hover {
   color: #27313c;
+}
+
+
+// ============================================================
+// ABAS
+// ============================================================
+
+.abc-tabs {
+  display: flex;
+
+  gap: 4px;
+
+  width: fit-content;
+
+  margin-bottom: 14px;
+
+  padding: 4px;
+
+  background: #f8fafb;
+
+  border: 1px solid #dfe3e8;
+
+  border-radius: 8px;
+}
+
+
+.abc-tabs button {
+  min-height: 32px;
+
+  padding: 0 14px;
+
+  border: 1px solid transparent;
+
+  border-radius: 6px;
+
+  background: transparent;
+
+  color: #667085;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+.abc-tabs button:hover {
+  color: #344054;
+
+  background: #fff;
+}
+
+
+.abc-tabs button.active {
+  border-color: #d0d5dd;
+
+  background: #fff;
+
+  color: #27313c;
+
+  box-shadow:
+    0 1px 2px
+    rgba(16, 24, 40, .04);
 }
 
 
@@ -108,6 +179,7 @@
   margin-bottom: 14px;
 }
 
+
 .summary-card,
 .class-card,
 .curve-card,
@@ -121,11 +193,13 @@
   box-sizing: border-box;
 }
 
+
 .summary-card {
   min-height: 70px;
 
   padding: 14px 16px;
 }
+
 
 .summary-card .label {
   display: block;
@@ -135,12 +209,14 @@
   color: #697586;
 
   font-size: 9px;
+
   font-weight: 700;
 
   letter-spacing: .08em;
 
   text-transform: uppercase;
 }
+
 
 .summary-card strong {
   color: #27313c;
@@ -164,6 +240,7 @@
   margin-bottom: 14px;
 }
 
+
 .class-card {
   display: grid;
 
@@ -177,14 +254,17 @@
   padding: 13px 16px;
 }
 
+
 .class-card span {
   color: #697586;
 
   font-size: 11px;
+
   font-weight: 700;
 
   text-transform: uppercase;
 }
+
 
 .class-card strong {
   color: #27313c;
@@ -192,20 +272,25 @@
   font-size: 20px;
 }
 
+
 .class-card small {
   color: #697586;
 
   font-size: 12px;
+
   font-weight: 600;
 }
+
 
 .class-a {
   border-left: 3px solid #475467;
 }
 
+
 .class-b {
   border-left: 3px solid #98a2b3;
 }
+
 
 .class-c {
   border-left: 3px solid #d0d5dd;
@@ -223,6 +308,7 @@
   margin-bottom: 14px;
 }
 
+
 .section-header {
   padding: 13px 16px;
 
@@ -231,8 +317,15 @@
   background: #f8fafb;
 }
 
+
 .section-header h2 {
+  margin: 0;
+
+  color: #27313c;
+
   font-size: 14px;
+
+  font-weight: 700;
 
   line-height: 1.2;
 }
@@ -246,9 +339,11 @@
   padding: 16px;
 }
 
+
 .curve-row + .curve-row {
   margin-top: 10px;
 }
+
 
 .curve-label {
   display: flex;
@@ -260,11 +355,21 @@
   margin-bottom: 5px;
 }
 
+
 .curve-label strong {
+  max-width: 75%;
+
+  overflow: hidden;
+
   color: #344054;
 
   font-size: 11px;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
 }
+
 
 .curve-label span {
   color: #697586;
@@ -272,7 +377,10 @@
   font-size: 11px;
 
   font-variant-numeric: tabular-nums;
+
+  white-space: nowrap;
 }
+
 
 .curve-track {
   width: 100%;
@@ -285,6 +393,7 @@
 
   border-radius: 99px;
 }
+
 
 .curve-fill {
   height: 100%;
@@ -305,6 +414,7 @@
   overflow: auto;
 }
 
+
 table {
   width: 100%;
 
@@ -314,6 +424,12 @@ table {
 
   font-size: 12px;
 }
+
+
+.equipment-table {
+  min-width: 1250px;
+}
+
 
 th {
   padding: 10px 12px;
@@ -325,6 +441,7 @@ th {
   color: #697586;
 
   font-size: 9px;
+
   font-weight: 700;
 
   letter-spacing: .05em;
@@ -336,6 +453,7 @@ th {
   white-space: nowrap;
 }
 
+
 td {
   padding: 10px 12px;
 
@@ -346,15 +464,18 @@ td {
   white-space: nowrap;
 }
 
+
 tbody tr:hover td {
   background: #f8fafb;
 }
+
 
 .number {
   text-align: right;
 
   font-variant-numeric: tabular-nums;
 }
+
 
 .strong {
   color: #27313c;
@@ -371,6 +492,7 @@ tbody tr:hover td {
   display: inline-flex;
 
   align-items: center;
+
   justify-content: center;
 
   min-width: 26px;
@@ -390,13 +512,16 @@ tbody tr:hover td {
   font-weight: 700;
 }
 
+
 .class-badge.a {
   background: #f2f4f7;
 }
 
+
 .class-badge.b {
   background: #f8fafc;
 }
+
 
 .class-badge.c {
   background: #fff;
@@ -413,6 +538,7 @@ tbody tr:hover td {
   flex-direction: column;
 
   align-items: center;
+
   justify-content: center;
 
   min-height: 400px;
@@ -424,6 +550,7 @@ tbody tr:hover td {
   text-align: center;
 }
 
+
 .empty-state h2 {
   margin: 0;
 
@@ -432,11 +559,13 @@ tbody tr:hover td {
   font-size: 18px;
 }
 
+
 .empty-state p {
   margin: 0;
 
   font-size: 13px;
 }
+
 
 .empty-state a {
   margin-top: 8px;
@@ -444,6 +573,7 @@ tbody tr:hover td {
   color: #475467;
 
   font-size: 12px;
+
   font-weight: 600;
 }
 
@@ -459,23 +589,62 @@ tbody tr:hover td {
       repeat(2, minmax(0, 1fr));
   }
 
+
   .classification-summary {
     grid-template-columns: 1fr;
   }
+
 }
+
 
 @media (max-width: 600px) {
 
   .abc-page {
     padding-right: 16px;
+
     padding-left: 16px;
   }
+
 
   .page-header {
     flex-direction: column;
   }
 
+
+  .abc-tabs {
+    width: 100%;
+
+    overflow-x: auto;
+  }
+
+
+  .abc-tabs button {
+    flex: 0 0 auto;
+  }
+
+
   .summary {
     grid-template-columns: 1fr;
   }
+
+}
+
+// ============================================================
+// FAIXAS ABC
+// ============================================================
+
+tbody tr.abc-a td {
+  background: #f3f6fa;
+}
+
+tbody tr.abc-b td {
+  background: #fafbfc;
+}
+
+tbody tr.abc-a:hover td {
+  background: #eaf0f6;
+}
+
+tbody tr.abc-b:hover td {
+  background: #f4f6f8;
 }
