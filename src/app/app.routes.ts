@@ -42,6 +42,14 @@ import {
   TransportsPageComponent
 } from './pages/transports/transports-page.component';
 
+import {
+  TimelinePageComponent
+} from './pages/timeline/timeline-page.component';
+
+import {
+  AnnualWorkPlanBudgetPageComponent
+} from './pages/annual-work-plan-budget/annual-work-plan-budget-page.component';
+
 
 export const routes: Routes = [
 
@@ -69,6 +77,11 @@ export const routes: Routes = [
   {
     path: 'budgets/:id',
     component: BudgetPageComponent
+  },
+
+  {
+    path: 'annual-work-plan-budget/:budgetId',
+    component: AnnualWorkPlanBudgetPageComponent
   },
 
   {
@@ -119,6 +132,11 @@ export const routes: Routes = [
   {
     path: 'logistics',
     component: TransportsPageComponent
+  },
+
+  {
+    path: 'timeline/:budgetId',
+    component: TimelinePageComponent
   },
 
 ];

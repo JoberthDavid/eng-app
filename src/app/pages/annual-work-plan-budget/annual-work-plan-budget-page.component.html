@@ -1,0 +1,537 @@
+@if (pato) {
+
+  <div class="pato-page">
+
+    <header class="page-header">
+
+      <div>
+
+        <span class="page-eyebrow">
+          PATO
+        </span>
+
+        <h1>
+          Plano Anual de Trabalho e Orçamento
+        </h1>
+
+        <p>
+          Orçamento {{ pato.budgetId }}
+          ·
+          Data-base {{ referenceDate }}
+        </p>
+
+      </div>
+
+
+      <div class="header-actions">
+
+        <a
+          class="secondary-action"
+          [routerLink]="[
+            '/budgets',
+            pato.budgetId
+          ]"
+        >
+          ← Orçamento
+        </a>
+
+        <button
+          type="button"
+          class="secondary-action"
+          (click)="generateReport()"
+        >
+          Imprimir / PDF
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <section class="summary">
+
+      <div class="summary-card">
+
+        <span class="label">
+          Ano de referência
+        </span>
+
+        <strong>
+          {{ referenceYear }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <span class="label">
+          Grupos
+        </span>
+
+        <strong>
+          {{ groups.length }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <span class="label">
+          Fonte dos quantitativos
+        </span>
+
+        <strong>
+          PATO
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <span class="label">
+          Status
+        </span>
+
+        <strong>
+          {{ pato.status }}
+        </strong>
+
+      </div>
+
+    </section>
+
+
+    <section class="actions-card">
+
+      <div>
+
+        <span class="page-eyebrow">
+          QUANTITATIVOS
+        </span>
+
+        <h2>
+          Quantidades dos serviços
+        </h2>
+
+        <p>
+          O inventário e o nível de esforço
+          serão utilizados para determinar os
+          quantitativos anuais.
+        </p>
+
+      </div>
+
+
+      <div class="section-actions">
+
+        <button
+          type="button"
+          class="secondary-action"
+          (click)="calculateQuantities()"
+        >
+          Calcular quantidades
+        </button>
+
+        <button
+          type="button"
+          class="primary-action"
+          (click)="applyToBudget()"
+        >
+          Aplicar ao orçamento
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <section class="table-card">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="page-eyebrow">
+            ESTRUTURA
+          </span>
+
+          <h2>
+            Serviços e composições
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <div class="table-scroll">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th class="group-column">
+                Grupo
+              </th>
+
+              <th class="description-column">
+                Serviço / Composição
+              </th>
+
+              <th>
+                Unidade
+              </th>
+
+              <th>
+                Inventário
+              </th>
+
+              <th>
+                Quantidade
+              </th>
+
+              <th>
+                Nível esforço
+              </th>
+
+              <th>
+                Unidade esforço
+              </th>
+
+              <th>
+                Preço unitário
+              </th>
+
+              <th>
+                Total
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              group of groups;
+              track group.id
+            ) {
+
+              <tr class="group-row">
+
+                <td>
+
+                  <button
+                    type="button"
+                    class="tree-button"
+                    (click)="toggleGroup(group)"
+                    [attr.aria-expanded]="
+                      isGroupExpanded(group.id)
+                    "
+                  >
+
+                    <span class="tree-icon">
+                      {{
+                        isGroupExpanded(group.id)
+                          ? '▾'
+                          : '▸'
+                      }}
+                    </span>
+
+                    <strong>
+                      {{ group.code }}
+                    </strong>
+
+                  </button>
+
+                </td>
+
+
+                <td colspan="8">
+
+                  <strong>
+                    {{ group.description }}
+                  </strong>
+
+                </td>
+
+              </tr>
+
+
+              @if (
+                isGroupExpanded(group.id)
+              ) {
+
+                @for (
+                  service of group.services;
+                  track service.id
+                ) {
+
+                  @let measurement =
+                    getMeasurement(service.id);
+
+                  <tr class="service-row">
+
+                    <td>
+
+                      <button
+                        type="button"
+                        class="tree-button service-tree"
+                        (click)="toggleService(service)"
+                        [attr.aria-expanded]="
+                          isServiceExpanded(service.id)
+                        "
+                      >
+
+                        <span class="tree-icon">
+                          {{
+                            isServiceExpanded(service.id)
+                              ? '▾'
+                              : '▸'
+                          }}
+                        </span>
+
+                        <strong>
+                          {{ service.code }}
+                        </strong>
+
+                      </button>
+
+                    </td>
+
+
+                    <td>
+                      {{ service.description }}
+                    </td>
+
+
+                    <td>
+                      {{ measurement?.workUnit || '—' }}
+                    </td>
+
+
+                    <td>
+
+                      @if (
+                        measurement?.inventoryQuantity
+                      ) {
+
+                        {{ measurement?.inventoryQuantity }}
+                        {{ ' ' }}
+                        {{ measurement?.inventoryUnit }}
+
+                      } @else {
+
+                        —
+
+                      }
+
+                    </td>
+
+
+                    <td>
+
+                      <strong>
+                        {{ measurement?.workQuantity || '—' }}
+                      </strong>
+
+                    </td>
+
+
+                    <td>
+
+                      @if (
+                        measurement?.effortLevel
+                      ) {
+
+                        {{ measurement?.effortLevel }}
+
+                      } @else {
+
+                        —
+
+                      }
+
+                    </td>
+
+
+                    <td>
+
+                      @if (
+                        measurement?.effortUnit
+                      ) {
+
+                        {{ measurement?.effortUnit }}
+
+                      } @else {
+
+                        —
+
+                      }
+
+                    </td>
+
+
+                    <td>
+                      —
+                    </td>
+
+
+                    <td>
+                      —
+                    </td>
+
+                  </tr>
+
+
+                  @if (
+                    isServiceExpanded(service.id)
+                  ) {
+
+                    @for (
+                      composition of service.compositions;
+                      track composition.id
+                    ) {
+
+                      @let compositionPlan =
+                        getCompositionPlan(
+                          service.id,
+                          composition.id
+                        );
+
+                      <tr class="composition-row">
+
+                        <td></td>
+
+
+                        <td class="composition-description">
+
+                          <span class="composition-code">
+                            {{ composition.compositionCode }}
+                          </span>
+
+                          <span>
+                            {{ composition.description }}
+                          </span>
+
+                        </td>
+
+
+                        <td>
+                          {{ composition.unit }}
+                        </td>
+
+
+                        <td>
+                          —
+                        </td>
+
+
+                        <td>
+                          {{ compositionPlan?.quantity || '—' }}
+                        </td>
+
+
+                        <td>
+                          {{ composition.factor }}
+                        </td>
+
+
+                        <td>
+                          —
+                        </td>
+
+
+                        <td>
+                          {{ compositionPlan?.unitPrice || '—' }}
+                        </td>
+
+
+                        <td>
+                          {{ compositionPlan?.totalCost || '—' }}
+                        </td>
+
+                      </tr>
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <section class="report-card">
+
+      <div>
+
+        <span class="page-eyebrow">
+          DOCUMENTO TÉCNICO
+        </span>
+
+        <h2>
+          Relatório PATO
+        </h2>
+
+        <p>
+          A geração oficial do relatório será
+          posteriormente realizada pela API.
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="primary-action"
+        (click)="generateReport()"
+      >
+        Gerar relatório
+      </button>
+
+    </section>
+
+  </div>
+
+} @else {
+
+  <div class="empty-state">
+
+    <h2>
+      PATO não encontrado
+    </h2>
+
+    <p>
+      Não existe um Plano Anual de Trabalho e
+      Orçamento associado a este orçamento.
+    </p>
+
+    <a
+      [routerLink]="[
+        '/budgets',
+        budgetId
+      ]"
+    >
+      Voltar para o orçamento
+    </a>
+
+  </div>
+
+}
