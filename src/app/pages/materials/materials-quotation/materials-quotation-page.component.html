@@ -1,5 +1,10 @@
 <div class="page">
 
+
+  <!-- ================================================= -->
+  <!-- CABEÇALHO -->
+  <!-- ================================================= -->
+
   <header class="page-header">
 
     <div>
@@ -8,13 +13,15 @@
         ORÇAMENTO
       </div>
 
+
       <h1>
         Materiais cotados
       </h1>
 
+
       <p>
-        Cotações de materiais, atualização monetária,
-        transporte e determinação do custo adotado.
+        Pesquisa de aquisição, transporte e definição
+        do custo adotado.
       </p>
 
     </div>
@@ -22,366 +29,729 @@
   </header>
 
 
-  <!-- CONTROLES -->
 
-  <section class="toolbar">
+
+
+  <!-- ================================================= -->
+  <!-- FILTROS -->
+  <!-- ================================================= -->
+
+
+  <section class="filters-card">
+
 
     <div class="search">
+
 
       <label>
         Pesquisar
       </label>
 
+
       <input
+
         type="search"
+
         [(ngModel)]="search"
+
         placeholder="Código, material ou fornecedor..."
+
       />
 
+
     </div>
+
 
 
     <div class="summary">
 
+
       <span>
-        {{ filteredMaterials.length }}
+        {{ materialCount }}
         materiais
       </span>
 
+
       <span>
-        {{ adoptedQuotationCount }}
+        {{ quotationCount }}
+        cotações
+      </span>
+
+
+      <span>
+        {{ adoptedCount }}
         adotados
       </span>
 
+
     </div>
+
 
   </section>
 
 
-  <!-- TABELA -->
 
-  <section class="card">
 
-    <div class="table-scroll">
 
-      <table>
 
-        <thead>
+  <!-- ================================================= -->
+  <!-- LOOP DOS MATERIAIS -->
+  <!-- ================================================= -->
 
-          <tr>
 
-            <th class="sticky code">
-              Código
-            </th>
+  @for (
+      material of filteredMaterials;
+      track material.code
+  ) {
 
-            <th class="sticky material">
-              Material
-            </th>
 
-            <th>
-              Fornecedor
-            </th>
 
-            <th>
-              Preço unitário / und
-            </th>
+    <section class="material-section">
 
-            <th>
-              Und
-            </th>
 
-            <th>
-              Und SICRO
-            </th>
+      <div class="material-title">
 
-            <th>
-              Mês cotação
-            </th>
 
-            <th>
-              Índice reajuste
-            </th>
+        <strong>
+          {{ material.code }}
+        </strong>
 
-            <th>
-              Conversor unidade
-            </th>
 
-            <th>
-              Preço unitário /
-              und SICRO
-            </th>
+        <span>
+          {{ material.material }}
+        </span>
 
-            <th>
-              Índice mês
-              cotação
-            </th>
 
-            <th>
-              Índice data-base
-            </th>
+      </div>
 
-            <th>
-              Reajuste
-            </th>
 
-            <th>
-              Preço reajustado /
-              und SICRO
-            </th>
 
-            <th>
-              Código
-              transporte LN
-            </th>
 
-            <th>
-              Código
-              transporte RP
-            </th>
 
-            <th>
-              Código
-              transporte PV
-            </th>
 
-            <th>
-              Custo LN
-            </th>
 
-            <th>
-              Custo RP
-            </th>
+      <!-- ================================================= -->
+      <!-- TABELA 1 - AQUISIÇÃO -->
+      <!-- ================================================= -->
 
-            <th>
-              Custo PV
-            </th>
 
-            <th>
-              Custo total
-            </th>
+      <section class="table-card">
 
-            <th>
-              Adotado
-            </th>
 
-            <th>
-              Transporte
-            </th>
+        <header class="table-title">
 
-          </tr>
+          Aquisição do material
 
-        </thead>
+        </header>
 
 
-        <tbody>
 
-          <ng-container
-            *ngFor="
-              let material of filteredMaterials
-            "
-          >
+        <div class="table-scroll">
 
-            <tr
-              *ngFor="
-                let quotation of material.quotations;
-                let first = first
-              "
-              [class.adopted]="quotation.adopted"
-            >
 
-              <!-- CÓDIGO -->
+          <table class="quotation-table">
 
-              <td
-                class="sticky code material-cell"
-                *ngIf="first"
-                [attr.rowspan]="material.quotations.length"
-              >
-                {{ material.code }}
-              </td>
 
+            <thead>
 
-              <!-- MATERIAL -->
+              <tr>
 
-              <td
-                class="sticky material material-cell"
-                *ngIf="first"
-                [attr.rowspan]="material.quotations.length"
-              >
-                {{ material.material }}
-              </td>
+                <th>
+                  Fornecedor
+                </th>
 
 
-              <!-- FORNECEDOR -->
+                <th>
+                  Origem
+                </th>
 
-              <td class="supplier">
-                {{ quotation.supplier }}
-              </td>
 
+                <th>
+                  Preço cotado
+                </th>
 
-              <td class="number">
-                {{
-                  formatNumber(
-                    quotation.unitPrice,
-                    4
-                  )
-                }}
-              </td>
 
+                <th>
+                  Unidade
+                </th>
 
-              <td>
-                {{ quotation.unit }}
-              </td>
 
+                <th>
+                  Mês cotação
+                </th>
 
-              <td>
-                {{ quotation.sicroUnit }}
-              </td>
 
+                <th>
+                  Índice
+                </th>
 
-              <td>
-                {{ quotation.quotationMonth }}
-              </td>
 
+                <th>
+                  Conversor
+                </th>
 
-              <td>
-                {{ quotation.adjustmentIndex }}
-              </td>
 
+                <th>
+                  Preço SICRO
+                </th>
 
-              <td class="number">
-                {{
-                  formatNumber(
-                    quotation.unitConverter
-                  )
-                }}
-              </td>
 
+                <th>
+                  Índice mês
+                </th>
 
-              <td class="number">
-                {{
-                  formatNumber(
-                    quotation.sicroUnitPrice,
-                    4
-                  )
-                }}
-              </td>
 
+                <th>
+                  Índice base
+                </th>
 
-              <td class="number">
-                {{
-                  formatNumber(
-                    quotation.quotationMonthIndex
-                  )
-                }}
-              </td>
 
+                <th>
+                  Reajuste
+                </th>
 
-              <td class="number">
-                {{
-                  formatNumber(
-                    quotation.baseDateIndex
-                  )
-                }}
-              </td>
 
+                <th>
+                  Preço reajustado
+                </th>
 
-              <td class="number">
-                {{
-                  formatNumber(
-                    quotation.adjustment,
-                    5
-                  )
-                }}
-              </td>
 
+              </tr>
 
-              <td class="number">
-                {{
-                  formatNumber(
-                    quotation.adjustedSicroUnitPrice,
-                    4
-                  )
-                }}
-              </td>
 
+            </thead>
 
-              <td>
-                {{ quotation.transportLnCode }}
-              </td>
 
 
-              <td>
-                {{ quotation.transportRpCode }}
-              </td>
 
+            <tbody>
 
-              <td>
-                {{ quotation.transportPvCode }}
-              </td>
 
+              @for (
+                quotation of material.quotations;
+                track quotation.supplier
+              ) {
 
-              <td class="number">
-                {{
-                  formatNumber(
-                    quotation.costLn
-                  )
-                }}
-              </td>
 
+                <tr>
 
-              <td class="number">
-                {{
-                  formatNumber(
-                    quotation.costRp
-                  )
-                }}
-              </td>
 
+                  <td class="supplier">
 
-              <td class="number">
-                {{
-                  formatNumber(
-                    quotation.costPv
-                  )
-                }}
-              </td>
+                    {{ quotation.supplier }}
 
+                  </td>
 
-              <td class="number total-cost">
-                {{
-                  formatNumber(
-                    quotation.totalCost
-                  )
-                }}
-              </td>
 
 
-              <td class="adopted-cell">
+                  <td>
 
-                <span
-                  *ngIf="quotation.adopted"
-                  class="adopted-badge"
+                    {{ quotation.originCity }}
+
+                    /
+
+                    {{ quotation.originState }}
+
+                  </td>
+
+
+
+                  <td class="number">
+
+                    {{ quotation.unitPrice }}
+
+                  </td>
+
+
+
+                  <td>
+
+                    {{ quotation.unit }}
+
+                  </td>
+
+
+
+                  <td>
+
+                    {{ quotation.quotationMonth }}
+
+                  </td>
+
+
+
+                  <td>
+
+                    {{ quotation.adjustmentIndex }}
+
+                  </td>
+
+
+
+                  <td class="number">
+
+                    {{ quotation.unitConverter }}
+
+                  </td>
+
+
+
+                  <td class="number">
+
+                    {{ quotation.sicroUnitPrice }}
+
+                  </td>
+
+
+
+                  <td class="number">
+
+                    {{ quotation.quotationMonthIndex }}
+
+                  </td>
+
+
+
+                  <td class="number">
+
+                    {{ quotation.baseDateIndex }}
+
+                  </td>
+
+
+
+                  <td class="number">
+
+                    {{ quotation.adjustment }}
+
+                  </td>
+
+
+
+                  <td class="number strong">
+
+                    {{ quotation.adjustedSicroUnitPrice }}
+
+                  </td>
+
+
+
+                </tr>
+
+
+              }
+
+
+            </tbody>
+
+
+          </table>
+
+
+        </div>
+
+
+      </section>
+
+
+
+
+
+
+
+
+
+      <!-- ================================================= -->
+      <!-- TABELA 2 - TRANSPORTE -->
+      <!-- ================================================= -->
+
+
+      <section class="table-card">
+
+
+        <header class="table-title">
+
+          Transporte associado ao fornecedor
+
+        </header>
+
+
+
+        <div class="table-scroll">
+
+
+          <table class="quotation-table">
+
+
+            <thead>
+
+
+              <tr>
+
+
+                <th>
+                  Fornecedor
+                </th>
+
+
+                <th>
+                  Origem
+                </th>
+
+
+                <th>
+                  Destino
+                </th>
+
+
+                <th>
+                  Pavimentada km
+                </th>
+
+
+                <th>
+                  Primária km
+                </th>
+
+
+                <th>
+                  Natural km
+                </th>
+
+
+                <th>
+                  Código LN
+                </th>
+
+
+                <th>
+                  Código RP
+                </th>
+
+
+                <th>
+                  Código PV
+                </th>
+
+
+                <th>
+                  Custo LN
+                </th>
+
+
+                <th>
+                  Custo RP
+                </th>
+
+
+                <th>
+                  Custo PV
+                </th>
+
+
+                <th>
+                  Transporte total
+                </th>
+
+
+              </tr>
+
+
+            </thead>
+
+
+
+
+            <tbody>
+
+
+              @for (
+
+                transport of material.transports;
+
+                track transport.supplier
+
+              ) {
+
+
+                <tr>
+
+
+                  <td>
+
+                    {{ transport.supplier }}
+
+                  </td>
+
+
+                  <td>
+
+                    {{ transport.originCity }}
+
+                  </td>
+
+
+                  <td>
+
+                    {{ transport.destination }}
+
+                  </td>
+
+
+                  <td class="number">
+
+                    {{ transport.pavedDistanceKm }}
+
+                  </td>
+
+
+                  <td class="number">
+
+                    {{ transport.primaryDistanceKm }}
+
+                  </td>
+
+
+                  <td class="number">
+
+                    {{ transport.naturalDistanceKm }}
+
+                  </td>
+
+
+                  <td>
+
+                    {{ transport.transportLnCode }}
+
+                  </td>
+
+
+                  <td>
+
+                    {{ transport.transportRpCode }}
+
+                  </td>
+
+
+                  <td>
+
+                    {{ transport.transportPvCode }}
+
+                  </td>
+
+
+                  <td class="number">
+
+                    {{ transport.costLn }}
+
+                  </td>
+
+
+                  <td class="number">
+
+                    {{ transport.costRp }}
+
+                  </td>
+
+
+                  <td class="number">
+
+                    {{ transport.costPv }}
+
+                  </td>
+
+
+                  <td class="number strong">
+
+                    {{ transport.totalTransport }}
+
+                  </td>
+
+
+                </tr>
+
+
+              }
+
+
+            </tbody>
+
+
+          </table>
+
+
+        </div>
+
+
+      </section>
+
+
+
+
+
+
+
+
+
+      <!-- ================================================= -->
+      <!-- TABELA 3 - CONSOLIDAÇÃO -->
+      <!-- ================================================= -->
+
+
+      <section class="table-card">
+
+
+        <header class="table-title">
+
+          Custo final e fornecedor adotado
+
+        </header>
+
+
+
+
+        <div class="table-scroll">
+
+
+          <table class="quotation-table">
+
+
+            <thead>
+
+
+              <tr>
+
+
+                <th>
+                  Fornecedor
+                </th>
+
+
+                <th>
+                  Aquisição
+                </th>
+
+
+                <th>
+                  Transporte
+                </th>
+
+
+                <th>
+                  Custo final
+                </th>
+
+
+                <th>
+                  Adotado
+                </th>
+
+
+              </tr>
+
+
+            </thead>
+
+
+
+
+            <tbody>
+
+
+              @for (
+
+                cost of material.adoptedCosts;
+
+                track cost.supplier
+
+              ) {
+
+
+
+                <tr
+                  [class.adopted]="cost.adopted"
                 >
-                  ✓
-                </span>
-
-              </td>
 
 
-              <td>
-                {{ quotation.transportType }}
-              </td>
+                  <td>
 
-            </tr>
+                    {{ cost.supplier }}
 
-          </ng-container>
+                  </td>
 
-        </tbody>
 
-      </table>
 
-    </div>
+                  <td class="number">
 
-  </section>
+                    {{ cost.acquisitionCost }}
+
+                  </td>
+
+
+
+                  <td class="number">
+
+                    {{ cost.transportCost }}
+
+                  </td>
+
+
+
+                  <td class="number strong">
+
+                    {{ cost.totalCost }}
+
+                  </td>
+
+
+
+                  <td class="adopted-cell">
+
+
+                    @if (cost.adopted) {
+
+
+                      <span class="adopted-badge">
+
+                        ✓
+
+                      </span>
+
+
+                    }
+
+
+                  </td>
+
+
+
+                </tr>
+
+
+
+              }
+
+
+            </tbody>
+
+
+
+          </table>
+
+
+        </div>
+
+
+      </section>
+
+
+
+    </section>
+
+
+
+  }
+
+
 
 </div>
