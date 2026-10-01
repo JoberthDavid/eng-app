@@ -1,0 +1,843 @@
+<div class="page">
+
+  <!-- ====================================================== -->
+  <!-- CABEÇALHO -->
+  <!-- ====================================================== -->
+
+  <header class="page-header">
+
+    <div>
+
+      <span class="page-eyebrow">
+        ORÇAMENTO
+      </span>
+
+      <h1>
+        Logística e transportes
+      </h1>
+
+      <p>
+        Rotas, transportes de materiais e produtos e mobilização
+        de equipamentos.
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <!-- ====================================================== -->
+  <!-- ABAS -->
+  <!-- ====================================================== -->
+
+  <section class="surface-tabs">
+
+    <button
+      type="button"
+      [class.active]="
+        isSurface('PAVIMENTADO')
+      "
+      (click)="
+        selectSurface('PAVIMENTADO')
+      "
+    >
+      Pavimentado
+    </button>
+
+
+    <button
+      type="button"
+      [class.active]="
+        isSurface(
+          'REVESTIMENTO_PRIMARIO'
+        )
+      "
+      (click)="
+        selectSurface(
+          'REVESTIMENTO_PRIMARIO'
+        )
+      "
+    >
+      Revestimento primário
+    </button>
+
+
+    <button
+      type="button"
+      [class.active]="
+        isSurface('LEITO_NATURAL')
+      "
+      (click)="
+        selectSurface('LEITO_NATURAL')
+      "
+    >
+      Leito natural
+    </button>
+
+  </section>
+
+
+  <!-- ====================================================== -->
+  <!-- 1. ROTAS -->
+  <!-- ====================================================== -->
+
+  <section class="table-card">
+
+    <header class="section-header">
+
+      <div>
+
+        <span class="page-eyebrow">
+          ROTAS · {{ surfaceLabel }}
+        </span>
+
+        <h2>
+          Rotas de transportes
+        </h2>
+
+        <p>
+          A distância cadastrada aqui será utilizada
+          nas aplicações desta modalidade.
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="primary-action"
+        (click)="openRouteForm()"
+      >
+        + Nova rota
+      </button>
+
+    </header>
+
+
+    @if (showRouteForm) {
+
+      <div class="route-form">
+
+        <div class="form-field">
+
+          <label>
+            Origem
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="routeOrigin"
+            placeholder="Ex.: PEDREIRA"
+          />
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label>
+            Destino
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="routeDestination"
+            placeholder="Ex.: PISTA"
+          />
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label>
+            Distância (km)
+          </label>
+
+          <input
+            type="text"
+            inputmode="decimal"
+            [(ngModel)]="routeDistanceKm"
+            placeholder="Ex.: 146,0"
+          />
+
+        </div>
+
+
+        <div class="form-actions">
+
+          <button
+            type="button"
+            class="secondary-action"
+            (click)="cancelRouteForm()"
+          >
+            Cancelar
+          </button>
+
+
+          <button
+            type="button"
+            class="primary-action"
+            (click)="createRoute()"
+          >
+            Salvar rota
+          </button>
+
+        </div>
+
+      </div>
+
+    }
+
+
+    <div class="table-scroll">
+
+      <table class="routes-table">
+
+        <thead>
+
+          <tr>
+
+            <th>
+              CÓDIGO
+            </th>
+
+            <th>
+              ORIGEM
+            </th>
+
+            <th>
+              DESTINO
+            </th>
+
+            <th>
+              DISTÂNCIA (KM)
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          @for (
+            route of visibleRoutes;
+            track route.id
+          ) {
+
+            <tr>
+
+              <td>
+                <strong>
+                  {{ route.id }}
+                </strong>
+              </td>
+
+              <td>
+                {{ route.origin }}
+              </td>
+
+              <td>
+                {{ route.destination }}
+              </td>
+
+              <td class="number">
+                {{ route.distanceKm }}
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+
+  <!-- ====================================================== -->
+  <!-- PESQUISA -->
+  <!-- ====================================================== -->
+
+  <section class="toolbar">
+
+    <div class="search">
+
+      <label>
+        Pesquisar aplicações
+      </label>
+
+      <input
+        type="search"
+        [(ngModel)]="search"
+        placeholder="Composição, transporte, item..."
+      />
+
+    </div>
+
+  </section>
+
+
+  <!-- ====================================================== -->
+  <!-- 2. TRANSPORTE DE MATERIAIS -->
+  <!-- ====================================================== -->
+
+  <section class="table-card">
+
+    <header class="section-header">
+
+      <div>
+
+        <span class="page-eyebrow">
+          TRANSPORTE DE MATERIAIS ·
+          {{ surfaceLabel }}
+        </span>
+
+        <h2>
+          Transportes de materiais e produtos
+        </h2>
+
+      </div>
+
+    </header>
+
+
+    <div class="table-scroll">
+
+      <table class="applications-table">
+
+        <thead>
+
+          <tr>
+
+            <th>
+              COMPOSIÇÃO
+            </th>
+
+            <th>
+              CÓDIGO
+            </th>
+
+            <th class="transport-description">
+              DESCRIÇÃO DO TRANSPORTE
+            </th>
+
+            <th>
+              ITEM
+            </th>
+
+            <th class="item-description">
+              DESCRIÇÃO ITEM TRANSPORTADO
+            </th>
+
+            <th>
+              UTILIZAÇÃO
+            </th>
+
+            <th>
+              QUANTIDADE SERVIÇO
+            </th>
+
+            <th>
+              ORIGEM
+            </th>
+
+            <th>
+              DESTINO
+            </th>
+
+            <th>
+              DISTÂNCIA (KM)
+            </th>
+
+            <th>
+              QUANTIDADE TRANSPORTADA
+            </th>
+
+            <th>
+              MOMENTO TRANSPORTE
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          @for (
+            application of visibleApplications;
+            track application.id
+          ) {
+
+            <tr>
+
+              <td>
+
+                <strong>
+                  {{ application.compositionCode }}
+                </strong>
+
+              </td>
+
+
+              <td>
+
+                <strong>
+                  {{ application.transportCode }}
+                </strong>
+
+              </td>
+
+
+              <td
+                class="transport-description"
+                [title]="
+                  application.transportDescription
+                "
+              >
+
+                {{
+                  application.transportDescription
+                }}
+
+              </td>
+
+
+              <td>
+
+                <strong>
+                  {{ application.transportedItemCode }}
+                </strong>
+
+              </td>
+
+
+              <td
+                class="item-description"
+                [title]="
+                  application.transportedItemDescription
+                "
+              >
+
+                {{
+                  application.transportedItemDescription
+                }}
+
+              </td>
+
+
+              <td class="number">
+
+                {{ application.utilization }}
+
+              </td>
+
+
+              <td class="number">
+
+                {{ application.serviceQuantity }}
+
+              </td>
+
+
+              <!-- ORIGEM -->
+
+              <td class="select-cell">
+
+                <select
+                  [(ngModel)]="
+                    application.origin
+                  "
+                >
+
+                  @for (
+                    origin of routeOrigins;
+                    track origin
+                  ) {
+
+                    <option
+                      [value]="origin"
+                    >
+                      {{ origin }}
+                    </option>
+
+                  }
+
+                </select>
+
+              </td>
+
+
+              <!-- DESTINO -->
+
+              <td class="select-cell">
+
+                <select
+                  [(ngModel)]="
+                    application.destination
+                  "
+                >
+
+                  @for (
+                    destination of
+                      getDestinations(
+                        application.origin
+                      );
+                    track destination
+                  ) {
+
+                    <option
+                      [value]="destination"
+                    >
+                      {{ destination }}
+                    </option>
+
+                  }
+
+                </select>
+
+              </td>
+
+
+              <!-- DISTÂNCIA -->
+
+              <td
+                class="number distance-cell"
+                [class.missing]="
+                  !hasRoute(application)
+                "
+              >
+
+                @if (
+                  hasRoute(application)
+                ) {
+
+                  {{ getDistance(application) }}
+
+                } @else {
+
+                  <span>
+                    Não cadastrada
+                  </span>
+
+                }
+
+              </td>
+
+
+              <td class="number">
+
+                {{
+                  application.transportedQuantity
+                }}
+
+              </td>
+
+
+              <td class="number">
+
+                {{
+                  application.transportMoment
+                }}
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+
+  <!-- ====================================================== -->
+  <!-- 3. MOBILIZAÇÃO -->
+  <!-- ====================================================== -->
+
+  <section class="table-card">
+
+    <header class="section-header">
+
+      <div>
+
+        <span class="page-eyebrow">
+          MOBILIZAÇÃO ·
+          {{ surfaceLabel }}
+        </span>
+
+        <h2>
+          Mobilização de equipamentos
+        </h2>
+
+        <p>
+          Horas correspondentes à rota desta modalidade.
+        </p>
+
+      </div>
+
+    </header>
+
+
+    <div class="table-scroll">
+
+      <table class="mobilization-table">
+
+        <thead>
+
+          <tr>
+
+            <th>
+              COMPOSIÇÃO
+            </th>
+
+            <th>
+              EQUIPAMENTO
+            </th>
+
+            <th class="equipment-description">
+              DESCRIÇÃO DO EQUIPAMENTO
+            </th>
+
+            <th>
+              TRANSPORTADOR
+            </th>
+
+            <th>
+              ORIGEM
+            </th>
+
+            <th>
+              DESTINO
+            </th>
+
+            <th>
+              DISTÂNCIA (KM)
+            </th>
+
+            <th>
+              VELOCIDADE MÉDIA (KM/H)
+            </th>
+
+            <th>
+              HORAS
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          @for (
+            mobilization of visibleMobilizations;
+            track mobilization.id
+          ) {
+
+            <tr>
+
+              <td>
+
+                <strong>
+                  {{ mobilization.compositionCode }}
+                </strong>
+
+              </td>
+
+
+              <td>
+
+                <strong>
+                  {{ mobilization.equipmentCode }}
+                </strong>
+
+              </td>
+
+
+              <td
+                class="equipment-description"
+                [title]="
+                  mobilization.equipmentDescription
+                "
+              >
+
+                {{
+                  mobilization.equipmentDescription
+                }}
+
+              </td>
+
+
+              <td>
+
+                <select
+                  [(ngModel)]="
+                    mobilization
+                      .transporterEquipmentCode
+                  "
+                >
+
+                  @for (
+                    transporter of
+                      equipmentTransporters;
+                    track transporter.code
+                  ) {
+
+                    <option
+                      [value]="
+                        transporter.code
+                      "
+                    >
+
+                      {{ transporter.code }}
+
+                    </option>
+
+                  }
+
+                </select>
+
+              </td>
+
+
+              <!-- ORIGEM -->
+
+              <td class="select-cell">
+
+                <select
+                  [(ngModel)]="
+                    mobilization.origin
+                  "
+                  (ngModelChange)="
+                    onMobilizationOriginChange(
+                      mobilization
+                    )
+                  "
+                >
+
+                  @for (
+                    origin of routeOrigins;
+                    track origin
+                  ) {
+
+                    <option
+                      [value]="origin"
+                    >
+                      {{ origin }}
+                    </option>
+
+                  }
+
+                </select>
+
+              </td>
+
+
+              <!-- DESTINO -->
+
+              <td class="select-cell">
+
+                <select
+                  [(ngModel)]="
+                    mobilization.destination
+                  "
+                  [disabled]="
+                    !mobilization.origin
+                  "
+                >
+
+                  @for (
+                    destination of
+                      getDestinations(
+                        mobilization.origin
+                      );
+                    track destination
+                  ) {
+
+                    <option
+                      [value]="destination"
+                    >
+                      {{ destination }}
+                    </option>
+
+                  }
+
+                </select>
+
+              </td>
+
+
+              <!-- DISTÂNCIA -->
+
+              <td
+                class="number distance-cell"
+                [class.missing]="
+                  !hasMobilizationRoute(
+                    mobilization
+                  )
+                "
+              >
+
+                @if (
+                  hasMobilizationRoute(
+                    mobilization
+                  )
+                ) {
+
+                  {{
+                    getMobilizationDistance(
+                      mobilization
+                    )
+                  }}
+
+                } @else {
+
+                  <span>
+                    Não cadastrada
+                  </span>
+
+                }
+
+              </td>
+
+
+              <td class="number">
+
+                {{
+                  mobilization.averageSpeedKmH
+                }}
+
+              </td>
+
+
+              <td class="number strong">
+
+                {{
+                  mobilization.hours
+                }}
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+</div>

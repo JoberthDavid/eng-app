@@ -37,7 +37,11 @@ import { AbcCompositionsPageComponent }
 
 import { OccurrencesMapComponent }
   from './pages/materials/occurrences-map/occurrences-map.component'
-  
+
+import {
+  TransportsPageComponent
+} from './pages/transports/transports-page.component';
+
 
 export const routes: Routes = [
 
@@ -68,7 +72,7 @@ export const routes: Routes = [
   },
 
   {
-    path: 'abc/compositions/:budgetId',
+    path: 'abc/:budgetId',
     component: AbcCompositionsPageComponent
   },
 
@@ -110,6 +114,11 @@ export const routes: Routes = [
   {
     path: 'occurrences',
     component: OccurrencesMapComponent
+  },
+
+  {
+    path: 'logistics',
+    component: TransportsPageComponent
   },
 
 ];

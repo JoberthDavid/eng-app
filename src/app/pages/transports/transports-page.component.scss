@@ -1,0 +1,663 @@
+:host {
+  display: block;
+
+  width: 100%;
+
+  color: #27313c;
+}
+
+
+// ============================================================
+// PÁGINA
+// ============================================================
+
+.page {
+  width: 100%;
+
+  max-width: 1800px;
+
+  margin: 0 auto;
+
+  padding: 24px 32px 40px;
+
+  box-sizing: border-box;
+}
+
+
+// ============================================================
+// CABEÇALHO
+// ============================================================
+
+.page-header {
+  margin-bottom: 16px;
+}
+
+
+.page-eyebrow {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #697586;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: .08em;
+
+  text-transform: uppercase;
+}
+
+
+.page-header h1 {
+  margin: 0;
+
+  color: #27313c;
+
+  font-size: 26px;
+
+  font-weight: 700;
+
+  line-height: 1.15;
+}
+
+
+.page-header p {
+  margin: 6px 0 0;
+
+  color: #697586;
+
+  font-size: 13px;
+}
+
+
+// ============================================================
+// ABAS
+// ============================================================
+
+.surface-tabs {
+  display: flex;
+
+  gap: 4px;
+
+  margin-bottom: 14px;
+
+  padding: 4px;
+
+  border: 1px solid #dfe3e8;
+
+  border-radius: 8px;
+
+  background: #f8fafb;
+
+  width: fit-content;
+}
+
+
+.surface-tabs button {
+  min-height: 32px;
+
+  padding: 0 14px;
+
+  border: 1px solid transparent;
+
+  border-radius: 6px;
+
+  background: transparent;
+
+  color: #667085;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+.surface-tabs button:hover {
+  background: #fff;
+
+  color: #344054;
+}
+
+
+.surface-tabs button.active {
+  border-color: #d0d5dd;
+
+  background: #fff;
+
+  color: #27313c;
+
+  box-shadow:
+    0 1px 2px
+    rgba(16, 24, 40, .04);
+}
+
+
+// ============================================================
+// CARDS
+// ============================================================
+
+.table-card {
+  width: 100%;
+
+  margin-bottom: 14px;
+
+  overflow: hidden;
+
+  background: #fff;
+
+  border: 1px solid #e1e6eb;
+
+  border-radius: 8px;
+
+  box-sizing: border-box;
+}
+
+
+.section-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 13px 16px;
+
+  background: #f8fafb;
+
+  border-bottom: 1px solid #e1e6eb;
+}
+
+
+.section-header h2 {
+  margin: 0;
+
+  color: #27313c;
+
+  font-size: 14px;
+
+  font-weight: 700;
+}
+
+
+.section-header p {
+  margin: 5px 0 0;
+
+  color: #697586;
+
+  font-size: 11px;
+}
+
+
+// ============================================================
+// FORMULÁRIO DE ROTAS
+// ============================================================
+
+.route-form {
+  display: grid;
+
+  grid-template-columns:
+    2fr
+    2fr
+    1fr
+    auto;
+
+  align-items: end;
+
+  gap: 10px;
+
+  padding: 14px 16px;
+
+  background: #fbfcfd;
+
+  border-bottom: 1px solid #e1e6eb;
+}
+
+
+.form-field {
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+.form-field label {
+  margin-bottom: 5px;
+
+  color: #475467;
+
+  font-size: 10px;
+
+  font-weight: 700;
+}
+
+
+.form-field input {
+  width: 100%;
+
+  height: 34px;
+
+  padding: 0 9px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d0d5dd;
+
+  border-radius: 6px;
+
+  background: #fff;
+
+  color: #344054;
+
+  font-size: 12px;
+
+  outline: none;
+}
+
+
+.form-field input:focus {
+  border-color: #98a2b3;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(71, 84, 103, .08);
+}
+
+
+.form-actions {
+  display: flex;
+
+  gap: 7px;
+}
+
+
+// ============================================================
+// BOTÕES
+// ============================================================
+
+.primary-action,
+.secondary-action {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 34px;
+
+  padding: 0 12px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+}
+
+
+.primary-action {
+  border: 1px solid #344054;
+
+  background: #344054;
+
+  color: #fff;
+}
+
+
+.primary-action:hover {
+  background: #27313c;
+
+  border-color: #27313c;
+}
+
+
+.secondary-action {
+  border: 1px solid #d0d5dd;
+
+  background: #fff;
+
+  color: #344054;
+}
+
+
+// ============================================================
+// PESQUISA
+// ============================================================
+
+.toolbar {
+  display: flex;
+
+  align-items: flex-end;
+
+  margin-bottom: 14px;
+}
+
+
+.search {
+  width: 360px;
+}
+
+
+.search label {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #475467;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+
+.search input {
+  width: 100%;
+
+  height: 38px;
+
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d0d5dd;
+
+  border-radius: 8px;
+
+  background: #fff;
+
+  color: #344054;
+
+  font-size: 13px;
+
+  outline: none;
+}
+
+
+// ============================================================
+// TABELAS
+// ============================================================
+
+.table-scroll {
+  width: 100%;
+
+  overflow: auto;
+}
+
+
+table {
+  width: max-content;
+
+  min-width: 100%;
+
+  border-collapse: collapse;
+
+  font-size: 11px;
+}
+
+
+th {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 2;
+
+  padding: 9px 9px;
+
+  background: #f8fafb;
+
+  border-bottom: 1px solid #dfe3e8;
+
+  color: #697586;
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: .05em;
+
+  line-height: 1.25;
+
+  text-align: left;
+
+  text-transform: uppercase;
+
+  white-space: nowrap;
+}
+
+
+td {
+  padding: 7px 9px;
+
+  border-bottom: 1px solid #eaecf0;
+
+  color: #344054;
+
+  white-space: nowrap;
+
+  vertical-align: middle;
+}
+
+
+tbody tr:hover td {
+  background: #f8fafb;
+}
+
+
+// ============================================================
+// DESCRIÇÕES
+// ============================================================
+
+.transport-description {
+  max-width: 260px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+.item-description {
+  max-width: 210px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+.equipment-description {
+  max-width: 220px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+// ============================================================
+// NÚMEROS
+// ============================================================
+
+.number {
+  text-align: right;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+.strong {
+  font-weight: 700;
+
+  color: #27313c;
+}
+
+
+// ============================================================
+// SELECTS
+// ============================================================
+
+.select-cell {
+  padding: 4px 6px;
+
+  background: #f9fbfd;
+}
+
+
+.select-cell select,
+.mobilization-table select {
+  height: 29px;
+
+  padding: 0 7px;
+
+  border: 1px solid #cbd5e1;
+
+  border-radius: 5px;
+
+  background: #fff;
+
+  color: #344054;
+
+  font-size: 10px;
+
+  outline: none;
+
+  cursor: pointer;
+}
+
+
+.select-cell select {
+  width: 120px;
+}
+
+
+.mobilization-table select {
+  width: 110px;
+}
+
+
+.select-cell select:focus,
+.mobilization-table select:focus {
+  border-color: #667085;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(71, 84, 103, .08);
+}
+
+
+.select-cell select:disabled {
+  background: #f2f4f7;
+
+  color: #98a2b3;
+
+  cursor: not-allowed;
+}
+
+
+// ============================================================
+// DISTÂNCIA
+// ============================================================
+
+.distance-cell {
+  min-width: 88px;
+
+  font-weight: 600;
+}
+
+
+.distance-cell.missing {
+  color: #b54708;
+}
+
+
+// ============================================================
+// MOBILIZAÇÃO
+// ============================================================
+
+.mobilization-table {
+  min-width: 1250px;
+}
+
+
+.mobilization-summary-table {
+  min-width: 1050px;
+}
+
+
+.total-hours {
+  font-weight: 700;
+
+  color: #27313c;
+
+  background: #f8fafb;
+}
+
+
+// ============================================================
+// RESPONSIVIDADE
+// ============================================================
+
+@media (max-width: 1000px) {
+
+  .route-form {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    justify-content: flex-end;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .page {
+    padding-right: 16px;
+
+    padding-left: 16px;
+  }
+
+
+  .surface-tabs {
+    width: 100%;
+
+    overflow-x: auto;
+  }
+
+
+  .surface-tabs button {
+    flex: 0 0 auto;
+  }
+
+
+  .section-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+
+  .toolbar,
+  .search {
+    width: 100%;
+  }
+
+}
