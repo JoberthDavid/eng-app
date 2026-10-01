@@ -1,0 +1,433 @@
+<div class="fit-page">
+
+  <!-- CABEÇALHO DA PÁGINA -->
+
+  <header class="page-header">
+
+    <div>
+
+      <div class="eyebrow">
+        CUSTOS REFERENCIAIS
+      </div>
+
+      <h1>
+        Fator de Interferência do Tráfego
+      </h1>
+
+      <p>
+        Cálculo do FIT conforme o Manual de Custos de Infraestrutura
+        de Transportes — Anexo 01/2017.
+      </p>
+
+    </div>
+
+    <div class="page-header-actions">
+
+      <span class="reference-badge">
+        FIT
+      </span>
+
+    </div>
+
+  </header>
+
+
+  <!-- RESULTADO PRINCIPAL -->
+
+  <section class="result-card">
+
+    <div class="result-content">
+
+      <div class="result-label">
+        FATOR DE INTERFERÊNCIA DE TRÁFEGO RESULTANTE
+      </div>
+
+      <div class="result-value">
+        {{ calculation().resultingFit }}
+      </div>
+
+      <div class="result-description">
+        FIT médio ponderado considerando os trechos
+        e a interferência dos centros urbanos.
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ANÁLISE -->
+
+  <section class="analysis-grid">
+
+
+    <!-- GRÁFICO -->
+
+    <article class="card chart-card">
+
+      <div class="card-header">
+
+        <div>
+
+          <h2>
+            Modelo matemático
+          </h2>
+
+          <span>
+            Gráfico 01 — Cálculo do FIT
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="chart-container">
+
+        <div class="chart-y-label">
+          Fator de Interferência de Tráfego (%)
+        </div>
+
+        <div class="chart">
+
+          <div class="chart-grid"></div>
+
+          <div class="chart-line"></div>
+
+          <div class="chart-axis-label">
+            Volume Médio Diário de Tráfego
+          </div>
+
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <!-- INDICADORES -->
+
+    <article class="card indicators-card">
+
+      <div class="card-header">
+
+        <div>
+
+          <h2>
+            Indicadores do cálculo
+          </h2>
+
+          <span>
+            Valores fornecidos pelo cálculo
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="indicators">
+
+        <div class="indicator">
+
+          <span>
+            Proximidade de centros urbanos
+          </span>
+
+          <strong>
+            {{ calculation().proximityUrbanCenters }}
+          </strong>
+
+        </div>
+
+
+        <div class="indicator">
+
+          <span>
+            VMD média ponderada
+          </span>
+
+          <strong>
+            {{ calculation().weightedVmd }}
+          </strong>
+
+        </div>
+
+
+        <div class="indicator">
+
+          <span>
+            Fator do gráfico
+          </span>
+
+          <strong>
+            {{ calculation().graphFactor }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <!-- CENTROS URBANOS -->
+
+    <article class="card urban-card">
+
+      <div class="card-header">
+
+        <div>
+
+          <h2>
+            Interferência dos centros urbanos
+          </h2>
+
+          <span>
+            Variação de 0 a 5%
+          </span>
+
+        </div>
+
+        <strong class="card-result">
+          {{ calculation().urbanCentersInterference }}
+        </strong>
+
+      </div>
+
+
+      <div class="table-container">
+
+        <table class="urban-table">
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Cidade
+              </th>
+
+              <th>
+                Extensão do perímetro
+              </th>
+
+              <th>
+                Proporção
+              </th>
+
+              <th>
+                Interferência
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              center of calculation().urbanCenters;
+              track trackUrbanCenter($index, center)
+            ) {
+
+              <tr>
+
+                <td>
+                  {{ center.city }}
+                </td>
+
+                <td>
+                  {{ center.perimeterExtensionKm }}
+                </td>
+
+                <td>
+                  {{ center.proportion }}
+                </td>
+
+                <td>
+                  {{ center.interference }}
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </article>
+
+  </section>
+
+
+  <!-- TRECHOS -->
+
+  <section class="card stretches-card">
+
+    <div class="card-header">
+
+      <div>
+
+        <h2>
+          Trechos considerados
+        </h2>
+
+        <span>
+          Distribuição do VMD e cálculo do FIT por trecho
+        </span>
+
+      </div>
+
+      <div class="table-summary">
+        {{ calculation().stretches.length }} trechos
+      </div>
+
+    </div>
+
+
+    <div class="table-container table-scroll">
+
+      <table class="stretch-table">
+
+        <thead>
+
+          <tr>
+
+            <th rowspan="2">
+              SNV
+            </th>
+
+            <th rowspan="2">
+              Início
+            </th>
+
+            <th rowspan="2">
+              Fim
+            </th>
+
+            <th colspan="3">
+              VMD
+            </th>
+
+            <th rowspan="2">
+              Proporção<br>
+              do trecho
+            </th>
+
+            <th rowspan="2">
+              FIT de cada<br>
+              trecho
+            </th>
+
+            <th rowspan="2">
+              FIT ponderado
+            </th>
+
+          </tr>
+
+
+          <tr>
+
+            <th>
+              Início
+            </th>
+
+            <th>
+              Fim
+            </th>
+
+            <th>
+              Total
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          @for (
+            stretch of calculation().stretches;
+            track trackStretch($index, stretch)
+          ) {
+
+            <tr>
+
+              <td class="snv">
+                {{ stretch.snv }}
+              </td>
+
+              <td class="description">
+                {{ stretch.start }}
+              </td>
+
+              <td class="description">
+                {{ stretch.end }}
+              </td>
+
+              <td class="numeric">
+                {{ stretch.vmd2019 }}
+              </td>
+
+              <td class="numeric">
+                {{ stretch.vmd2024 }}
+              </td>
+
+              <td class="numeric">
+                {{ stretch.lengthKm }}
+              </td>
+
+              <td class="numeric">
+                {{ stretch.stretchProportion }}
+              </td>
+
+              <td class="numeric">
+                {{ stretch.stretchFit }}
+              </td>
+
+              <td class="numeric highlight-column">
+                {{ stretch.weightedFit }}
+              </td>
+
+            </tr>
+
+          }
+
+
+          <tr class="total-row">
+
+            <td colspan="3">
+              TOTAL
+            </td>
+
+            <td colspan="3"></td>
+
+            <td>
+              100,00%
+            </td>
+
+            <td>
+              {{ calculation().graphFactor }}
+            </td>
+
+            <td>
+              {{ calculation().weightedFit }}
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+</div>
