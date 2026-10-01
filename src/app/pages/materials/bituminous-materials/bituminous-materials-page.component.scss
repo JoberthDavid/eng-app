@@ -1,0 +1,506 @@
+:host {
+  display: block;
+}
+
+
+// ---------------------------------------------------------
+// PAGE
+// ---------------------------------------------------------
+
+.page {
+  width: 100%;
+  max-width: 1440px;
+
+  margin: 0 auto;
+  padding: 28px 24px 48px;
+
+  box-sizing: border-box;
+
+  min-width: 0;
+}
+
+
+// ---------------------------------------------------------
+// HEADER
+// ---------------------------------------------------------
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin-bottom: 4px;
+
+  color: #697586;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  color: #18212b;
+
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.page-header p {
+  margin: 6px 0 0;
+
+  color: #697586;
+
+  font-size: 14px;
+}
+
+
+// ---------------------------------------------------------
+// TOOLBAR
+// ---------------------------------------------------------
+
+.toolbar {
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 16px;
+}
+
+.search-box {
+  display: flex;
+
+  flex-direction: column;
+
+  width: 420px;
+  max-width: 100%;
+}
+
+.search-box label {
+  margin-bottom: 7px;
+
+  color: #697586;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: 0.04em;
+}
+
+.search-box input {
+  width: 100%;
+  min-height: 38px;
+
+  padding: 8px 10px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #cfd6dd;
+  border-radius: 5px;
+
+  background: #ffffff;
+
+  color: #1f2930;
+
+  font: inherit;
+  font-size: 13px;
+
+  outline: none;
+}
+
+.search-box input::placeholder {
+  color: #98a2b3;
+}
+
+.search-box input:focus {
+  border-color: #7b8792;
+
+  box-shadow:
+    0 0 0 2px rgba(123, 135, 146, 0.12);
+}
+
+
+// ---------------------------------------------------------
+// SUMMARY
+// ---------------------------------------------------------
+
+.summary {
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  padding-bottom: 2px;
+
+  color: #697586;
+
+  font-size: 12px;
+}
+
+.summary span {
+  white-space: nowrap;
+}
+
+.summary span + span {
+  padding-left: 18px;
+
+  border-left: 1px solid #dce2e8;
+}
+
+
+// ---------------------------------------------------------
+// TABLE CARD
+// ---------------------------------------------------------
+
+.table-card {
+  width: 100%;
+
+  overflow: hidden;
+
+  border: 1px solid #dce2e8;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 5px rgb(16 24 40 / 4%);
+}
+
+.table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+  overflow-y: auto;
+
+  max-height: calc(100vh - 250px);
+}
+
+
+// ---------------------------------------------------------
+// TABLE
+// ---------------------------------------------------------
+
+.bituminous-table {
+  width: max-content;
+  min-width: 100%;
+
+  border-collapse: collapse;
+
+  color: #344054;
+
+  font-size: 12px;
+}
+
+.bituminous-table thead {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 20;
+}
+
+.bituminous-table thead th {
+  padding: 10px 12px;
+
+  border-top: 0;
+  border-right: 1px solid #dce2e8;
+  border-bottom: 1px solid #dce2e8;
+
+  background: #f5f7f9;
+
+  color: #697586;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.04em;
+
+  line-height: 1.2;
+
+  text-align: left;
+
+  text-transform: uppercase;
+
+  white-space: nowrap;
+}
+
+.bituminous-table thead th:last-child {
+  border-right: 0;
+}
+
+
+// ---------------------------------------------------------
+// STICKY COLUMNS
+// ---------------------------------------------------------
+
+.sticky-code,
+.sticky-material {
+  position: sticky;
+
+  background: #ffffff;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  box-sizing: border-box;
+}
+
+.sticky-code {
+  left: 0;
+
+  width: 78px;
+  min-width: 78px;
+  max-width: 78px;
+
+  z-index: 21;
+}
+
+.sticky-material {
+  left: 78px;
+
+  width: 230px;
+  min-width: 230px;
+  max-width: 230px;
+
+  z-index: 20;
+}
+
+
+// Cabeçalho das colunas fixas
+
+.bituminous-table thead .sticky-code,
+.bituminous-table thead .sticky-material {
+  background: #f5f7f9;
+
+  z-index: 40;
+}
+
+
+// ---------------------------------------------------------
+// MATERIAL
+// ---------------------------------------------------------
+
+.sticky-material.material-cell {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+// Linha divisória entre área fixa e área rolável
+
+.sticky-material::after {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  right: -1px;
+  bottom: 0;
+
+  width: 1px;
+
+  background: #dce2e8;
+
+  pointer-events: none;
+}
+
+
+// ---------------------------------------------------------
+// BODY
+// ---------------------------------------------------------
+
+.bituminous-table tbody td {
+  height: 34px;
+
+  padding: 8px 12px;
+
+  border-top: 1px solid #edf0f3;
+  border-right: 1px solid #edf0f3;
+
+  background: #ffffff;
+
+  color: #344054;
+
+  font-size: 12px;
+
+  vertical-align: middle;
+
+  white-space: nowrap;
+
+  box-sizing: border-box;
+}
+
+.bituminous-table tbody td:last-child {
+  border-right: 0;
+}
+
+.bituminous-table tbody tr:hover td {
+  background: #fafbfc;
+}
+
+.bituminous-table tbody tr:hover .sticky-code,
+.bituminous-table tbody tr:hover .sticky-material {
+  background: #fafbfc;
+}
+
+
+// ---------------------------------------------------------
+// COLUMNS
+// ---------------------------------------------------------
+
+.code-cell {
+  color: #18212b !important;
+
+  font-weight: 700;
+
+  text-align: left;
+}
+
+.material-cell {
+  color: #27313d !important;
+
+  font-weight: 600;
+}
+
+.icms,
+.icms-cell {
+  min-width: 72px;
+}
+
+.state {
+  min-width: 100px;
+}
+
+.state-cell {
+  text-align: center;
+}
+
+.origin,
+.origin-cell {
+  min-width: 330px;
+}
+
+.numeric-cell {
+  min-width: 92px;
+
+  text-align: right;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+// ---------------------------------------------------------
+// ADOTADO
+// ---------------------------------------------------------
+
+.adopted-header {
+  min-width: 82px;
+
+  text-align: center !important;
+}
+
+.adopted-cell {
+  min-width: 82px;
+
+  text-align: center;
+}
+
+.row-adopted td {
+  background: #ffffff;
+}
+
+.row-adopted .sticky-code,
+.row-adopted .sticky-material {
+  background: #ffffff;
+}
+
+.adopted-badge {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+
+  background: #16a34a;
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.not-adopted {
+  color: #98a2b3;
+
+  font-size: 13px;
+}
+
+
+// ---------------------------------------------------------
+// EMPTY STATE
+// ---------------------------------------------------------
+
+.empty-state {
+  height: 120px;
+
+  text-align: center !important;
+
+  color: #697586 !important;
+
+  font-size: 13px !important;
+}
+
+
+// ---------------------------------------------------------
+// RESPONSIVE
+// ---------------------------------------------------------
+
+@media (max-width: 900px) {
+
+  .page {
+    padding: 20px 16px 36px;
+  }
+
+  .page-header {
+    margin-bottom: 20px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .toolbar {
+    align-items: stretch;
+
+    flex-direction: column;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .summary {
+    padding-bottom: 0;
+  }
+}

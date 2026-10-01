@@ -1,0 +1,203 @@
+<div class="page">
+
+  <header class="page-header">
+
+    <div>
+      <div class="eyebrow">
+        CUSTOS REFERENCIAIS
+      </div>
+
+      <h1>
+        Materiais betuminosos
+      </h1>
+
+      <p>
+        Pesquisa e composição dos custos de materiais betuminosos.
+      </p>
+    </div>
+
+  </header>
+
+
+  <section class="toolbar">
+
+    <div class="search-box">
+
+      <label for="material-search">
+        Pesquisar
+      </label>
+
+      <input
+        id="material-search"
+        type="search"
+        [ngModel]="search()"
+        (ngModelChange)="updateSearch($event)"
+        placeholder="Código, material, estado ou cidade..."
+      />
+
+    </div>
+
+
+    <div class="summary">
+
+      <span>
+        {{ materialCount() }} materiais
+      </span>
+
+      <span>
+        {{ adoptedCount() }} adotados
+      </span>
+
+    </div>
+
+  </section>
+
+
+  <section class="table-card">
+
+    <div class="table-wrapper">
+
+      <table class="bituminous-table">
+
+        <thead>
+
+          <tr>
+
+            <th class="sticky-code">
+              CÓDIGO
+            </th>
+
+            <th class="sticky-material">
+              MATERIAL
+            </th>
+
+            <th class="icms">
+              ICMS
+            </th>
+
+            <th class="state">
+              ESTADO ORIGEM
+            </th>
+
+            <th class="origin">
+              CIDADE / ORIGEM
+            </th>
+
+            <th>COLUNA 01</th>
+            <th>COLUNA 02</th>
+            <th>COLUNA 03</th>
+            <th>COLUNA 04</th>
+            <th>COLUNA 05</th>
+            <th>COLUNA 06</th>
+            <th>COLUNA 07</th>
+            <th>COLUNA 08</th>
+            <th>COLUNA 09</th>
+            <th>COLUNA 10</th>
+            <th>COLUNA 11</th>
+            <th>COLUNA 12</th>
+
+            <th class="adopted-header">
+              ADOTADO
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          @for (
+            row of filteredRows();
+            track trackByRow($index, row)
+          ) {
+
+            <tr [class.row-adopted]="row.adopted">
+
+              <td class="sticky-code code-cell">
+                {{ row.code }}
+              </td>
+
+
+              <td class="sticky-material material-cell">
+                {{ row.material }}
+              </td>
+
+
+              <td class="icms-cell numeric-cell">
+                {{ row.icms }}
+              </td>
+
+
+              <td class="state-cell">
+                {{ row.state }}
+              </td>
+
+
+              <td class="origin-cell">
+                {{ row.origin }}
+              </td>
+
+
+              @for (
+                value of row.values;
+                track $index
+              ) {
+
+                <td class="numeric-cell">
+                  {{ value }}
+                </td>
+
+              }
+
+
+              <td class="adopted-cell">
+
+                @if (row.adopted) {
+
+                  <span
+                    class="adopted-badge"
+                    aria-label="Material adotado"
+                  >
+                    ✓
+                  </span>
+
+                } @else {
+
+                  <span class="not-adopted">
+                    —
+                  </span>
+
+                }
+
+              </td>
+
+            </tr>
+
+          }
+
+
+          @if (filteredRows().length === 0) {
+
+            <tr>
+
+              <td
+                class="empty-state"
+                colspan="18"
+              >
+                Nenhum material encontrado.
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+</div>
