@@ -1,0 +1,421 @@
+@if (result) {
+
+  <div class="abc-page">
+
+    <header class="page-header">
+
+      <div>
+
+        <span class="page-eyebrow">
+          ANÁLISE ABC
+        </span>
+
+        <h1>
+          Curva ABC de composições
+        </h1>
+
+        <p>
+          Composições consolidadas a partir
+          dos serviços do orçamento
+          {{ result.budgetId }}.
+        </p>
+
+      </div>
+
+
+      <a
+        class="back-link"
+        [routerLink]="[
+          '/budgets',
+          result.budgetId
+        ]"
+      >
+        ← Orçamento
+      </a>
+
+    </header>
+
+
+    <!-- ================================================= -->
+    <!-- RESUMO -->
+    <!-- ================================================= -->
+
+    <section class="summary">
+
+      <div class="summary-card">
+
+        <span class="label">
+          Orçamento
+        </span>
+
+        <strong>
+          {{ result.budgetId }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <span class="label">
+          Data-base
+        </span>
+
+        <strong>
+          {{ result.referenceDate }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <span class="label">
+          Valor analisado
+        </span>
+
+        <strong>
+          {{ result.totalCost }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <span class="label">
+          Composições
+        </span>
+
+        <strong>
+          {{ result.compositionCount }}
+        </strong>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- CLASSES ABC -->
+    <!-- ================================================= -->
+
+    <section class="classification-summary">
+
+      <div class="class-card class-a">
+
+        <span>
+          Classe A
+        </span>
+
+        <strong>
+          {{ result.classACount }}
+        </strong>
+
+        <small>
+          {{ result.classAParticipation }}
+        </small>
+
+      </div>
+
+
+      <div class="class-card class-b">
+
+        <span>
+          Classe B
+        </span>
+
+        <strong>
+          {{ result.classBCount }}
+        </strong>
+
+        <small>
+          {{ result.classBParticipation }}
+        </small>
+
+      </div>
+
+
+      <div class="class-card class-c">
+
+        <span>
+          Classe C
+        </span>
+
+        <strong>
+          {{ result.classCCount }}
+        </strong>
+
+        <small>
+          {{ result.classCParticipation }}
+        </small>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- CURVA -->
+    <!-- ================================================= -->
+
+    <section class="curve-card">
+
+      <header class="section-header">
+
+        <div>
+
+          <span class="page-eyebrow">
+            CURVA
+          </span>
+
+          <h2>
+            Participação acumulada
+          </h2>
+
+        </div>
+
+      </header>
+
+
+      <div class="curve-list">
+
+        @for (
+          item of result.items;
+          track item.code
+        ) {
+
+          <div class="curve-row">
+
+            <div class="curve-label">
+
+              <strong>
+                {{ item.code }}
+              </strong>
+
+              <span>
+                {{ item.accumulatedParticipation }}
+              </span>
+
+            </div>
+
+
+            <div class="curve-track">
+
+              <div
+                class="curve-fill"
+                [style.width]="
+                  item.accumulatedParticipation
+                "
+              ></div>
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- TABELA -->
+    <!-- ================================================= -->
+
+    <section class="table-card">
+
+      <header class="section-header">
+
+        <div>
+
+          <span class="page-eyebrow">
+            COMPOSIÇÕES
+          </span>
+
+          <h2>
+            Detalhamento da Curva ABC
+          </h2>
+
+        </div>
+
+      </header>
+
+
+      <div class="table-scroll">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                ORDEM
+              </th>
+
+              <th>
+                CÓDIGO
+              </th>
+
+              <th>
+                COMPOSIÇÃO
+              </th>
+
+              <th>
+                UN.
+              </th>
+
+              <th>
+                QUANTIDADE
+              </th>
+
+              <th>
+                FATOR
+              </th>
+
+              <th>
+                CUSTO UNITÁRIO
+              </th>
+
+              <th>
+                CUSTO TOTAL
+              </th>
+
+              <th>
+                PARTICIPAÇÃO
+              </th>
+
+              <th>
+                ACUMULADO
+              </th>
+
+              <th>
+                CLASSE
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              item of result.items;
+              track item.code;
+              let i = $index
+            ) {
+
+              <tr>
+
+                <td>
+                  {{ i + 1 }}
+                </td>
+
+
+                <td>
+
+                  <strong>
+                    {{ item.code }}
+                  </strong>
+
+                </td>
+
+
+                <td>
+                  {{ item.description }}
+                </td>
+
+
+                <td>
+                  {{ item.unit }}
+                </td>
+
+
+                <td class="number">
+                  {{ item.quantity }}
+                </td>
+
+
+                <td class="number">
+                  {{ item.factor }}
+                </td>
+
+
+                <td class="number">
+                  {{ item.unitCost }}
+                </td>
+
+
+                <td class="number strong">
+                  {{ item.totalCost }}
+                </td>
+
+
+                <td class="number">
+                  {{ item.participation }}
+                </td>
+
+
+                <td class="number">
+                  {{ item.accumulatedParticipation }}
+                </td>
+
+
+                <td>
+
+                  <span
+                    class="class-badge"
+                    [class.a]="
+                      item.classification === 'A'
+                    "
+                    [class.b]="
+                      item.classification === 'B'
+                    "
+                    [class.c]="
+                      item.classification === 'C'
+                    "
+                  >
+                    {{ item.classification }}
+                  </span>
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </div>
+
+} @else {
+
+  <div class="empty-state">
+
+    <h2>
+      Orçamento não encontrado
+    </h2>
+
+    <p>
+      Não foi possível carregar
+      a Curva ABC solicitada.
+    </p>
+
+    <a
+      [routerLink]="['/budgets']"
+    >
+      Voltar para orçamentos
+    </a>
+
+  </div>
+
+}
