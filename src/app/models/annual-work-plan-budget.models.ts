@@ -102,6 +102,8 @@ export interface AnnualWorkPlanBudgetComposition {
 
   serviceId: string;
 
+  catalogItemId?: string;
+
   compositionCode: string;
 
   description: string;

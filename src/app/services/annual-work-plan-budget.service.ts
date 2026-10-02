@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 
 import {
-  AnnualWorkPlanBudget
+  AnnualWorkPlanBudget,
+  AnnualWorkPlanBudgetGroup,
+  AnnualWorkPlanBudgetServiceItem,
+  AnnualWorkPlanBudgetComposition
 } from '../models/annual-work-plan-budget.models';
 
 
@@ -529,692 +532,178 @@ export class AnnualWorkPlanBudgetService {
 
       {
         id: 'PATO-2026',
-
         year: '2026',
-
         startDate: '2026-01-01',
-
         endDate: '2026-12-31',
-
         mode: 'INDEPENDENT',
-
         sourcePlanId: null,
 
         servicePlans: [
 
           {
             id: 'PATO-2026-SRV-01-01',
-
             serviceId: 'SRV-01-01',
 
             measurement: {
-              quantityMode:
-                'INVENTORY_X_EFFORT',
-
-              inventoryQuantity:
-                '294,4000',
-
-              inventoryUnit:
-                'km',
-
-              effortLevel:
-                '0,0100',
-
-              effortUnit:
-                'm/m',
-
-              workQuantity:
-                '2,9440',
-
-              workUnit:
-                'km',
-
-              justification:
-                ''
+              quantityMode: 'INVENTORY_X_EFFORT',
+              inventoryQuantity: '294,4000',
+              inventoryUnit: 'km',
+              effortLevel: '0,0100',
+              effortUnit: 'm/m',
+              workQuantity: '2,9440',
+              workUnit: 'km',
+              justification: ''
             },
 
             compositions: [
-
               {
-                compositionId:
-                  'SC-01-01-001',
-
-                quantity:
-                  '0,2944',
-
-                unitPrice:
-                  '467,220',
-
-                totalCost:
-                  '137,67'
+                compositionId: 'SC-01-01-001',
+                quantity: '0,2944',
+                unitPrice: '467,220',
+                totalCost: '137,67'
               },
-
               {
-                compositionId:
-                  'SC-01-01-002',
-
-                quantity:
-                  '0,5888',
-
-                unitPrice:
-                  '502,760',
-
-                totalCost:
-                  '296,03'
+                compositionId: 'SC-01-01-002',
+                quantity: '0,5888',
+                unitPrice: '502,760',
+                totalCost: '296,03'
               },
-
               {
-                compositionId:
-                  'SC-01-01-003',
-
-                quantity:
-                  '1,0304',
-
-                unitPrice:
-                  '31,910',
-
-                totalCost:
-                  '32,88'
+                compositionId: 'SC-01-01-003',
+                quantity: '1,0304',
+                unitPrice: '31,910',
+                totalCost: '32,88'
               },
-
               {
-                compositionId:
-                  'SC-01-01-004',
-
-                quantity:
-                  '1,0304',
-
-                unitPrice:
-                  '3,650',
-
-                totalCost:
-                  '3,76'
+                compositionId: 'SC-01-01-004',
+                quantity: '1,0304',
+                unitPrice: '3,650',
+                totalCost: '3,76'
               }
-
             ]
           },
-
 
           {
             id: 'PATO-2026-SRV-02-01',
-
             serviceId: 'SRV-02-01',
 
             measurement: {
-              quantityMode:
-                'INVENTORY_X_EFFORT',
-
-              inventoryQuantity:
-                '12,0000',
-
-              inventoryUnit:
-                'mês',
-
-              effortLevel:
-                '1,0000',
-
-              effortUnit:
-                'mês/mês',
-
-              workQuantity:
-                '12,0000',
-
-              workUnit:
-                'mês',
-
-              justification:
-                ''
+              quantityMode: 'INVENTORY_X_EFFORT',
+              inventoryQuantity: '12,0000',
+              inventoryUnit: 'mês',
+              effortLevel: '1,0000',
+              effortUnit: 'mês/mês',
+              workQuantity: '12,0000',
+              workUnit: 'mês',
+              justification: ''
             },
 
             compositions: [
-
               {
-                compositionId:
-                  'SC-02-01-001',
-
-                quantity:
-                  '12,0000',
-
-                unitPrice:
-                  '80.932,550',
-
-                totalCost:
-                  '971.190,60'
+                compositionId: 'SC-02-01-001',
+                quantity: '12,0000',
+                unitPrice: '80.932,550',
+                totalCost: '971.190,60'
               }
-
-            ]
-          },
-
-
-          {
-            id: 'PATO-2026-SRV-03-01',
-
-            serviceId: 'SRV-03-01',
-
-            measurement: {
-              quantityMode:
-                'INVENTORY_X_EFFORT',
-
-              inventoryQuantity:
-                '294,4000',
-
-              inventoryUnit:
-                'km',
-
-              effortLevel:
-                '0,0500',
-
-              effortUnit:
-                'm/m',
-
-              workQuantity:
-                '14,7200',
-
-              workUnit:
-                'km',
-
-              justification:
-                ''
-            },
-
-            compositions: [
-
-              {
-                compositionId:
-                  'SC-03-01-001',
-
-                quantity:
-                  '14,7200',
-
-                unitPrice:
-                  '87,960',
-
-                totalCost:
-                  '1.294,77'
-              },
-
-              {
-                compositionId:
-                  'SC-03-01-002',
-
-                quantity:
-                  '7,3600',
-
-                unitPrice:
-                  '65,570',
-
-                totalCost:
-                  '482,60'
-              }
-
-            ]
-          },
-
-
-          {
-            id: 'PATO-2026-SRV-04-01',
-
-            serviceId: 'SRV-04-01',
-
-            measurement: {
-              quantityMode:
-                'DIRECT',
-
-              inventoryQuantity:
-                '',
-
-              inventoryUnit:
-                '',
-
-              effortLevel:
-                '',
-
-              effortUnit:
-                '',
-
-              workQuantity:
-                '12,4340',
-
-              workUnit:
-                'm³',
-
-              justification:
-                'Quantidade definida por memória de cálculo.'
-            },
-
-            compositions: [
-
-              {
-                compositionId:
-                  'SC-04-01-001',
-
-                quantity:
-                  '12,4340',
-
-                unitPrice:
-                  '163,370',
-
-                totalCost:
-                  '2.031,77'
-              },
-
-              {
-                compositionId:
-                  'SC-04-01-002',
-
-                quantity:
-                  '6,2170',
-
-                unitPrice:
-                  '237,920',
-
-                totalCost:
-                  '1.479,35'
-              }
-
-            ]
-          },
-
-
-          {
-            id: 'PATO-2026-SRV-05-01',
-
-            serviceId: 'SRV-05-01',
-
-            measurement: {
-              quantityMode:
-                'DIRECT',
-
-              inventoryQuantity:
-                '',
-
-              inventoryUnit:
-                '',
-
-              effortLevel:
-                '',
-
-              effortUnit:
-                '',
-
-              workQuantity:
-                '54,0000',
-
-              workUnit:
-                'un',
-
-              justification:
-                'Quantidade definida por memória de cálculo.'
-            },
-
-            compositions: [
-
-              {
-                compositionId:
-                  'SC-05-01-001',
-
-                quantity:
-                  '54,0000',
-
-                unitPrice:
-                  '8.245,060',
-
-                totalCost:
-                  '445.233,24'
-              },
-
-              {
-                compositionId:
-                  'SC-05-01-002',
-
-                quantity:
-                  '2,0000',
-
-                unitPrice:
-                  '4.453,010',
-
-                totalCost:
-                  '8.906,02'
-              }
-
-            ]
-          },
-
-
-          {
-            id: 'PATO-2026-SRV-06-01',
-
-            serviceId: 'SRV-06-01',
-
-            measurement: {
-              quantityMode:
-                'DIRECT',
-
-              inventoryQuantity:
-                '',
-
-              inventoryUnit:
-                '',
-
-              effortLevel:
-                '',
-
-              effortUnit:
-                '',
-
-              workQuantity:
-                '10,0000',
-
-              workUnit:
-                'dia',
-
-              justification:
-                'Quantidade definida conforme planejamento operacional.'
-            },
-
-            compositions: [
-
-              {
-                compositionId:
-                  'SC-06-01-001',
-
-                quantity:
-                  '10,0000',
-
-                unitPrice:
-                  '398,300',
-
-                totalCost:
-                  '3.983,00'
-              }
-
-            ]
-          },
-
-
-          {
-            id: 'PATO-2026-SRV-07-01',
-
-            serviceId: 'SRV-07-01',
-
-            measurement: {
-              quantityMode:
-                'INVENTORY_X_EFFORT',
-
-              inventoryQuantity:
-                '51.142,5000',
-
-              inventoryUnit:
-                'm²',
-
-              effortLevel:
-                '1,0000',
-
-              effortUnit:
-                'm²/m²',
-
-              workQuantity:
-                '51.142,5000',
-
-              workUnit:
-                'm²',
-
-              justification:
-                ''
-            },
-
-            compositions: [
-
-              {
-                compositionId:
-                  'SC-07-01-001',
-
-                quantity:
-                  '51.142,5000',
-
-                unitPrice:
-                  '17,340',
-
-                totalCost:
-                  '886.810,95'
-              }
-
-            ]
-          },
-
-
-          {
-            id: 'PATO-2026-SRV-08-01',
-
-            serviceId: 'SRV-08-01',
-
-            measurement: {
-              quantityMode:
-                'DIRECT',
-
-              inventoryQuantity:
-                '',
-
-              inventoryUnit:
-                '',
-
-              effortLevel:
-                '',
-
-              effortUnit:
-                '',
-
-              workQuantity:
-                '720,9540',
-
-              workUnit:
-                'tkm',
-
-              justification:
-                'Quantidade definida conforme memória de cálculo de transporte.'
-            },
-
-            compositions: [
-
-              {
-                compositionId:
-                  'SC-08-01-001',
-
-                quantity:
-                  '266,7070',
-
-                unitPrice:
-                  '1,340',
-
-                totalCost:
-                  '357,39'
-              },
-
-              {
-                compositionId:
-                  'SC-08-01-002',
-
-                quantity:
-                  '733.565,4600',
-
-                unitPrice:
-                  '1,090',
-
-                totalCost:
-                  '799.584,35'
-              }
-
-            ]
-          },
-
-
-          {
-            id: 'PATO-2026-SRV-09-01',
-
-            serviceId: 'SRV-09-01',
-
-            measurement: {
-              quantityMode:
-                'DIRECT',
-
-              inventoryQuantity:
-                '',
-
-              inventoryUnit:
-                '',
-
-              effortLevel:
-                '',
-
-              effortUnit:
-                '',
-
-              workQuantity:
-                '1,0000',
-
-              workUnit:
-                'ano',
-
-              justification:
-                'Quantidade definida conforme período contratual.'
-            },
-
-            compositions: [
-
-              {
-                compositionId:
-                  'SC-09-01-001',
-
-                quantity:
-                  '1,0000',
-
-                unitPrice:
-                  '1.568.818,570',
-
-                totalCost:
-                  '1.568.818,57'
-              }
-
-            ]
-          },
-
-
-          {
-            id: 'PATO-2026-SRV-10-01',
-
-            serviceId: 'SRV-10-01',
-
-            measurement: {
-              quantityMode:
-                'DIRECT',
-
-              inventoryQuantity:
-                '',
-
-              inventoryUnit:
-                '',
-
-              effortLevel:
-                '',
-
-              effortUnit:
-                '',
-
-              workQuantity:
-                '0,5000',
-
-              workUnit:
-                'un',
-
-              justification:
-                'Quantidade definida conforme planejamento da obra.'
-            },
-
-            compositions: [
-
-              {
-                compositionId:
-                  'SC-10-01-001',
-
-                quantity:
-                  '0,5000',
-
-                unitPrice:
-                  '82.686,660',
-
-                totalCost:
-                  '41.343,33'
-              }
-
-            ]
-          },
-
-
-          {
-            id: 'PATO-2026-SRV-11-01',
-
-            serviceId: 'SRV-11-01',
-
-            measurement: {
-              quantityMode:
-                'DIRECT',
-
-              inventoryQuantity:
-                '',
-
-              inventoryUnit:
-                '',
-
-              effortLevel:
-                '',
-
-              effortUnit:
-                '',
-
-              workQuantity:
-                '1,0000',
-
-              workUnit:
-                'un',
-
-              justification:
-                'Quantidade definida conforme estrutura prevista para execução.'
-            },
-
-            compositions: [
-
-              {
-                compositionId:
-                  'SC-11-01-001',
-
-                quantity:
-                  '0,5000',
-
-                unitPrice:
-                  '252.967,420',
-
-                totalCost:
-                  '126.483,71'
-              },
-
-              {
-                compositionId:
-                  'SC-11-01-002',
-
-                quantity:
-                  '0,5000',
-
-                unitPrice:
-                  '221.859,460',
-
-                totalCost:
-                  '110.929,73'
-              }
-
             ]
           }
 
         ]
+      },
+
+
+      {
+        id: 'PATO-2027',
+        year: '2027',
+        startDate: '2027-01-01',
+        endDate: '2027-12-31',
+        mode: 'INDEPENDENT',
+        sourcePlanId: null,
+
+        servicePlans: [
+
+          {
+            id: 'PATO-2027-SRV-01-01',
+            serviceId: 'SRV-01-01',
+
+            measurement: {
+              quantityMode: 'INVENTORY_X_EFFORT',
+              inventoryQuantity: '294,4000',
+              inventoryUnit: 'km',
+              effortLevel: '0,0150',
+              effortUnit: 'm/m',
+              workQuantity: '4,4160',
+              workUnit: 'km',
+              justification: ''
+            },
+
+            compositions: [
+              {
+                compositionId: 'SC-01-01-001',
+                quantity: '0,4416',
+                unitPrice: '467,220',
+                totalCost: '206,31'
+              },
+              {
+                compositionId: 'SC-01-01-002',
+                quantity: '0,8832',
+                unitPrice: '502,760',
+                totalCost: '443,99'
+              },
+              {
+                compositionId: 'SC-01-01-003',
+                quantity: '1,5456',
+                unitPrice: '31,910',
+                totalCost: '49,32'
+              },
+              {
+                compositionId: 'SC-01-01-004',
+                quantity: '1,5456',
+                unitPrice: '3,650',
+                totalCost: '5,64'
+              }
+            ]
+          },
+
+          {
+            id: 'PATO-2027-SRV-02-01',
+            serviceId: 'SRV-02-01',
+
+            measurement: {
+              quantityMode: 'INVENTORY_X_EFFORT',
+              inventoryQuantity: '12,0000',
+              inventoryUnit: 'mês',
+              effortLevel: '1,0000',
+              effortUnit: 'mês/mês',
+              workQuantity: '12,0000',
+              workUnit: 'mês',
+              justification: ''
+            },
+
+            compositions: [
+              {
+                compositionId: 'SC-02-01-001',
+                quantity: '12,0000',
+                unitPrice: '80.932,550',
+                totalCost: '971.190,60'
+              }
+            ]
+          }
+
+        ]
+      },
+
+
+      {
+        id: 'PATO-2028',
+        year: '2028',
+        startDate: '2028-01-01',
+        endDate: '2028-12-31',
+        mode: 'REPEAT',
+        sourcePlanId: 'PATO-2027',
+
+        servicePlans: []
+
       }
 
     ]
@@ -1244,6 +733,7 @@ export class AnnualWorkPlanBudgetService {
       'Solicitação de cálculo de quantitativos do PATO:',
       budgetId
     );
+
   }
 
 
@@ -1255,6 +745,7 @@ export class AnnualWorkPlanBudgetService {
       'Solicitação de atualização do orçamento pelo PATO:',
       budgetId
     );
+
   }
 
 
@@ -1265,6 +756,252 @@ export class AnnualWorkPlanBudgetService {
     console.info(
       'Solicitação de relatório PATO:',
       budgetId
+    );
+
+  }
+      
+  addGroup(
+    budgetId: string,
+    code: string,
+    description: string
+  ): AnnualWorkPlanBudgetGroup | null {
+
+    if (budgetId !== this.pato.budgetId) {
+      return null;
+    }
+
+    const groups =
+      this.pato.structure.groups;
+
+    const nextSortOrder =
+      String(groups.length + 1)
+        .padStart(2, '0');
+
+    const group:
+      AnnualWorkPlanBudgetGroup = {
+
+      id:
+        `GRP-${crypto.randomUUID()}`,
+
+      code:
+        code.trim(),
+
+      description:
+        description.trim(),
+
+      sortOrder:
+        nextSortOrder,
+
+      services: []
+
+    };
+
+    groups.push(group);
+
+    return group;
+  }
+
+
+  addService(
+    budgetId: string,
+    groupId: string,
+    code: string,
+    description: string
+  ): AnnualWorkPlanBudgetServiceItem | null {
+
+    if (budgetId !== this.pato.budgetId) {
+      return null;
+    }
+
+    const group =
+      this.pato.structure.groups.find(
+        item =>
+          item.id === groupId
+      );
+
+    if (!group) {
+      return null;
+    }
+
+    const nextSortOrder =
+      String(group.services.length + 1)
+        .padStart(2, '0');
+
+    const service:
+      AnnualWorkPlanBudgetServiceItem = {
+
+      id:
+        `SRV-${crypto.randomUUID()}`,
+
+      groupId:
+        group.id,
+
+      code:
+        code.trim(),
+
+      description:
+        description.trim(),
+
+      sortOrder:
+        nextSortOrder,
+
+      compositions: []
+
+    };
+
+    group.services.push(service);
+
+    return service;
+  }
+
+
+  addComposition(
+    budgetId: string,
+    serviceId: string,
+    catalogItemId: string,
+    compositionCode: string,
+    description: string,
+    unit: string,
+    factor: string
+  ): AnnualWorkPlanBudgetComposition | null {
+
+    if (budgetId !== this.pato.budgetId) {
+      return null;
+    }
+
+    const group =
+      this.pato.structure.groups.find(
+        item =>
+          item.services.some(
+            service =>
+              service.id === serviceId
+          )
+      );
+
+    if (!group) {
+      return null;
+    }
+
+    const service =
+      group.services.find(
+        item =>
+          item.id === serviceId
+      );
+
+    if (!service) {
+      return null;
+    }
+
+    const existingComposition =
+      service.compositions.find(
+        composition =>
+          composition.catalogItemId === catalogItemId
+      );
+
+    if (existingComposition) {
+      return null;
+    }
+
+    const nextSortOrder =
+      String(service.compositions.length + 1)
+        .padStart(2, '0');
+
+    const composition:
+      AnnualWorkPlanBudgetComposition = {
+
+      id:
+        `SC-${crypto.randomUUID()}`,
+
+      serviceId:
+        service.id,
+
+      catalogItemId,
+
+      compositionCode:
+        compositionCode.trim(),
+
+      description:
+        description.trim(),
+
+      unit,
+
+      factor:
+        factor.trim(),
+
+      sortOrder:
+        nextSortOrder
+
+    };
+
+    service.compositions.push(
+      composition
+    );
+
+    return composition;
+  }
+
+  private getNextGroupCode(): string {
+
+    const numericCodes =
+      this.pato.structure.groups
+        .map(group => Number(group.code))
+        .filter(code => Number.isFinite(code));
+
+    const nextCode =
+      numericCodes.length > 0
+        ? Math.max(...numericCodes) + 1
+        : 1;
+
+    return String(nextCode).padStart(2, '0');
+  }
+
+  private getNextServiceCode(
+    group: AnnualWorkPlanBudgetGroup
+  ): string {
+
+    const prefix =
+      group.code.padStart(2, '0');
+
+    const serviceNumbers =
+      group.services
+        .map(service => {
+          const parts =
+            service.code.split('.');
+
+          return Number(parts[parts.length - 1]);
+        })
+        .filter(code => Number.isFinite(code));
+
+    const nextNumber =
+      serviceNumbers.length > 0
+        ? Math.max(...serviceNumbers) + 1
+        : 1;
+
+    return `${prefix}.${String(nextNumber).padStart(2, '0')}`;
+  }
+
+  private groupCodeExists(
+    code: string,
+    ignoredGroupId?: string
+  ): boolean {
+
+    return this.pato.structure.groups.some(
+      group =>
+        group.id !== ignoredGroupId &&
+        group.code.trim() === code.trim()
+    );
+  }
+
+  private serviceCodeExists(
+    group: AnnualWorkPlanBudgetGroup,
+    code: string,
+    ignoredServiceId?: string
+  ): boolean {
+
+    return group.services.some(
+      service =>
+        service.id !== ignoredServiceId &&
+        service.code.trim() === code.trim()
     );
   }
 

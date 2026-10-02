@@ -48,6 +48,71 @@
     </header>
 
 
+    <!-- PLANOS ANUAIS -->
+
+    <section class="plans-card">
+
+      <div class="plans-header">
+
+        <div>
+
+          <span class="page-eyebrow">
+            PLANEJAMENTO ANUAL
+          </span>
+
+          <h2>
+            Planos do contrato
+          </h2>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="secondary-action"
+          disabled
+        >
+          + Novo PATO
+        </button>
+
+      </div>
+
+
+      <div class="plans-list">
+
+        @for (
+          plan of plans;
+          track plan.id
+        ) {
+
+          <button
+            type="button"
+            class="plan-item"
+            [class.active]="
+              isActivePlan(plan.id)
+            "
+            (click)="selectPlan(plan.id)"
+          >
+
+            <span class="plan-year">
+              {{ plan.year }}
+            </span>
+
+            <span class="plan-mode">
+              {{ getPlanModeLabel(plan) }}
+            </span>
+
+          </button>
+
+        }
+
+      </div>
+
+    </section>
+
+
+    <!-- RESUMO -->
+
     <section class="summary">
 
       <div class="summary-card">
@@ -79,11 +144,15 @@
       <div class="summary-card">
 
         <span class="label">
-          Fonte dos quantitativos
+          Tipo do plano
         </span>
 
         <strong>
-          PATO
+          {{
+            activePlan
+              ? getPlanModeLabel(activePlan)
+              : '—'
+          }}
         </strong>
 
       </div>
@@ -103,6 +172,8 @@
 
     </section>
 
+
+    <!-- AÇÕES -->
 
     <section class="actions-card">
 
@@ -148,7 +219,9 @@
     </section>
 
 
-    <section class="table-card">
+    <!-- ESTRUTURA -->
+
+    <section class="structure-card">
 
       <div class="section-header">
 
@@ -159,305 +232,734 @@
           </span>
 
           <h2>
-            Serviços e composições
+            Grupos de serviços
           </h2>
 
+          <p>
+            Estrutura organizacional do planejamento anual.
+          </p>
+
         </div>
+
+
+        <button
+          type="button"
+          class="secondary-action"
+          (click)="openGroupForm()"
+        >
+          + Grupo
+        </button>
 
       </div>
 
 
-      <div class="table-scroll">
+      <!-- NOVO GRUPO -->
 
-        <table>
+      @if (showGroupForm) {
 
-          <thead>
+        <div class="group-form">
 
-            <tr>
+          <div class="group-form-title">
 
-              <th class="group-column">
-                Grupo
-              </th>
+            <strong>
+              Novo grupo
+            </strong>
 
-              <th class="description-column">
-                Serviço / Composição
-              </th>
+            <span>
+              Cadastre o grupo que organizará os serviços.
+            </span>
 
-              <th>
-                Unidade
-              </th>
-
-              <th>
-                Inventário
-              </th>
-
-              <th>
-                Quantidade
-              </th>
-
-              <th>
-                Nível esforço
-              </th>
-
-              <th>
-                Unidade esforço
-              </th>
-
-              <th>
-                Preço unitário
-              </th>
-
-              <th>
-                Total
-              </th>
-
-            </tr>
-
-          </thead>
+          </div>
 
 
-          <tbody>
+          <div class="group-form-fields">
 
-            @for (
-              group of groups;
-              track group.id
-            ) {
+            <label>
 
-              <tr class="group-row">
+              <span>
+                Código
+              </span>
 
-                <td>
+              <input
+                type="text"
+                [(ngModel)]="newGroupCode"
+                placeholder="Ex.: 12"
+              />
 
-                  <button
-                    type="button"
-                    class="tree-button"
-                    (click)="toggleGroup(group)"
-                    [attr.aria-expanded]="
-                      isGroupExpanded(group.id)
-                    "
-                  >
-
-                    <span class="tree-icon">
-                      {{
-                        isGroupExpanded(group.id)
-                          ? '▾'
-                          : '▸'
-                      }}
-                    </span>
-
-                    <strong>
-                      {{ group.code }}
-                    </strong>
-
-                  </button>
-
-                </td>
+            </label>
 
 
-                <td colspan="8">
+            <label>
 
-                  <strong>
-                    {{ group.description }}
-                  </strong>
+              <span>
+                Descrição
+              </span>
 
-                </td>
+              <input
+                type="text"
+                [(ngModel)]="newGroupDescription"
+                placeholder="Descrição do grupo"
+              />
+
+            </label>
+
+          </div>
+
+
+          <div class="group-form-actions">
+
+            <button
+              type="button"
+              class="ghost-button"
+              (click)="cancelGroupForm()"
+            >
+              Cancelar
+            </button>
+
+
+            <button
+              type="button"
+              class="primary-button"
+              [disabled]="
+                !newGroupCode.trim() ||
+                !newGroupDescription.trim()
+              "
+              (click)="addGroup()"
+            >
+              Adicionar grupo
+            </button>
+
+          </div>
+
+        </div>
+
+      }
+
+
+      <!-- TABELA -->
+
+      <section class="table-card">
+
+        <div class="section-header">
+
+          <div>
+
+            <span class="page-eyebrow">
+              ESTRUTURA
+            </span>
+
+            <h2>
+              Serviços e composições
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="table-scroll">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th class="group-column">
+                  Grupo
+                </th>
+
+                <th class="description-column">
+                  Serviço / Composição
+                </th>
+
+                <th>
+                  Unidade
+                </th>
+
+                <th>
+                  Inventário
+                </th>
+
+                <th>
+                  Quantidade
+                </th>
+
+                <th>
+                  Nível esforço
+                </th>
+
+                <th>
+                  Unidade esforço
+                </th>
+
+                <th>
+                  Preço unitário
+                </th>
+
+                <th>
+                  Total
+                </th>
 
               </tr>
 
+            </thead>
 
-              @if (
-                isGroupExpanded(group.id)
+
+            <tbody>
+
+              @for (
+                group of groups;
+                track group.id
               ) {
 
-                @for (
-                  service of group.services;
-                  track service.id
-                ) {
+                <!-- GRUPO -->
 
-                  @let measurement =
-                    getMeasurement(service.id);
+                <tr class="group-row">
 
-                  <tr class="service-row">
+                  <td>
 
-                    <td>
+                    <button
+                      type="button"
+                      class="tree-button"
+                      (click)="toggleGroup(group)"
+                      [attr.aria-expanded]="
+                        isGroupExpanded(group.id)
+                      "
+                    >
 
-                      <button
-                        type="button"
-                        class="tree-button service-tree"
-                        (click)="toggleService(service)"
-                        [attr.aria-expanded]="
-                          isServiceExpanded(service.id)
-                        "
-                      >
-
-                        <span class="tree-icon">
-                          {{
-                            isServiceExpanded(service.id)
-                              ? '▾'
-                              : '▸'
-                          }}
-                        </span>
-
-                        <strong>
-                          {{ service.code }}
-                        </strong>
-
-                      </button>
-
-                    </td>
-
-
-                    <td>
-                      {{ service.description }}
-                    </td>
-
-
-                    <td>
-                      {{ measurement?.workUnit || '—' }}
-                    </td>
-
-
-                    <td>
-
-                      @if (
-                        measurement?.inventoryQuantity
-                      ) {
-
-                        {{ measurement?.inventoryQuantity }}
-                        {{ ' ' }}
-                        {{ measurement?.inventoryUnit }}
-
-                      } @else {
-
-                        —
-
-                      }
-
-                    </td>
-
-
-                    <td>
+                      <span class="tree-icon">
+                        {{
+                          isGroupExpanded(group.id)
+                            ? '▾'
+                            : '▸'
+                        }}
+                      </span>
 
                       <strong>
-                        {{ measurement?.workQuantity || '—' }}
+                        {{ group.code }}
                       </strong>
 
-                    </td>
+                    </button>
+
+                  </td>
 
 
-                    <td>
+                  <td>
 
-                      @if (
-                        measurement?.effortLevel
-                      ) {
+                    <strong>
+                      {{ group.description }}
+                    </strong>
 
-                        {{ measurement?.effortLevel }}
-
-                      } @else {
-
-                        —
-
-                      }
-
-                    </td>
+                  </td>
 
 
-                    <td>
+                  <td colspan="7">
 
-                      @if (
-                        measurement?.effortUnit
-                      ) {
+                    <button
+                      type="button"
+                      class="secondary-button"
+                      (click)="openServiceForm(group.id)"
+                    >
+                      + Serviço
+                    </button>
 
-                        {{ measurement?.effortUnit }}
+                  </td>
 
-                      } @else {
-
-                        —
-
-                      }
-
-                    </td>
+                </tr>
 
 
-                    <td>
-                      —
-                    </td>
+                <!-- FORMULÁRIO DE SERVIÇO -->
+
+                @if (
+                  showServiceForm &&
+                  serviceFormGroupId === group.id
+                ) {
+
+                  <tr class="service-form-row">
+
+                    <td></td>
+
+                    <td colspan="8">
+
+                      <div class="service-form">
+
+                        <div class="service-form-title">
+
+                          <strong>
+                            Novo serviço
+                          </strong>
+
+                          <span>
+                            Serviço pertencente ao grupo
+                            {{ group.code }}
+                            —
+                            {{ group.description }}
+                          </span>
+
+                        </div>
 
 
-                    <td>
-                      —
+                        <div class="service-form-fields">
+
+                          <label>
+
+                            <span>
+                              Código
+                            </span>
+
+                            <input
+                              type="text"
+                              [(ngModel)]="newServiceCode"
+                              placeholder="Ex.: 01.01"
+                            />
+
+                          </label>
+
+
+                          <label>
+
+                            <span>
+                              Descrição
+                            </span>
+
+                            <input
+                              type="text"
+                              [(ngModel)]="newServiceDescription"
+                              placeholder="Descrição do serviço"
+                            />
+
+                          </label>
+
+                        </div>
+
+
+                        <div class="service-form-actions">
+
+                          <button
+                            type="button"
+                            class="ghost-button"
+                            (click)="cancelServiceForm()"
+                          >
+                            Cancelar
+                          </button>
+
+
+                          <button
+                            type="button"
+                            class="primary-button"
+                            [disabled]="
+                              !newServiceCode.trim() ||
+                              !newServiceDescription.trim()
+                            "
+                            (click)="addService()"
+                          >
+                            Adicionar serviço
+                          </button>
+
+                        </div>
+
+                      </div>
+
                     </td>
 
                   </tr>
 
+                }
 
-                  @if (
-                    isServiceExpanded(service.id)
+
+                <!-- SERVIÇOS -->
+
+                @if (
+                  isGroupExpanded(group.id)
+                ) {
+
+                  @for (
+                    service of group.services;
+                    track service.id
                   ) {
 
-                    @for (
-                      composition of service.compositions;
-                      track composition.id
-                    ) {
+                    @let measurement =
+                      getMeasurement(service.id);
 
-                      @let compositionPlan =
-                        getCompositionPlan(
-                          service.id,
-                          composition.id
-                        );
+                    <tr class="service-row">
 
-                      <tr class="composition-row">
+                      <td>
 
-                        <td></td>
+                        <button
+                          type="button"
+                          class="tree-button service-tree"
+                          (click)="toggleService(service)"
+                          [attr.aria-expanded]="
+                            isServiceExpanded(service.id)
+                          "
+                        >
 
-
-                        <td class="composition-description">
-
-                          <span class="composition-code">
-                            {{ composition.compositionCode }}
+                          <span class="tree-icon">
+                            {{
+                              isServiceExpanded(service.id)
+                                ? '▾'
+                                : '▸'
+                            }}
                           </span>
+
+                          <strong>
+                            {{ service.code }}
+                          </strong>
+
+                        </button>
+
+                      </td>
+
+
+                      <td>
+
+                        <div class="service-description-cell">
 
                           <span>
-                            {{ composition.description }}
+                            {{ service.description }}
                           </span>
 
-                        </td>
+                          <button
+                            type="button"
+                            class="secondary-button small-button"
+                            (click)="openCompositionForm(service.id)"
+                          >
+                            + Composição
+                          </button>
+
+                        </div>
+
+                      </td>
 
 
-                        <td>
-                          {{ composition.unit }}
-                        </td>
+                      <td>
+                        {{ measurement?.workUnit || '—' }}
+                      </td>
 
 
-                        <td>
+                      <td>
+
+                        @if (
+                          measurement?.inventoryQuantity
+                        ) {
+
+                          {{ measurement?.inventoryQuantity }}
+                          {{ ' ' }}
+                          {{ measurement?.inventoryUnit }}
+
+                        } @else {
+
                           —
-                        </td>
+
+                        }
+
+                      </td>
 
 
-                        <td>
-                          {{ compositionPlan?.quantity || '—' }}
-                        </td>
+                      <td>
+
+                        <strong>
+                          {{
+                            measurement?.workQuantity || '—'
+                          }}
+                        </strong>
+
+                      </td>
 
 
-                        <td>
-                          {{ composition.factor }}
-                        </td>
+                      <td>
 
+                        @if (
+                          measurement?.effortLevel
+                        ) {
 
-                        <td>
+                          {{ measurement?.effortLevel }}
+
+                        } @else {
+
                           —
-                        </td>
+
+                        }
+
+                      </td>
 
 
-                        <td>
-                          {{ compositionPlan?.unitPrice || '—' }}
-                        </td>
+                      <td>
+
+                        @if (
+                          measurement?.effortUnit
+                        ) {
+
+                          {{ measurement?.effortUnit }}
+
+                        } @else {
+
+                          —
+
+                        }
+
+                      </td>
 
 
-                        <td>
-                          {{ compositionPlan?.totalCost || '—' }}
-                        </td>
+                      <td>
+                        —
+                      </td>
 
-                      </tr>
+
+                      <td>
+                        —
+                      </td>
+
+                    </tr>
+
+
+                    <!-- PESQUISA -->
+
+                 @if (showCompositionForm && compositionFormServiceId === service.id) {
+                  <tr class="composition-search-row">
+                    <td colspan="9">
+
+                      <div class="composition-catalog">
+
+                        <div class="composition-catalog-header">
+                          <div>
+                            <div class="composition-catalog-label">
+                              CATÁLOGO SICRO
+                            </div>
+
+                            <div class="composition-catalog-title">
+                              Adicionar composição
+                            </div>
+
+                            <div class="composition-catalog-description">
+                              Pesquise uma composição do grupo CO para adicionar ao serviço.
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            class="composition-catalog-close"
+                            (click)="cancelCompositionForm()"
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+
+
+                        <div class="composition-search-form">
+
+                          <div class="composition-search-field composition-code-field">
+                            <label for="composition-code">
+                              Código
+                            </label>
+
+                            <input
+                              id="composition-code"
+                              type="text"
+                              [(ngModel)]="compositionSearchCode"
+                              placeholder="Ex.: 4915678"
+                              (keyup.enter)="searchCompositions()"
+                            />
+                          </div>
+
+
+                          <div class="composition-search-field">
+                            <label for="composition-description">
+                              Descrição
+                            </label>
+
+                            <input
+                              id="composition-description"
+                              type="text"
+                              [(ngModel)]="compositionSearchDescription"
+                              placeholder="Ex.: Tapa buraco"
+                              (keyup.enter)="searchCompositions()"
+                            />
+                          </div>
+
+
+                          <button
+                            type="button"
+                            class="primary-button composition-search-button"
+                            (click)="searchCompositions()"
+                            [disabled]="compositionSearchLoading"
+                          >
+                            @if (compositionSearchLoading) {
+                              Pesquisando...
+                            } @else {
+                              Pesquisar
+                            }
+                          </button>
+
+                        </div>
+
+
+                        @if (compositionSearchError) {
+                          <div class="composition-feedback composition-feedback-error">
+                            {{ compositionSearchError }}
+                          </div>
+                        }
+
+
+                        @if (
+                          !compositionSearchLoading &&
+                          !compositionSearchError &&
+                          compositionSearchResults.length === 0 &&
+                          (compositionSearchCode || compositionSearchDescription)
+                        ) {
+                          <div class="composition-feedback">
+                            Nenhuma composição encontrada para os critérios informados.
+                          </div>
+                        }
+
+
+                        @if (compositionSearchResults.length > 0) {
+
+                          <div class="composition-results">
+
+                            <div class="composition-results-header">
+
+                              <div>
+                                <span class="composition-results-title">
+                                  Resultados do catálogo
+                                </span>
+
+                                <span class="composition-results-count">
+                                  {{ compositionSearchResults.length }} encontrados
+                                </span>
+                              </div>
+
+                            </div>
+
+
+                            <div class="composition-results-list">
+
+                              @for (item of compositionSearchResults; track item.id) {
+
+                                <div class="composition-result">
+
+                                  <div class="composition-result-code">
+                                    {{ item.code }}
+                                  </div>
+
+
+                                  <div class="composition-result-information">
+
+                                    <div class="composition-result-description">
+                                      {{ getSicroDescription(item) }}
+                                    </div>
+
+                                    <div class="composition-result-source">
+                                      SICRO · Grupo CO
+                                    </div>
+
+                                  </div>
+
+
+                                  <button
+                                    type="button"
+                                    class="secondary-button composition-add-button"
+                                    (click)="addCompositionFromCatalog(item)"
+                                  >
+                                    + Adicionar
+                                  </button>
+
+                                </div>
+
+                              }
+
+                            </div>
+
+                          </div>
+
+                        }
+
+                      </div>
+
+                    </td>
+                  </tr>
+                }
+
+
+                    <!-- COMPOSIÇÕES -->
+
+                    @if (
+                      isServiceExpanded(service.id)
+                    ) {
+
+                      @for (
+                        composition of service.compositions;
+                        track composition.id
+                      ) {
+
+                        @let compositionPlan =
+                          getCompositionPlan(
+                            service.id,
+                            composition.id
+                          );
+
+                        <tr class="composition-row">
+
+                          <td></td>
+
+
+                          <td class="composition-description">
+
+                            <span class="composition-code">
+                              {{ composition.compositionCode }}
+                            </span>
+
+                            <span>
+                              {{ composition.description }}
+                            </span>
+
+                          </td>
+
+
+                          <td>
+                            {{ composition.unit }}
+                          </td>
+
+
+                          <td>
+                            —
+                          </td>
+
+
+                          <td>
+                            {{
+                              compositionPlan?.quantity || '—'
+                            }}
+                          </td>
+
+
+                          <td>
+                            {{ composition.factor }}
+                          </td>
+
+
+                          <td>
+                            —
+                          </td>
+
+
+                          <td>
+                            {{
+                              compositionPlan?.unitPrice || '—'
+                            }}
+                          </td>
+
+
+                          <td>
+                            {{
+                              compositionPlan?.totalCost || '—'
+                            }}
+                          </td>
+
+                        </tr>
+
+                      }
 
                     }
 
@@ -467,16 +969,18 @@
 
               }
 
-            }
+            </tbody>
 
-          </tbody>
+          </table>
 
-        </table>
+        </div>
 
-      </div>
+      </section>
 
     </section>
 
+
+    <!-- RELATÓRIO -->
 
     <section class="report-card">
 
