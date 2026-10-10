@@ -10,50 +10,88 @@ import {
   RouterOutlet
 } from '@angular/router';
 
-import { filter } from 'rxjs';
+import {
+  filter
+} from 'rxjs';
 
-import { SidebarComponent } from './layout/sidebar/sidebar.component';
+import {
+  SidebarComponent
+} from './layout/sidebar/sidebar.component';
+
 
 @Component({
   selector: 'app-root',
+
   standalone: true,
+
   imports: [
     RouterOutlet,
     SidebarComponent
   ],
+
   templateUrl: './app.component.html',
+
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+
   appName = 'ENG-APP';
+
   appSubtitle = 'Engenharia';
 
   currentSection = 'Projetos';
 
-  private readonly router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef);
+
+  private readonly router =
+    inject(Router);
+
+  private readonly destroyRef =
+    inject(DestroyRef);
+
 
   constructor() {
-    const subscription = this.router.events
-      .pipe(
-        filter(
-          event => event instanceof NavigationEnd
+
+    const subscription =
+      this.router.events
+
+        .pipe(
+          filter(
+            event =>
+              event instanceof NavigationEnd
+          )
         )
-      )
-      .subscribe(() => {
-        this.currentSection =
-          this.getSectionFromRoute(this.router.url);
-      });
+
+        .subscribe(() => {
+
+          this.currentSection =
+            this.getSectionFromRoute(
+              this.router.url
+            );
+
+        });
+
 
     this.destroyRef.onDestroy(() => {
+
       subscription.unsubscribe();
+
     });
 
+
     this.currentSection =
-      this.getSectionFromRoute(this.router.url);
+      this.getSectionFromRoute(
+        this.router.url
+      );
   }
 
-  private getSectionFromRoute(url: string): string {
+
+  /**
+   * Determina qual seção está sendo exibida.
+   */
+  private getSectionFromRoute(
+    url: string
+  ): string {
+
     if (url.startsWith('/budgets')) {
       return 'Orçamentos';
     }
@@ -62,7 +100,7 @@ export class AppComponent {
       return 'Composições';
     }
 
-    if (url.startsWith('/ner')) {
+    if (url.startsWith('/mowing-workload-level')) {
       return 'Nível de esforço';
     }
 
@@ -75,5 +113,19 @@ export class AppComponent {
     }
 
     return 'Projetos';
+  }
+
+
+  /**
+   * Indica se estamos em uma rota pública.
+   *
+   * O login e o 2FA possuem uma interface própria.
+   */
+  get isAuthenticationPage(): boolean {
+
+    return (
+      this.router.url.startsWith('/login') ||
+      this.router.url.startsWith('/2fa')
+    );
   }
 }

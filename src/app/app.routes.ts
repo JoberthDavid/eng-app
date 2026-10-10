@@ -1,42 +1,84 @@
-import { Routes } from '@angular/router';
+import {
+  Routes
+} from '@angular/router';
 
-import { ProjectsPageComponent }
-  from './pages/projects/projects-page/projects-page.component';
 
-import { ProjectPageComponent }
-  from './pages/projects/project-page/project-page.component';
+/*
+ * ============================================================
+ * AUTENTICAÇÃO
+ * ============================================================
+ */
 
-import { BudgetsPageComponent }
-  from './pages/budgets/budgets-page/budgets-page.component';
+import {
+  LoginPageComponent
+} from './pages/auth/login/login-page.component';
 
-import { BudgetPageComponent }
-  from './pages/budgets/budget-page/budget-page.component';
+import {
+  TwoFactorPageComponent
+} from './pages/auth/two-factor/two-factor-page.component';
 
-import { CompositionPageComponent }
-  from './pages/compositions/composition-page/composition-page.component';
+import {
+  authGuard
+} from './core/auth/auth.guard';
 
-import { MaterialsPageComponent }
-  from './pages/materials/materials-page/materials-page.component';
 
-import { MaterialsQuotationPageComponent }
-  from './pages/materials/materials-quotation/materials-quotation.component';
+/*
+ * ============================================================
+ * PÁGINAS EXISTENTES
+ * ============================================================
+ */
 
-import { BituminousMaterialsComponent }
-  from './pages/materials/bituminous-materials/bituminous-materials.component'
+import {
+  ProjectsPageComponent
+} from './pages/projects/projects-page/projects-page.component';
 
-import { NerPageComponent } from './pages/brush_cutting/ner-page/ner-page.component';
+import {
+  ProjectPageComponent
+} from './pages/projects/project-page/project-page.component';
 
-import { BdiPageComponent }
-  from './pages/bdi/bdi-page/bdi-page.component';
+import {
+  BudgetsPageComponent
+} from './pages/budgets/budgets-page/budgets-page.component';
 
-import { FitPageComponent }
-  from './pages/fit/fit-page/fit-page.component';
+import {
+  BudgetPageComponent
+} from './pages/budgets/budget-page/budget-page.component';
 
-import { AbcCompositionsPageComponent }
-  from './pages/abc/compositions/abc-compositions-page.component';
+import {
+  CompositionPageComponent
+} from './pages/compositions/composition-page/composition-page.component';
 
-import { OccurrencesMapComponent }
-  from './pages/materials/occurrences-map/occurrences-map.component'
+import {
+  MaterialsPageComponent
+} from './pages/materials/materials-page/materials-page.component';
+
+import {
+  MaterialsQuotationPageComponent
+} from './pages/materials/materials-quotation/materials-quotation.component';
+
+import {
+  BituminousMaterialsComponent
+} from './pages/materials/bituminous-materials/bituminous-materials.component';
+
+import {
+  NerPageComponent
+} from './pages/brush_cutting/ner-page/ner-page.component';
+
+import {
+  BdiPageComponent
+} from './pages/bdi/bdi-page/bdi-page.component';
+
+import {
+  FitPageComponent
+} from './pages/fit/fit-page/fit-page.component';
+
+import {
+  AbcCompositionsPageComponent
+} from './pages/abc/compositions/abc-compositions-page.component';
+
+import {
+  OccurrencesMapComponent
+} from './pages/materials/occurrences-map/occurrences-map.component';
 
 import {
   TransportsPageComponent
@@ -53,90 +95,141 @@ import {
 
 export const routes: Routes = [
 
+  /*
+   * ==========================================================
+   * ROTAS PÚBLICAS
+   * ==========================================================
+   */
+
+  {
+    path: 'login',
+    component: LoginPageComponent
+  },
+
+  {
+    path: '2fa',
+    component: TwoFactorPageComponent
+  },
+
+
+  /*
+   * ==========================================================
+   * ROTA RAIZ
+   * ==========================================================
+   *
+   * A raiz continua levando para projetos.
+   *
+   * Se o usuário não estiver autenticado, o AuthGuard
+   * interceptará a navegação e levará para /login.
+   */
+
   {
     path: '',
     pathMatch: 'full',
     redirectTo: 'projects'
   },
 
+
+  /*
+   * ==========================================================
+   * ROTAS PROTEGIDAS
+   * ==========================================================
+   */
+
   {
     path: 'projects',
-    component: ProjectsPageComponent
+    component: ProjectsPageComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'projects/:id',
-    component: ProjectPageComponent
+    component: ProjectPageComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'budgets',
-    component: BudgetsPageComponent
+    component: BudgetsPageComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'budgets/:id',
-    component: BudgetPageComponent
+    component: BudgetPageComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'annual-work-plan-budget/:budgetId',
-    component: AnnualWorkPlanBudgetPageComponent
+    component: AnnualWorkPlanBudgetPageComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'abc/:budgetId',
-    component: AbcCompositionsPageComponent
+    component: AbcCompositionsPageComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'compositions/:code',
-    component: CompositionPageComponent
+    component: CompositionPageComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'materials',
-    component: MaterialsPageComponent
+    component: MaterialsPageComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'materials-quotation',
-    component: MaterialsQuotationPageComponent
+    component: MaterialsQuotationPageComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'bituminous-material',
-    component: BituminousMaterialsComponent
+    component: BituminousMaterialsComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'mowing-workload-level',
-    component: NerPageComponent
+    component: NerPageComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'bdi',
-    component: BdiPageComponent
+    component: BdiPageComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'fit',
-    component: FitPageComponent
+    component: FitPageComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'occurrences',
-    component: OccurrencesMapComponent
+    component: OccurrencesMapComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'logistics',
-    component: TransportsPageComponent
+    component: TransportsPageComponent,
+    canActivate: [authGuard]
   },
 
   {
     path: 'timeline/:budgetId',
-    component: TimelinePageComponent
-  },
+    component: TimelinePageComponent,
+    canActivate: [authGuard]
+  }
 
 ];

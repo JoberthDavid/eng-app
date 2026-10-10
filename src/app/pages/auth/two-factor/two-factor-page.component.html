@@ -1,0 +1,148 @@
+<div class="two-factor-page">
+
+  <div class="two-factor-card">
+
+    <!-- ======================================================
+         Cabeçalho
+         ====================================================== -->
+
+    <div class="two-factor-header">
+
+      <div class="security-icon">
+        🔐
+      </div>
+
+      <h1>Verificação em duas etapas</h1>
+
+      <p>
+        Enviamos um código de 6 dígitos para o seu e-mail.
+      </p>
+
+    </div>
+
+
+    <!-- ======================================================
+         Formulário
+         ====================================================== -->
+
+    <form
+      [formGroup]="twoFactorForm"
+      (ngSubmit)="submit()"
+      novalidate
+    >
+
+      <div class="form-field">
+
+        <label for="code">
+          Código de autenticação
+        </label>
+
+        <input
+          id="code"
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          maxlength="6"
+          formControlName="code"
+          placeholder="000000"
+        />
+
+        @if (
+          twoFactorForm.controls.code.touched &&
+          twoFactorForm.controls.code.invalid
+        ) {
+
+          <small class="field-error">
+
+            @if (twoFactorForm.controls.code.errors?.['required']) {
+              Informe o código.
+            }
+
+            @if (
+              twoFactorForm.controls.code.errors?.['pattern'] &&
+              !twoFactorForm.controls.code.errors?.['required']
+            ) {
+              O código deve conter exatamente 6 números.
+            }
+
+          </small>
+
+        }
+
+      </div>
+
+
+      <!-- ====================================================
+           Tentativas restantes
+           ==================================================== -->
+
+      @if (attemptsRemaining !== null) {
+
+        <div class="attempts">
+
+          Tentativas restantes:
+          <strong>{{ attemptsRemaining }}</strong>
+
+        </div>
+
+      }
+
+
+      <!-- ====================================================
+           Mensagem de erro
+           ==================================================== -->
+
+      @if (errorMessage) {
+
+        <div class="error-message">
+          {{ errorMessage }}
+        </div>
+
+      }
+
+
+      <!-- ====================================================
+           Botão
+           ==================================================== -->
+
+      <button
+        type="submit"
+        class="verify-button"
+        [disabled]="loading"
+      >
+
+        @if (loading) {
+          Verificando...
+        } @else {
+          Verificar código
+        }
+
+      </button>
+
+    </form>
+
+
+    <!-- ======================================================
+         Voltar
+         ====================================================== -->
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="backToLogin()"
+    >
+      Voltar para o login
+    </button>
+
+
+    <!-- ======================================================
+         Rodapé
+         ====================================================== -->
+
+    <div class="two-factor-footer">
+      ENG App
+    </div>
+
+  </div>
+
+</div>

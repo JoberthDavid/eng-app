@@ -1,16 +1,50 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
-
-import { routes } from './app.routes';
+import {
+  ApplicationConfig,
+  provideZoneChangeDetection
+} from '@angular/core';
 
 import {
-  provideHttpClient
+  provideRouter
+} from '@angular/router';
+
+import {
+  provideHttpClient,
+  withInterceptors
 } from '@angular/common/http';
 
+import {
+  routes
+} from './app.routes';
+
+import {
+  authInterceptor
+} from './core/auth/auth.interceptor';
+
+
 export const appConfig: ApplicationConfig = {
+
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+
+    provideZoneChangeDetection({
+      eventCoalescing: true
+    }),
+
     provideRouter(routes),
-    provideHttpClient()
+
+    /*
+     * Registramos o interceptor de autenticação.
+     *
+     * A partir daqui, qualquer requisição que tenha
+     * uma sessão ativa receberá automaticamente:
+     *
+     * Authorization: Bearer <token>
+     */
+    provideHttpClient(
+      withInterceptors([
+        authInterceptor
+      ])
+    )
+
   ]
+
 };

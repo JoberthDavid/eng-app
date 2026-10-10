@@ -1,18 +1,38 @@
-<div class="app-shell">
+@if (isAuthenticationPage) {
 
-  <app-sidebar
-    [appName]="appName"
-    [appSubtitle]="appSubtitle"
-  />
+  <!--
+    Login e 2FA não utilizam o shell principal
+    da aplicação.
+  -->
 
-  <main class="content">
+  <router-outlet />
 
-    <header class="content-header">
-      <span>{{ currentSection }}</span>
-    </header>
+} @else {
 
-    <router-outlet />
+  <!--
+    Todas as páginas autenticadas utilizam o shell
+    normal do ENG-APP.
+  -->
 
-  </main>
+  <div class="app-shell">
 
-</div>
+    <app-sidebar
+      [appName]="appName"
+      [appSubtitle]="appSubtitle"
+    />
+
+    <main class="content">
+
+      <header class="content-header">
+        <span>
+          {{ currentSection }}
+        </span>
+      </header>
+
+      <router-outlet />
+
+    </main>
+
+  </div>
+
+}

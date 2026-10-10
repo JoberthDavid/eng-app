@@ -1,0 +1,312 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+
+/* ============================================================
+   Página
+   ============================================================ */
+
+.two-factor-page {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: #f5f6f8;
+}
+
+
+/* ============================================================
+   Card
+   ============================================================ */
+
+.two-factor-card {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 40px;
+
+  background: #ffffff;
+
+  border: 1px solid #e1e4e8;
+  border-radius: 12px;
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+
+/* ============================================================
+   Cabeçalho
+   ============================================================ */
+
+.two-factor-header {
+  margin-bottom: 32px;
+
+  text-align: center;
+}
+
+.security-icon {
+  width: 48px;
+  height: 48px;
+
+  margin: 0 auto 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #111827;
+
+  font-size: 22px;
+}
+
+.two-factor-header h1 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 24px;
+  font-weight: 700;
+
+  line-height: 1.25;
+}
+
+.two-factor-header p {
+  margin: 10px 0 0;
+
+  color: #6b7280;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+}
+
+
+/* ============================================================
+   Campo
+   ============================================================ */
+
+.form-field {
+  margin-bottom: 18px;
+}
+
+.form-field label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #374151;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-field input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 14px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #111827;
+
+  font-size: 22px;
+  font-weight: 600;
+
+  letter-spacing: 8px;
+
+  text-align: center;
+
+  outline: none;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.form-field input:focus {
+  border-color: #111827;
+
+  box-shadow:
+    0 0 0 3px rgba(17, 24, 39, 0.08);
+}
+
+.form-field input::placeholder {
+  color: #d1d5db;
+
+  letter-spacing: 8px;
+}
+
+
+/* ============================================================
+   Erro do campo
+   ============================================================ */
+
+.field-error {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #dc2626;
+
+  font-size: 12px;
+}
+
+
+/* ============================================================
+   Tentativas
+   ============================================================ */
+
+.attempts {
+  margin-bottom: 18px;
+
+  padding: 10px 12px;
+
+  border-radius: 8px;
+
+  background: #f9fafb;
+
+  color: #6b7280;
+
+  font-size: 13px;
+
+  text-align: center;
+}
+
+.attempts strong {
+  color: #111827;
+}
+
+
+/* ============================================================
+   Erro geral
+   ============================================================ */
+
+.error-message {
+  margin-bottom: 20px;
+
+  padding: 12px 14px;
+
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+
+  background: #fef2f2;
+
+  color: #b91c1c;
+
+  font-size: 13px;
+
+  line-height: 1.4;
+}
+
+
+/* ============================================================
+   Botão principal
+   ============================================================ */
+
+.verify-button {
+  width: 100%;
+
+  padding: 13px 16px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #111827;
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.verify-button:hover:not(:disabled) {
+  background: #1f2937;
+}
+
+.verify-button:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+
+/* ============================================================
+   Botão voltar
+   ============================================================ */
+
+.back-button {
+  width: 100%;
+
+  margin-top: 12px;
+
+  padding: 11px 16px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #6b7280;
+
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+.back-button:hover {
+  color: #111827;
+}
+
+
+/* ============================================================
+   Rodapé
+   ============================================================ */
+
+.two-factor-footer {
+  margin-top: 24px;
+
+  text-align: center;
+
+  color: #9ca3af;
+
+  font-size: 12px;
+}
+
+
+/* ============================================================
+   Responsividade
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+  .two-factor-page {
+    padding: 16px;
+  }
+
+  .two-factor-card {
+    padding: 28px 22px;
+  }
+
+  .form-field input {
+    font-size: 20px;
+    letter-spacing: 6px;
+  }
+
+}
