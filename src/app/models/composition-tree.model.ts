@@ -1,5 +1,5 @@
 import {
-  CompositionItem,
+  CompositionCatalogItem,
   CompositionReference
 } from './budget.model';
 
@@ -9,7 +9,7 @@ export type CompositionReferenceType =
   | 'FIXED_TIME';
 
 export interface CompositionTreeNode {
-  composition: CompositionItem;
+  composition: CompositionCatalogItem;
   reference: CompositionReference | null;
   referenceType: CompositionReferenceType;
   level: number;

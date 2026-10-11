@@ -39,7 +39,7 @@
         </span>
 
         <strong>
-          {{ project.referenceDate }}
+          {{ project.monetaryBaseDate }}
         </strong>
       </div>
 
@@ -76,11 +76,6 @@
                 Data-base
               </label>
 
-              <input
-                id="budget-reference-date"
-                type="date"
-                formControlName="referenceDate"
-              />
             </div>
 
             <div class="form-field">
@@ -197,7 +192,7 @@
             <tr>
               <th>Código</th>
               <th>Rodovia</th>
-              <th>Data-base</th>
+              <th>Data-base monetária do projeto</th>
               <th>Metodologia</th>
               <th>Sistema</th>
               <th>Status</th>
@@ -226,7 +221,7 @@
                 </td>
 
                 <td>
-                  {{ budget.referenceDate }}
+                  {{ project.monetaryBaseDate }}
                 </td>
 
                 <td>

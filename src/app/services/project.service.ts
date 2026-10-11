@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Project } from '../models/project.model';
-import { Budget, ServiceItem, CompositionItem } from '../models/budget.model';
+import { Budget, ServiceItem, CompositionItem, CompositionCatalogItem } from '../models/budget.model';
 
 
 @Injectable({
@@ -9,7 +9,7 @@ import { Budget, ServiceItem, CompositionItem } from '../models/budget.model';
 })
 export class ProjectService {
 
-  private readonly compositions: CompositionItem[] = [
+  private readonly compositions: CompositionCatalogItem[] = [
     {
       code: 'COMP-001',
       description: 'Composição X',
@@ -271,12 +271,11 @@ export class ProjectService {
       code: 'PRJ-001',
       description: 'Conservação rodoviária',
       uf: 'GO',
-      referenceDate: "01/06/2026",
+      monetaryBaseDate: "01/06/2026",
       budgets: [
       {
         id: 'BUD-001',
         projectId: 'PRJ-001',
-        referenceDate: '01/07/2026',
         methodology: 'SC',
         typeSystem: 'ON',
         status: 'Rascunho',
@@ -288,7 +287,6 @@ export class ProjectService {
       {
         id: 'BUD-002',
         projectId: 'PRJ-001',
-        referenceDate: '01/06/2026',
         methodology: 'SC',
         typeSystem: 'ON',
         status: 'Calculado',
@@ -303,10 +301,11 @@ export class ProjectService {
             quantity: 1250,
             compositions: [
               {
-                code: 'COMP-001',
-                description: 'Composição X',
+                code: '4915757',
+                description: 'Tapa buraco',
                 referenceDate: '01/06/2026',
                 factor: 1,
+                quantity: 1250,
                 unitCost: 'R$ 125,40',
                 totalCost: 'R$ 125,40',
                 auxiliaryCompositions: [
@@ -343,6 +342,7 @@ export class ProjectService {
                 description: 'Composição X',
                 referenceDate: '01/05/2026',
                 factor: 0.35,
+                quantity: 437.5,
                 unitCost: 'R$ 200,00',
                 totalCost: 'R$ 70,00',
                 auxiliaryCompositions: [],
@@ -367,7 +367,6 @@ export class ProjectService {
       {
         id: 'BUD-003',
         projectId: 'PRJ-001',
-        referenceDate: '01/05/2026',
         methodology: 'SC',
         typeSystem: 'ON',
         status: 'Finalizado',
@@ -383,12 +382,11 @@ export class ProjectService {
       code: 'PRJ-002',
       description: 'Manutenção de pavimento',
       uf: 'DF',
-      referenceDate: "01/06/2026",
+      monetaryBaseDate: "01/06/2026",
       budgets: [
       {
         id: 'BUD-004',
         projectId: 'PRJ-002',
-        referenceDate: '01/07/2026',
         methodology: 'SC',
         typeSystem: 'ON',
         status: 'Calculado',
@@ -400,7 +398,6 @@ export class ProjectService {
       {
         id: 'BUD-005',
         projectId: 'PRJ-002',
-        referenceDate: '01/06/2026',
         methodology: 'SC',
         typeSystem: 'ON',
         status: 'Finalizado',
@@ -416,12 +413,11 @@ export class ProjectService {
       code: 'PRJ-003',
       description: 'Conservação rotineira',
       uf: 'GO',
-      referenceDate: "01/06/2026",
+      monetaryBaseDate: "01/06/2026",
       budgets: [
       {
         id: 'BUD-006',
         projectId: 'PRJ-003',
-        referenceDate: '01/05/2026',
         methodology: 'SC',
         typeSystem: 'ON',
         status: 'Finalizado',
@@ -442,13 +438,13 @@ export class ProjectService {
     return this.projects.find(project => project.code === id) ?? null;
   }
 
-  getComposition(code: string): CompositionItem | null {
+  getComposition(code: string): CompositionCatalogItem | null {
     return this.compositions.find(
       composition => composition.code === code
     ) ?? null;
   }
 
-  getCompositions(): CompositionItem[] {
+  getCompositions(): CompositionCatalogItem[] {
     return [...this.compositions];
   }
 
@@ -538,6 +534,14 @@ export class ProjectService {
     }
 
     service.compositions.push(composition);
+  }
+
+  getProjectByBudgetId(budgetId: string): Project | null {
+    return this.projects.find(
+      project => project.budgets.some(
+        budget => budget.id === budgetId
+      )
+    ) ?? null;
   }
 
 }

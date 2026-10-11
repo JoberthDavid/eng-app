@@ -40,7 +40,14 @@ export class AbcCompositionService {
     const budget =
       this.projectService.getBudgetById(budgetId);
 
-    if (!budget) {
+      if (!budget) {
+      return null;
+    }
+
+    const project =
+      this.projectService.getById(budget.projectId);
+
+    if (!project) {
       return null;
     }
 
@@ -57,7 +64,7 @@ export class AbcCompositionService {
         budgetId: budget.id,
 
         referenceDate:
-          budget.referenceDate,
+          project?.monetaryBaseDate,
 
         totalCost:
           '195,40',
@@ -161,7 +168,7 @@ export class AbcCompositionService {
         budget.id,
 
       referenceDate:
-        budget.referenceDate,
+        project.monetaryBaseDate,
 
       totalCost:
         '0,00',
@@ -241,13 +248,16 @@ export class AbcService {
         budgetId
       );
 
-
     if (!budget) {
-
       return null;
-
     }
 
+    const project =
+      this.projectService.getById(budget.projectId);
+
+    if (!project) {
+      return null;
+    }
 
     return {
 
@@ -255,7 +265,7 @@ export class AbcService {
         budget.id,
 
       referenceDate:
-        budget.referenceDate,
+        project.monetaryBaseDate,
 
       summary: {
 
@@ -417,6 +427,12 @@ export class AbcService {
 
     }
 
+    const project =
+      this.projectService.getById(budget.projectId);
+
+    if (!project) {
+      return null;
+    }
 
     return {
 
@@ -424,7 +440,7 @@ export class AbcService {
         budget.id,
 
       referenceDate:
-        budget.referenceDate,
+        project.monetaryBaseDate,
 
       summary: {
 
@@ -606,6 +622,12 @@ export class AbcService {
 
     }
 
+    const project =
+      this.projectService.getById(budget.projectId);
+
+    if (!project) {
+      return null;
+    }
 
     return {
 
@@ -613,7 +635,7 @@ export class AbcService {
         budget.id,
 
       referenceDate:
-        budget.referenceDate,
+        project.monetaryBaseDate,
 
       summary: {
 

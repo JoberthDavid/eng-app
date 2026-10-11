@@ -17,7 +17,7 @@
         <p>
           {{ budget.highway }}
           ·
-          {{ budget.referenceDate }}
+          {{ project?.monetaryBaseDate }}
         </p>
 
       </div>
@@ -54,7 +54,7 @@
         </span>
 
         <strong>
-          {{ budget.referenceDate }}
+          {{ project?.monetaryBaseDate }}
         </strong>
 
       </div>
@@ -350,6 +350,7 @@
                 <th>DESCRIÇÃO</th>
                 <th>DATA-BASE</th>
                 <th>FATOR</th>
+                <th>QUANTIDADE</th>
                 <th>CUSTO UNITÁRIO</th>
                 <th>CUSTO TOTAL</th>
                 <th>AÇÃO</th>
@@ -378,6 +379,10 @@
                   </td>
 
                   <td>
+                    {{ composition.quantity }}
+                  </td>
+
+                  <td>
                     {{ composition.unitCost }}
                   </td>
 
@@ -389,6 +394,7 @@
                     <a
                       class="table-action"
                       [routerLink]="['/compositions', composition.code]"
+                      [queryParams]="{ budgetId: budget.id }"
                     >
                       Abrir composição
                     </a>

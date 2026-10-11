@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 
 import {
-  CompositionItem
+  CompositionCatalogItem
 } from '../../models/budget.model';
 
 @Component({
@@ -17,7 +17,7 @@ import {
 export class CompositionPanelComponent {
 
   @Input()
-  composition: CompositionItem | null = null;
+  composition: CompositionCatalogItem | null = null;
 
   /**
    * Quando true, o conteúdo da composição utiliza

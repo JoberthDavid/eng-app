@@ -1,7 +1,6 @@
 export interface Budget {
   id: string;
   projectId: string;
-  referenceDate: string;
   methodology: 'SC' | 'SN';
   typeSystem: 'ON' | 'DS' | 'NA';
   status: string;
@@ -19,7 +18,7 @@ export interface ServiceItem {
   compositions: CompositionItem[];
 }
 
-export interface CompositionItem {
+export interface CompositionCatalogItem {
   code: string;
   description: string;
   referenceDate: string;
@@ -32,6 +31,10 @@ export interface CompositionItem {
   fixedTimeCompositions: CompositionReference[];
 
   inputs: CompositionInput[];
+}
+
+export interface CompositionItem extends CompositionCatalogItem {
+  quantity: number;
 }
 
 export interface CompositionReference {

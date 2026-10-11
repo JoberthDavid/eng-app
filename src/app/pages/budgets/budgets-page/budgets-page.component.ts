@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 interface BudgetSummary {
   project: string;
-  referenceDate: string;
+  monetaryBaseDate: string;
   status: string;
   total: string;
 }
@@ -20,19 +20,19 @@ export class BudgetsPageComponent {
   budgets: BudgetSummary[] = [
     {
       project: 'BR-060/GO',
-      referenceDate: '01/07/2026',
+      monetaryBaseDate: '01/07/2026',
       status: 'Rascunho',
       total: '—'
     },
     {
       project: 'BR-040/DF',
-      referenceDate: '01/06/2026',
+      monetaryBaseDate: '01/06/2026',
       status: 'Calculado',
       total: 'R$ 1.248.530,42'
     },
     {
       project: 'BR-153/GO',
-      referenceDate: '01/05/2026',
+      monetaryBaseDate: '01/05/2026',
       status: 'Finalizado',
       total: 'R$ 876.240,18'
     }

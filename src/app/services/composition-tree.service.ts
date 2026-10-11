@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import {
-  CompositionItem,
+  CompositionCatalogItem,
   CompositionReference
 } from '../models/budget.model';
 
@@ -39,7 +39,7 @@ export class CompositionTreeService {
   }
 
   private buildNode(
-    composition: CompositionItem,
+    composition: CompositionCatalogItem,
     reference: CompositionReference | null,
     referenceType: CompositionReferenceType,
     level: number,
@@ -141,5 +141,5 @@ export class CompositionTreeService {
 
     return null;
   }
-  
+
 }

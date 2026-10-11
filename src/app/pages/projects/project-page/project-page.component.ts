@@ -37,10 +37,7 @@ export class ProjectPageComponent {
   showCreateBudgetForm = false;
 
   budgetForm = new FormGroup({
-    referenceDate: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required]
-    }),
+
 
     methodology: new FormControl<
       'SC' | 'SN'
@@ -78,8 +75,6 @@ export class ProjectPageComponent {
 
   openCreateBudget(): void {
     this.budgetForm.reset({
-      referenceDate:
-        this.project?.referenceDate ?? '',
 
       methodology: 'SC',
 
@@ -110,9 +105,6 @@ export class ProjectPageComponent {
       id: this.generateBudgetId(),
 
       projectId: this.project.id,
-
-      referenceDate:
-        this.budgetForm.controls.referenceDate.value,
 
       methodology:
         this.budgetForm.controls.methodology.value,

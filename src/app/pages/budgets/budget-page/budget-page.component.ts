@@ -11,8 +11,13 @@ import {
 import {
   Budget,
   ServiceItem,
-  CompositionItem
+  CompositionItem,
+  CompositionCatalogItem
 } from '../../../models/budget.model';
+
+import {
+  Project
+} from '../../../models/project.model';
 
 import {
   ProjectService
@@ -45,6 +50,8 @@ export class BudgetPageComponent {
 
   budget: Budget | null = null;
 
+  project: Project | null = null;
+
   showCreateServiceForm = false;
 
   showAddCompositionForm = false;
@@ -53,7 +60,7 @@ export class BudgetPageComponent {
 
   expandedServiceCode: string | null = null;
 
-  compositions: CompositionItem[] =
+  compositions: CompositionCatalogItem[] =
     this.projectService.getCompositions();
 
   constructor() {
@@ -65,6 +72,13 @@ export class BudgetPageComponent {
         this.projectService.getBudgetById(
           budgetId
         );
+
+      if (this.budget) {
+        this.project =
+          this.projectService.getById(
+            this.budget.projectId
+          );
+      }
     }
   }
 
@@ -196,7 +210,7 @@ export class BudgetPageComponent {
 
     this.compositionForm.patchValue({
       referenceDate:
-        composition?.referenceDate ?? ''
+        this.project?.monetaryBaseDate ?? ''
     });
   }
 
@@ -227,6 +241,10 @@ export class BudgetPageComponent {
         this.compositionForm.controls.referenceDate.value,
 
       factor:
+        this.compositionForm.controls.factor.value,
+
+      quantity:
+        this.selectedService.quantity *
         this.compositionForm.controls.factor.value,
 
       unitCost: '0,00',

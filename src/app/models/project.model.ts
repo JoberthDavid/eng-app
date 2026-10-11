@@ -5,6 +5,6 @@ export interface Project {
   code: string;
   description: string;
   uf: string;
-  referenceDate: string;
+  monetaryBaseDate: string;
   budgets: Budget[];
 }
