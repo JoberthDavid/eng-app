@@ -383,7 +383,7 @@
                   </td>
 
                   <td>
-                    {{ composition.unitCost }}
+                    {{ formatMoney(composition.unitCost) }}
                   </td>
 
                   <td>
@@ -506,8 +506,7 @@
               <option
                 [value]="composition.code"
               >
-                {{ composition.code }}
-                
+                {{ composition.code }} — {{ composition.description }}
               </option>
 
             }
@@ -520,13 +519,14 @@
         <div class="form-field">
 
           <label for="composition-reference-date">
-            Data-base
+            Data-base de referência
           </label>
 
           <input
             id="composition-reference-date"
-            type="text"
+            type="date"
             formControlName="referenceDate"
+            [disabled]="isCalculatingComposition"
           />
 
         </div>
@@ -550,12 +550,23 @@
 
       </div>
 
+      @if (compositionCalculationError) {
+
+        <p
+          role="alert"
+          class="form-error"
+        >
+          {{ compositionCalculationError }}
+        </p>
+
+      }
 
       <div class="form-actions">
 
         <button
           type="button"
           class="secondary-action"
+          [disabled]="isCalculatingComposition"
           (click)="cancelAddComposition()"
         >
           Cancelar
@@ -564,8 +575,13 @@
         <button
           type="submit"
           class="primary-action"
+          [disabled]="isCalculatingComposition"
         >
-          Adicionar composição
+          {{
+            isCalculatingComposition
+              ? 'Calculando...'
+              : 'Calcular e adicionar'
+          }}
         </button>
 
       </div>

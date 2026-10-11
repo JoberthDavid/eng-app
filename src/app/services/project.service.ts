@@ -13,7 +13,7 @@ export class ProjectService {
     {
       code: 'COMP-001',
       description: 'Composição X',
-      referenceDate: '01/06/2026',
+      referenceDate: '01/01/2023',
       factor: 1,
       unitCost: 'R$ 125,40',
       totalCost: 'R$ 125,40',
@@ -73,7 +73,7 @@ export class ProjectService {
     {
       code: 'COMP-AUX-001',
       description: 'Composição X',
-      referenceDate: '01/06/2026',
+      referenceDate: '01/01/2023',
       factor: 1,
       unitCost: 'R$ 42,50',
       totalCost: 'R$ 42,50',
@@ -116,7 +116,7 @@ export class ProjectService {
     {
       code: 'COMP-AUX-002',
       description: 'Composição X',
-      referenceDate: '01/06/2026',
+      referenceDate: '01/01/2023',
       factor: 1,
       unitCost: 'R$ 18,75',
       totalCost: 'R$ 18,75',
@@ -149,7 +149,7 @@ export class ProjectService {
     {
       code: 'COMP-AUX-003',
       description: 'Composição X',
-      referenceDate: '01/06/2026',
+      referenceDate: '01/01/2023',
       factor: 1,
       unitCost: 'R$ 31,20',
       totalCost: 'R$ 31,20',
@@ -192,7 +192,7 @@ export class ProjectService {
     {
       code: 'COMP-AUX-004',
       description: 'Composição X',
-      referenceDate: '01/06/2026',
+      referenceDate: '01/01/2023',
       factor: 1,
       unitCost: 'R$ 12,80',
       totalCost: 'R$ 12,80',
@@ -218,7 +218,7 @@ export class ProjectService {
     {
       code: 'COMP-TF-001',
       description: 'Composição X',
-      referenceDate: '01/06/2026',
+      referenceDate: '01/01/2023',
       factor: 1,
       unitCost: 'R$ 15,00',
       totalCost: 'R$ 15,00',
@@ -251,7 +251,7 @@ export class ProjectService {
     {
       code: 'COMP-TF-002',
       description: 'Composição X',
-      referenceDate: '01/06/2026',
+      referenceDate: '01/01/2023',
       factor: 1,
       unitCost: 'R$ 7,50',
       totalCost: 'R$ 7,50',
@@ -270,8 +270,8 @@ export class ProjectService {
       id: 'PRJ-001',
       code: 'PRJ-001',
       description: 'Conservação rodoviária',
-      uf: 'GO',
-      monetaryBaseDate: "01/06/2026",
+      uf: 'DF',
+      monetaryBaseDate: "01/01/2023",
       budgets: [
       {
         id: 'BUD-001',
@@ -303,7 +303,7 @@ export class ProjectService {
               {
                 code: '4915757',
                 description: 'Tapa buraco',
-                referenceDate: '01/06/2026',
+                referenceDate: '01/01/2023',
                 factor: 1,
                 quantity: 1250,
                 unitCost: 'R$ 125,40',
@@ -382,7 +382,7 @@ export class ProjectService {
       code: 'PRJ-002',
       description: 'Manutenção de pavimento',
       uf: 'DF',
-      monetaryBaseDate: "01/06/2026",
+      monetaryBaseDate: "01/01/2023",
       budgets: [
       {
         id: 'BUD-004',
@@ -412,8 +412,8 @@ export class ProjectService {
       id: 'PRJ-003',
       code: 'PRJ-003',
       description: 'Conservação rotineira',
-      uf: 'GO',
-      monetaryBaseDate: "01/06/2026",
+      uf: 'DF',
+      monetaryBaseDate: "01/01/2023",
       budgets: [
       {
         id: 'BUD-006',
