@@ -79,6 +79,7 @@
 
           <app-composition-panel
             [composition]="composition"
+            [calculation]="calculation"
             [scrollable]="false"
           />
 
@@ -128,9 +129,7 @@
         <div class="panel-body">
 
           <app-composition-panel
-            [composition]="
-              parentNode?.composition ?? composition
-            "
+            [composition]="parentNode?.composition ?? composition"
             [scrollable]="true"
           />
 
@@ -166,10 +165,10 @@
 
           @if (childNode) {
 
-            <app-composition-panel
-              [composition]="childNode.composition"
-              [scrollable]="true"
-            />
+          <app-composition-panel
+            [composition]="childNode.composition"
+            [scrollable]="true"
+          />
 
           } @else {
 

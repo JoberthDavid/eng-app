@@ -173,7 +173,7 @@ export const routes: Routes = [
   },
 
   {
-    path: 'compositions/:code',
+    path: 'budgets/:budgetId/compositions/:code',
     component: CompositionPageComponent,
     canActivate: [authGuard]
   },

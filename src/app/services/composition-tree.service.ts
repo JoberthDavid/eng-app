@@ -21,16 +21,21 @@ export class CompositionTreeService {
     private readonly projectService: ProjectService
   ) {}
 
-  buildTree(rootCode: string): CompositionTreeNode | null {
-    const rootComposition =
+  buildTree(
+    rootCode: string,
+    rootComposition: CompositionCatalogItem | null = null
+  ): CompositionTreeNode | null {
+
+    const composition =
+      rootComposition ??
       this.projectService.getComposition(rootCode);
 
-    if (!rootComposition) {
+    if (!composition) {
       return null;
     }
 
     return this.buildNode(
-      rootComposition,
+      composition,
       null,
       'ROOT',
       0,
@@ -140,6 +145,70 @@ export class CompositionTreeService {
     }
 
     return null;
+  }
+
+  private formatUnitCost(
+    value: number
+  ): string {
+
+    return (
+      `R$ ${value.toFixed(2).replace('.', ',')}`
+    );
+  }
+
+  buildTreeFromReferences(
+    rootComposition: CompositionCatalogItem,
+    references: Array<{
+      group: string;
+      code: string;
+      description: string;
+      unit: string;
+      quantity: string;
+      child_unit_cost: string;
+      line_cost: string;
+    }>
+  ): CompositionTreeNode {
+
+    const children: CompositionTreeNode[] =
+      references.map(reference => {
+
+        const childComposition: CompositionCatalogItem = {
+          code: reference.code,
+          description: reference.description,
+          referenceDate: rootComposition.referenceDate,
+          referenceBaseDate: rootComposition.referenceBaseDate,
+          factor: 1,
+          unitCost: this.formatUnitCost(Number(reference.child_unit_cost)),
+          totalCost: this.formatUnitCost(Number(reference.line_cost)),
+          auxiliaryCompositions: [],
+          fixedTimeCompositions: [],
+          inputs: []
+        };
+
+        return {
+          composition: childComposition,
+          reference: {
+            code: reference.code,
+            description: reference.description,
+            unit: reference.unit,
+            quantity: Number(reference.quantity)
+          },
+          referenceType:
+            reference.group === 'AX'
+              ? 'AUXILIARY'
+              : 'FIXED_TIME',
+          level: 1,
+          children: []
+        };
+      });
+
+    return {
+      composition: rootComposition,
+      reference: null,
+      referenceType: 'ROOT',
+      level: 0,
+      children
+    };
   }
 
 }

@@ -1,6 +1,7 @@
 @if (composition) {
   <div
-  class="panel-content" [class.scrollable]="scrollable">
+    class="panel-content"
+    [class.scrollable]="scrollable">
 
     <header class="panel-header">
       <div>
@@ -24,213 +25,515 @@
       </div>
     </header>
 
-    <section class="input-section">
-      <div class="section-header">
-        <h3>Equipamentos</h3>
-        <span>{{ getEquipments().length }}</span>
+
+    @if (calculation) {
+
+      <section class="input-section">
+
+        <div class="section-header">
+
+          <h3>
+            Resultado do cálculo
+          </h3>
+
+          <span>
+            Composition Engine
+          </span>
+
+        </div>
+
+
+        <div class="panel-summary calculation-summary">
+
+          <span>
+            Data-base de referência:
+            <strong>
+              {{ calculation.reference_base_date }}
+            </strong>
+          </span>
+
+
+          <span>
+            Custo unitário:
+            <strong>
+              R$ {{ calculation.unit_cost | number:'1.2-2':'pt-BR' }}
+            </strong>
+          </span>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================================================= -->
+      <!-- EQUIPAMENTOS CALCULADOS                           -->
+      <!-- ================================================= -->
+
+      <section class="input-section">
+
+        <div class="section-header">
+
+          <h3>
+            Equipamentos — cálculo
+          </h3>
+
+          <span>
+            {{ getCalculatedEquipments().length }}
+          </span>
+
+        </div>
+
+      <div class="calculation-table-wrapper">
+        <table class="calculation-table calculation-table-equipment">
+
+          <thead>
+
+            <tr>
+              <th>Código</th>
+              <th>Descrição</th>
+              <th>Unidade</th>
+              <th>Quantidade</th>
+              <th>Uso</th>
+              <th>Produtivo</th>
+              <th>Improdutivo</th>
+              <th>Custo</th>
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              equipment of getCalculatedEquipments();
+              track equipment.code
+            ) {
+
+              <tr>
+
+                <td>
+                  {{ equipment.code }}
+                </td>
+
+                <td>
+                  {{ equipment.description }}
+                </td>
+
+                <td>
+                  {{ equipment.unit }}
+                </td>
+
+                <td>
+                  {{ equipment.quantity | number:'1.5-5':'pt-BR' }}
+                </td>
+
+                <td>
+                  {{ equipment.input_use | number:'1.5-5':'pt-BR' }}
+                </td>
+
+                <td>
+                  {{ equipment.productive_value | number:'1.4-4':'pt-BR' }}
+                </td>
+
+                <td>
+                  {{ equipment.unproductive_value | number:'1.4-4':'pt-BR' }}
+                </td>
+
+                <td>
+                  {{ equipment.line_cost | number:'1.4-4':'pt-BR' }}
+                </td>
+
+              </tr>
+
+            }
+
+
+            @if (getCalculatedEquipments().length === 0) {
+
+              <tr>
+                <td colspan="8">
+                  Nenhum equipamento no resultado do cálculo.
+                </td>
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
       </div>
+      </section>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Descrição</th>
-            <th>Unidade</th>
-            <th>Quantidade</th>
-          </tr>
-        </thead>
 
-        <tbody>
-          @for (
-            equipment of getEquipments();
-            track equipment.id
-          ) {
+      <!-- ================================================= -->
+      <!-- MÃO DE OBRA CALCULADA                             -->
+      <!-- ================================================= -->
+
+      <section class="input-section">
+
+        <div class="section-header">
+
+          <h3>
+            Mão de obra — cálculo
+          </h3>
+
+          <span>
+            {{ getCalculatedLabor().length }}
+          </span>
+
+        </div>
+
+      <div class="calculation-table-wrapper">
+
+        <table class="calculation-table calculation-table-standard">
+
+          <thead>
+
             <tr>
-              <td>{{ equipment.genericItem }}</td>
-              <td>{{ equipment.genericDescription }}</td>
-              <td>{{ equipment.unit }}</td>
-              <td>{{ equipment.inputQuantity }}</td>
+              <th>Código</th>
+              <th>Descrição</th>
+              <th>Unidade</th>
+              <th>Quantidade</th>
+              <th>Valor monetário</th>
+              <th>Custo</th>
             </tr>
-          }
 
-          @if (getEquipments().length === 0) {
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              labor of getCalculatedLabor();
+              track labor.code
+            ) {
+
+              <tr>
+
+                <td>
+                  {{ labor.code }}
+                </td>
+
+                <td>
+                  {{ labor.description }}
+                </td>
+
+                <td>
+                  {{ labor.unit }}
+                </td>
+
+                <td>
+                  {{ labor.quantity | number:'1.5-5':'pt-BR' }}
+                </td>
+
+                <td>
+                  {{ labor.monetary_value | number:'1.4-4':'pt-BR' }}
+                </td>
+
+                <td>
+                  {{ labor.line_cost | number:'1.4-4':'pt-BR' }}
+                </td>
+
+              </tr>
+
+            }
+
+
+            @if (getCalculatedLabor().length === 0) {
+
+              <tr>
+                <td colspan="6">
+                  Nenhuma mão de obra no resultado do cálculo.
+                </td>
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+      </div>
+      </section>
+
+
+      <!-- ================================================= -->
+      <!-- MATERIAIS CALCULADOS                              -->
+      <!-- ================================================= -->
+
+      <section class="input-section">
+
+        <div class="section-header">
+
+          <h3>
+            Materiais — cálculo
+          </h3>
+
+          <span>
+            {{ getCalculatedMaterials().length }}
+          </span>
+
+        </div>
+
+      <div class="calculation-table-wrapper">
+
+        <table class="calculation-table calculation-table-standard">
+
+          <thead>
+
             <tr>
-              <td colspan="4">
-                Nenhum equipamento.
-              </td>
+              <th>Código</th>
+              <th>Descrição</th>
+              <th>Unidade</th>
+              <th>Quantidade</th>
+              <th>Valor monetário</th>
+              <th>Custo</th>
             </tr>
-          }
-        </tbody>
-      </table>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              material of getCalculatedMaterials();
+              track material.code
+            ) {
+
+              <tr>
+
+                <td>
+                  {{ material.code }}
+                </td>
+
+                <td>
+                  {{ material.description }}
+                </td>
+
+                <td>
+                  {{ material.unit }}
+                </td>
+
+                <td>
+                  {{ material.quantity | number:'1.5-5':'pt-BR' }}
+                </td>
+
+                <td>
+                  {{ material.monetary_value | number:'1.4-4':'pt-BR' }}
+                </td>
+
+                <td>
+                  {{ material.line_cost | number:'1.4-4':'pt-BR' }}
+                </td>
+
+              </tr>
+
+            }
+
+
+            @if (getCalculatedMaterials().length === 0) {
+
+              <tr>
+                <td colspan="6">
+                  Nenhum material no resultado do cálculo.
+                </td>
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+      </div>
+      </section>
+
+
+      <!-- ================================================= -->
+      <!-- COMPOSIÇÕES AUXILIARES — CÁLCULO                  -->
+      <!-- ================================================= -->
+
+      <section class="input-section">
+
+        <div class="section-header">
+
+          <h3>
+            Composições auxiliares — cálculo
+          </h3>
+
+          <span>
+            {{ getCalculatedAuxiliaryCompositions().length }}
+          </span>
+
+        </div>
+
+      <div class="calculation-table-wrapper">
+        <table class="calculation-table calculation-table-standard">
+
+          <thead>
+
+            <tr>
+              <th>Código</th>
+              <th>Descrição</th>
+              <th>Unidade</th>
+              <th>Quantidade</th>
+              <th>Custo unitário</th>
+              <th>Custo</th>
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              auxiliary of getCalculatedAuxiliaryCompositions();
+              track auxiliary.code
+            ) {
+
+              <tr>
+
+                <td>
+                  {{ auxiliary.code }}
+                </td>
+
+                <td>
+                  {{ auxiliary.description }}
+                </td>
+
+                <td>
+                  {{ auxiliary.unit }}
+                </td>
+
+                <td>
+                  {{ auxiliary.quantity | number:'1.5-5':'pt-BR' }}
+                </td>
+
+                <td>
+                  {{ auxiliary.child_unit_cost | number:'1.4-4':'pt-BR' }}
+                </td>
+
+                <td>
+                  {{ auxiliary.line_cost | number:'1.4-4':'pt-BR' }}
+                </td>
+
+              </tr>
+
+            }
+
+
+            @if (getCalculatedAuxiliaryCompositions().length === 0) {
+
+              <tr>
+                <td colspan="6">
+                  Nenhuma composição auxiliar no resultado do cálculo.
+                </td>
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+      </div>
+      
     </section>
 
-    <section class="input-section">
-      <div class="section-header">
-        <h3>Mão de obra</h3>
-        <span>{{ getLabor().length }}</span>
+      <!-- ================================================= -->
+      <!-- TEMPOS FIXOS — CÁLCULO                            -->
+      <!-- ================================================= -->
+
+      <section class="input-section">
+
+        <div class="section-header">
+
+          <h3>
+            Tempos fixos — cálculo
+          </h3>
+
+          <span>
+            {{ getCalculatedFixedTimeCompositions().length }}
+          </span>
+
+        </div>
+
+      <div class="calculation-table-wrapper">
+        <table class="calculation-table calculation-table-standard">
+
+          <thead>
+
+            <tr>
+              <th>Código</th>
+              <th>Descrição</th>
+              <th>Unidade</th>
+              <th>Quantidade</th>
+              <th>Custo unitário</th>
+              <th>Custo</th>
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              fixedTime of getCalculatedFixedTimeCompositions();
+              track fixedTime.code
+            ) {
+
+              <tr>
+
+                <td>
+                  {{ fixedTime.code }}
+                </td>
+
+                <td>
+                  {{ fixedTime.description }}
+                </td>
+
+                <td>
+                  {{ fixedTime.unit }}
+                </td>
+
+                <td>
+                  {{ fixedTime.quantity | number:'1.5-5':'pt-BR' }}
+                </td>
+
+                <td>
+                  {{ fixedTime.child_unit_cost | number:'1.4-4':'pt-BR' }}
+                </td>
+
+                <td>
+                  {{ fixedTime.line_cost | number:'1.4-4':'pt-BR' }}
+                </td>
+
+              </tr>
+
+            }
+
+
+            @if (getCalculatedFixedTimeCompositions().length === 0) {
+
+              <tr>
+                <td colspan="6">
+                  Nenhum tempo fixo no resultado do cálculo.
+                </td>
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
       </div>
+      </section>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Descrição</th>
-            <th>Unidade</th>
-            <th>Quantidade</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          @for (
-            labor of getLabor();
-            track labor.id
-          ) {
-            <tr>
-              <td>{{ labor.genericItem }}</td>
-              <td>{{ labor.genericDescription }}</td>
-              <td>{{ labor.unit }}</td>
-              <td>{{ labor.inputQuantity }}</td>
-            </tr>
-          }
-
-          @if (getLabor().length === 0) {
-            <tr>
-              <td colspan="4">
-                Nenhuma mão de obra.
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </section>
-
-    <section class="input-section">
-      <div class="section-header">
-        <h3>Materiais</h3>
-        <span>{{ getMaterials().length }}</span>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Descrição</th>
-            <th>Unidade</th>
-            <th>Quantidade</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          @for (
-            material of getMaterials();
-            track material.id
-          ) {
-            <tr>
-              <td>{{ material.genericItem }}</td>
-              <td>{{ material.genericDescription }}</td>
-              <td>{{ material.unit }}</td>
-              <td>{{ material.inputQuantity }}</td>
-            </tr>
-          }
-
-          @if (getMaterials().length === 0) {
-            <tr>
-              <td colspan="4">
-                Nenhum material.
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </section>
-
-    <section class="input-section">
-      <div class="section-header">
-        <h3>Composições auxiliares</h3>
-        <span>
-          {{ composition.auxiliaryCompositions.length }}
-        </span>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Descrição</th>
-            <th>Unidade</th>
-            <th>Quantidade</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          @for (
-            auxiliary of composition.auxiliaryCompositions;
-            track auxiliary.code
-          ) {
-            <tr>
-              <td>{{ auxiliary.code }}</td>
-              <td>{{ auxiliary.description }}</td>
-              <td>{{ auxiliary.unit }}</td>
-              <td>{{ auxiliary.quantity }}</td>
-            </tr>
-          }
-
-          @if (composition.auxiliaryCompositions.length === 0) {
-            <tr>
-              <td colspan="4">
-                Nenhuma composição auxiliar.
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </section>
-
-    <section class="input-section">
-      <div class="section-header">
-        <h3>Tempos fixos</h3>
-        <span>
-          {{ composition.fixedTimeCompositions.length }}
-        </span>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Descrição</th>
-            <th>Unidade</th>
-            <th>Quantidade</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          @for (
-            fixedTime of composition.fixedTimeCompositions;
-            track fixedTime.code
-          ) {
-            <tr>
-              <td>{{ fixedTime.code }}</td>
-              <td>{{ fixedTime.description }}</td>
-              <td>{{ fixedTime.unit }}</td>
-              <td>{{ fixedTime.quantity }}</td>
-            </tr>
-          }
-
-          @if (composition.fixedTimeCompositions.length === 0) {
-            <tr>
-              <td colspan="4">
-                Nenhum tempo fixo.
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </section>
+    }
 
   </div>
+
 } @else {
+
   <div class="empty-panel">
     Nenhuma composição selecionada.
   </div>
+
 }

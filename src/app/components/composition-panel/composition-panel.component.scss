@@ -218,6 +218,113 @@
   border-spacing: 0;
 }
 
+// ============================================================
+// TABELAS DO RESULTADO DO CÁLCULO
+// ============================================================
+
+// ============================================================
+// TABELAS DO RESULTADO DO CÁLCULO
+// ============================================================
+
+.calculation-table {
+  width: 100%;
+  min-width: 0;
+
+  table-layout: fixed;
+}
+
+
+// ============================================================
+// TABELA DE EQUIPAMENTOS — CÁLCULO
+// ============================================================
+
+.calculation-table-equipment th:nth-child(1),
+.calculation-table-equipment td:nth-child(1) {
+  width: 9%;
+}
+
+.calculation-table-equipment th:nth-child(2),
+.calculation-table-equipment td:nth-child(2) {
+  width: 36%;
+}
+
+.calculation-table-equipment th:nth-child(3),
+.calculation-table-equipment td:nth-child(3) {
+  width: 7%;
+}
+
+.calculation-table-equipment th:nth-child(4),
+.calculation-table-equipment td:nth-child(4) {
+  width: 10%;
+}
+
+.calculation-table-equipment th:nth-child(5),
+.calculation-table-equipment td:nth-child(5) {
+  width: 8%;
+}
+
+.calculation-table-equipment th:nth-child(6),
+.calculation-table-equipment td:nth-child(6) {
+  width: 10%;
+}
+
+.calculation-table-equipment th:nth-child(7),
+.calculation-table-equipment td:nth-child(7) {
+  width: 10%;
+}
+
+.calculation-table-equipment th:nth-child(8),
+.calculation-table-equipment td:nth-child(8) {
+  width: 10%;
+}
+
+
+// ============================================================
+// TABELAS PADRÃO — CÁLCULO
+// ============================================================
+
+.calculation-table-standard th:nth-child(1),
+.calculation-table-standard td:nth-child(1) {
+  width: 10%;
+}
+
+.calculation-table-standard th:nth-child(2),
+.calculation-table-standard td:nth-child(2) {
+  width: 38%;
+}
+
+.calculation-table-standard th:nth-child(3),
+.calculation-table-standard td:nth-child(3) {
+  width: 13%;
+}
+
+.calculation-table-standard th:nth-child(4),
+.calculation-table-standard td:nth-child(4) {
+  width: 13%;
+}
+
+.calculation-table-standard th:nth-child(5),
+.calculation-table-standard td:nth-child(5) {
+  width: 13%;
+}
+
+.calculation-table-standard th:nth-child(6),
+.calculation-table-standard td:nth-child(6) {
+  width: 13%;
+}
+
+
+// ============================================================
+// CONTÊINER DAS TABELAS DE CÁLCULO
+// ============================================================
+
+.calculation-table-wrapper {
+  width: 100%;
+  min-width: 0;
+
+  overflow: hidden;
+}
+
 
 // ============================================================
 // CABEÇALHOS DAS TABELAS
@@ -230,13 +337,13 @@
 .input-section th {
   height: 28px;
 
-  padding: 0 11px;
+  padding: 0 6px;
 
   box-sizing: border-box;
 
   color: #697586;
 
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 700;
   line-height: 1.2;
 
@@ -247,10 +354,27 @@
   border-bottom: 1px solid #eef1f4;
 }
 
-.input-section th:last-child {
-  text-align: right;
+.input-section th:not(:nth-child(2)) {
+  text-align: center;
 }
 
+.input-section td:not(:nth-child(2)) {
+  text-align: center;
+}
+
+// ============================================================
+// ALINHAMENTO DAS EXTREMIDADES DAS TABELAS
+// ============================================================
+
+.input-section th:first-child,
+.input-section td:first-child {
+  padding-left: 6px;
+}
+
+.input-section th:last-child,
+.input-section td:last-child {
+  padding-right: 6px;
+}
 
 // ============================================================
 // COLUNAS
@@ -258,22 +382,22 @@
 
 .input-section th:nth-child(1),
 .input-section td:nth-child(1) {
-  width: 18%;
+  width: 10%;
 }
 
 .input-section th:nth-child(2),
 .input-section td:nth-child(2) {
-  width: 56%;
+  width: 64%;
 }
 
 .input-section th:nth-child(3),
 .input-section td:nth-child(3) {
-  width: 12%;
+  width: 13%;
 }
 
 .input-section th:nth-child(4),
 .input-section td:nth-child(4) {
-  width: 14%;
+  width: 13%;
 }
 
 
@@ -290,7 +414,7 @@
 
   color: #27313c;
 
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   line-height: 1.3;
 
@@ -310,9 +434,6 @@
   white-space: nowrap;
 }
 
-.input-section td:last-child {
-  text-align: right;
-}
 
 
 // ============================================================
@@ -416,7 +537,7 @@
   }
 
   .input-section td {
-    font-size: 9px;
+    font-size: 10px;
   }
 
   .input-section th,

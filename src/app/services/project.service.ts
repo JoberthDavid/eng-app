@@ -14,66 +14,23 @@ export class ProjectService {
       code: 'COMP-001',
       description: 'Composição X',
       referenceDate: '01/01/2023',
+      referenceBaseDate: '01/01/2023',
       factor: 1,
       unitCost: 'R$ 125,40',
       totalCost: 'R$ 125,40',
 
-      auxiliaryCompositions: [
-        {
-          code: 'COMP-AUX-001',
-          description: 'Composição auxiliar nível 1',
-          unit: 'un',
-          quantity: 1
-        }
-      ],
+      auxiliaryCompositions: [],
 
-      fixedTimeCompositions: [
-        {
-          code: 'COMP-TF-001',
-          description: 'Tempo fixo nível 1',
-          unit: 'h',
-          quantity: 0.5
-        }
-      ],
+      fixedTimeCompositions: [],
 
-      inputs: [
-        {
-          id: 1,
-          inputGroup: 'EQ',
-          genericItem: 'EQ-001',
-          genericDescription: 'Equipamento de demonstração',
-          unit: 'h',
-          inputQuantity: 2,
-          inputUse: 1,
-          proprietaryItem: null
-        },
-        {
-          id: 2,
-          inputGroup: 'MO',
-          genericItem: 'MO-001',
-          genericDescription: 'Mão de obra de demonstração',
-          unit: 'h',
-          inputQuantity: 3,
-          inputUse: 1,
-          proprietaryItem: null
-        },
-        {
-          id: 3,
-          inputGroup: 'MA',
-          genericItem: 'MA-001',
-          genericDescription: 'Material de demonstração',
-          unit: 'kg',
-          inputQuantity: 10,
-          inputUse: 1,
-          proprietaryItem: null
-        }
-      ]
+      inputs: []
     },
 
     {
       code: 'COMP-AUX-001',
       description: 'Composição X',
       referenceDate: '01/01/2023',
+      referenceBaseDate: '01/01/2023',
       factor: 1,
       unitCost: 'R$ 42,50',
       totalCost: 'R$ 42,50',
@@ -117,6 +74,7 @@ export class ProjectService {
       code: 'COMP-AUX-002',
       description: 'Composição X',
       referenceDate: '01/01/2023',
+      referenceBaseDate: '01/01/2023',
       factor: 1,
       unitCost: 'R$ 18,75',
       totalCost: 'R$ 18,75',
@@ -150,6 +108,7 @@ export class ProjectService {
       code: 'COMP-AUX-003',
       description: 'Composição X',
       referenceDate: '01/01/2023',
+      referenceBaseDate: '01/01/2023',
       factor: 1,
       unitCost: 'R$ 31,20',
       totalCost: 'R$ 31,20',
@@ -193,6 +152,7 @@ export class ProjectService {
       code: 'COMP-AUX-004',
       description: 'Composição X',
       referenceDate: '01/01/2023',
+      referenceBaseDate: '01/01/2023',
       factor: 1,
       unitCost: 'R$ 12,80',
       totalCost: 'R$ 12,80',
@@ -219,6 +179,7 @@ export class ProjectService {
       code: 'COMP-TF-001',
       description: 'Composição X',
       referenceDate: '01/01/2023',
+      referenceBaseDate: '01/01/2023',
       factor: 1,
       unitCost: 'R$ 15,00',
       totalCost: 'R$ 15,00',
@@ -252,6 +213,7 @@ export class ProjectService {
       code: 'COMP-TF-002',
       description: 'Composição X',
       referenceDate: '01/01/2023',
+      referenceBaseDate: '01/01/2023',
       factor: 1,
       unitCost: 'R$ 7,50',
       totalCost: 'R$ 7,50',
@@ -304,43 +266,20 @@ export class ProjectService {
                 code: '4915757',
                 description: 'Tapa buraco',
                 referenceDate: '01/01/2023',
+                referenceBaseDate: '01/01/2023',
                 factor: 1,
                 quantity: 1250,
                 unitCost: 'R$ 125,40',
                 totalCost: 'R$ 125,40',
-                auxiliaryCompositions: [
-                  {
-                    code: 'COMP-AUX-001',
-                    description: 'Atividade auxiliar de demonstração',
-                    unit: 'un',
-                    quantity: 1
-                  }
-                ],
-                fixedTimeCompositions: [
-                  {
-                    code: 'COMP-TF-001',
-                    description: 'Tempo fixo de demonstração',
-                    unit: 'h',
-                    quantity: 0.5
-                  }
-                ],
-                inputs: [
-                  {
-                    id: 1,
-                    inputGroup: 'MA',
-                    genericItem: 'INS-001',
-                    genericDescription: '...',
-                    unit: '...',
-                    inputQuantity: 10,
-                    inputUse: 0.1,
-                    proprietaryItem: null
-                  }
-                ]
+                auxiliaryCompositions: [],
+                fixedTimeCompositions: [],
+                inputs: []
               },
               {
                 code: 'COMP-002',
                 description: 'Composição X',
-                referenceDate: '01/05/2026',
+                referenceDate: '01/01/2023',
+                referenceBaseDate: '01/01/2023',
                 factor: 0.35,
                 quantity: 437.5,
                 unitCost: 'R$ 200,00',
@@ -442,6 +381,34 @@ export class ProjectService {
     return this.compositions.find(
       composition => composition.code === code
     ) ?? null;
+  }
+
+  getCompositionByBudget(
+    budgetId: string,
+    compositionCode: string
+  ): CompositionItem | null {
+
+    const budget =
+      this.getBudgetById(budgetId);
+
+    if (!budget) {
+      return null;
+    }
+
+    for (const service of budget.services) {
+
+      const composition =
+        service.compositions.find(
+          item => item.code === compositionCode
+        );
+
+      if (composition) {
+        return composition;
+      }
+
+    }
+
+    return null;
   }
 
   getCompositions(): CompositionCatalogItem[] {

@@ -12,6 +12,7 @@ import {
 } from 'rxjs';
 
 import {
+  CompositionCalculationDetailResponse,
   CompositionCalculationRequest,
   CompositionCalculationResponse
 } from './composition.models';
@@ -29,6 +30,12 @@ export class CompositionService {
     inject(HttpClient);
 
 
+  /**
+   * Solicita o cálculo simples da composição.
+ *
+   * Este método é utilizado pelo formulário
+   * de inclusão de composição no orçamento.
+   */
   calculate(
     request: CompositionCalculationRequest
   ): Observable<CompositionCalculationResponse> {
@@ -38,4 +45,23 @@ export class CompositionService {
       request
     );
   }
+
+
+  /**
+   * Solicita o cálculo detalhado da composição.
+   *
+   * O resultado contém o custo unitário e o
+   * detalhamento econômico dos equipamentos,
+   * mão de obra, materiais e composições referenciadas.
+   */
+  calculateDetail(
+    request: CompositionCalculationRequest
+  ): Observable<CompositionCalculationDetailResponse> {
+
+    return this.http.post<CompositionCalculationDetailResponse>(
+      `${MANIFOLD_API_URL}/api/integrations/composition-engine/calcular-detalhe-composicao/`,
+      request
+    );
+  }
+
 }

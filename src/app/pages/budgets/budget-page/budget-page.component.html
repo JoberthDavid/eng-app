@@ -393,8 +393,12 @@
                   <td>
                     <a
                       class="table-action"
-                      [routerLink]="['/compositions', composition.code]"
-                      [queryParams]="{ budgetId: budget.id }"
+                      [routerLink]="[
+                        '/budgets',
+                        budget.id,
+                        'compositions',
+                        composition.code
+                      ]"
                     >
                       Abrir composição
                     </a>
