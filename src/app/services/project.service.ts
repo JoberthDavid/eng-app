@@ -377,12 +377,6 @@ export class ProjectService {
     return this.projects.find(project => project.code === id) ?? null;
   }
 
-  getComposition(code: string): CompositionCatalogItem | null {
-    return this.compositions.find(
-      composition => composition.code === code
-    ) ?? null;
-  }
-
   getCompositionByBudget(
     budgetId: string,
     compositionCode: string

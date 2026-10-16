@@ -10,104 +10,10 @@ import {
   CompositionTreeNode
 } from '../models/composition-tree.model';
 
-import { ProjectService } from './project.service';
-
 @Injectable({
   providedIn: 'root'
 })
 export class CompositionTreeService {
-
-  constructor(
-    private readonly projectService: ProjectService
-  ) {}
-
-  buildTree(
-    rootCode: string,
-    rootComposition: CompositionCatalogItem | null = null
-  ): CompositionTreeNode | null {
-
-    const composition =
-      rootComposition ??
-      this.projectService.getComposition(rootCode);
-
-    if (!composition) {
-      return null;
-    }
-
-    return this.buildNode(
-      composition,
-      null,
-      'ROOT',
-      0,
-      new Set<string>()
-    );
-  }
-
-  private buildNode(
-    composition: CompositionCatalogItem,
-    reference: CompositionReference | null,
-    referenceType: CompositionReferenceType,
-    level: number,
-    visited: Set<string>
-  ): CompositionTreeNode {
-
-    if (visited.has(composition.code)) {
-      return {
-        composition,
-        reference,
-        referenceType,
-        level,
-        children: []
-      };
-    }
-
-    const nextVisited = new Set(visited);
-    nextVisited.add(composition.code);
-
-    const children: CompositionTreeNode[] = [];
-
-    for (const auxiliary of composition.auxiliaryCompositions) {
-      const childComposition =
-        this.projectService.getComposition(auxiliary.code);
-
-      if (childComposition) {
-        children.push(
-          this.buildNode(
-            childComposition,
-            auxiliary,
-            'AUXILIARY',
-            level + 1,
-            nextVisited
-          )
-        );
-      }
-    }
-
-    for (const fixedTime of composition.fixedTimeCompositions) {
-      const childComposition =
-        this.projectService.getComposition(fixedTime.code);
-
-      if (childComposition) {
-        children.push(
-          this.buildNode(
-            childComposition,
-            fixedTime,
-            'FIXED_TIME',
-            level + 1,
-            nextVisited
-          )
-        );
-      }
-    }
-
-    return {
-      composition,
-      reference,
-      referenceType,
-      level,
-      children
-    };
-  }
 
   findNode(
     root: CompositionTreeNode,
@@ -150,7 +56,6 @@ export class CompositionTreeService {
   private formatUnitCost(
     value: number
   ): string {
-
     return (
       `R$ ${value.toFixed(2).replace('.', ',')}`
     );
@@ -178,8 +83,12 @@ export class CompositionTreeService {
           referenceDate: rootComposition.referenceDate,
           referenceBaseDate: rootComposition.referenceBaseDate,
           factor: 1,
-          unitCost: this.formatUnitCost(Number(reference.child_unit_cost)),
-          totalCost: this.formatUnitCost(Number(reference.line_cost)),
+          unitCost: this.formatUnitCost(
+            Number(reference.child_unit_cost)
+          ),
+          totalCost: this.formatUnitCost(
+            Number(reference.line_cost)
+          ),
           auxiliaryCompositions: [],
           fixedTimeCompositions: [],
           inputs: []

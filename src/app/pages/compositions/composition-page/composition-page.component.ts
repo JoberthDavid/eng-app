@@ -106,13 +106,7 @@ export class CompositionPageComponent
       : null;
 
 
-  compositionTree =
-    this.compositionCode
-      ? this.compositionTreeService.buildTree(
-          this.compositionCode,
-          this.composition
-        )
-      : null;
+  compositionTree: CompositionTreeNode | null = null;
 
 
   calculation:
