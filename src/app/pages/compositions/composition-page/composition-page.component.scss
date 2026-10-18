@@ -1,16 +1,13 @@
 // ============================================================
-// COMPOSITION PAGE
+// COMPOSITION PAGE — DESIGN SYSTEM V1
 // ============================================================
 
 :host {
   display: block;
-
   width: 100%;
   min-width: 0;
-
-  color: #27313c;
+  color: var(--color-text);
 }
-
 
 // ============================================================
 // PÁGINA NORMAL
@@ -19,81 +16,59 @@
 .composition-page {
   width: 100%;
   max-width: 1800px;
-
   margin: 0 auto;
-  padding: 24px 32px 40px;
-
+  padding: var(--space-6) var(--space-8) var(--space-10);
   box-sizing: border-box;
+  background: var(--color-app-bg);
+  color: var(--color-text);
 }
 
-
 // ============================================================
-// CABEÇALHO DA PÁGINA
+// CABEÇALHO
 // ============================================================
 
 .page-header {
   width: 100%;
-
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
 }
 
 .page-eyebrow {
   display: block;
-
-  margin: 0 0 6px;
-
-  color: #697586;
-
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 1.2;
-
+  margin: 0 0 var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .page-header h1 {
   margin: 0;
-
-  color: #27313c;
-
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 1.15;
+  color: var(--color-text);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
 }
 
 .page-header p {
-  margin: 6px 0 0;
-
-  color: #697586;
-
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1.4;
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
 }
 
-
 // ============================================================
-// PROPRIEDADES DA COMPOSIÇÃO
+// INDICADORES DA COMPOSIÇÃO
 // ============================================================
-
-/*
- * IMPORTANTE:
- * O HTML utiliza .summary, e não .composition-summary.
- */
 
 .summary {
   display: grid;
-
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
-
-  gap: 12px;
-
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
   width: 100%;
-
-  margin: 0 0 22px;
-
+  margin: 0 0 var(--space-6);
   box-sizing: border-box;
 }
 
@@ -101,46 +76,36 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   width: 100%;
   min-width: 0;
   min-height: 70px;
-
-  padding: 14px 16px;
-
+  padding: var(--space-3) var(--space-4);
   box-sizing: border-box;
 
-  background: #ffffff;
-
-  border: 1px solid #e1e6eb;
-  border-radius: 8px;
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
 }
 
 .summary-card .label {
   display: block;
-
-  margin: 0 0 5px;
-
-  color: #697586;
-
-  font-size: 9px;
-  font-weight: 700;
-  line-height: 1.2;
-
-  letter-spacing: 0.08em;
+  margin: 0 0 var(--space-1);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .summary-card strong {
   display: block;
-
-  color: #27313c;
-
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.25;
+  overflow-wrap: anywhere;
+  color: var(--color-text);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-normal);
 }
-
 
 // ============================================================
 // COMPOSIÇÃO PRINCIPAL
@@ -149,15 +114,14 @@
 .root-composition-card {
   width: 100%;
   min-width: 0;
-
   overflow: hidden;
-
-  background: #ffffff;
-
-  border: 1px solid #e1e6eb;
-  border-radius: 8px;
-
   box-sizing: border-box;
+
+  background: var(--color-surface);
+  color: var(--color-text);
+
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
 }
 
 .root-composition-title {
@@ -168,71 +132,55 @@
   width: 100%;
   min-width: 0;
   min-height: 40px;
-
-  padding: 0 14px;
-
+  padding: 0 var(--space-4);
   box-sizing: border-box;
 
-  background: #f8fafb;
-
-  border-bottom: 1px solid #e1e6eb;
+  background: var(--color-surface-secondary);
+  border-bottom: var(--border-width) solid var(--color-divider);
 }
 
 .root-composition-title span {
   min-width: 0;
-
-  color: #697586;
-
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 1.2;
-
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .root-composition-title strong {
   flex: 0 0 auto;
-
-  margin-left: 16px;
-
-  color: #27313c;
-
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1.2;
-
+  margin-left: var(--space-4);
+  color: var(--color-text);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
   white-space: nowrap;
 }
 
-
 // ============================================================
-// WORKSPACE — DOIS PAINÉIS
+// WORKSPACE — NAVEGAÇÃO ENTRE COMPOSIÇÕES
 // ============================================================
 
 .composition-workspace {
   display: grid;
-
-  grid-template-rows:
-    minmax(0, 1fr)
-    minmax(0, 1fr);
-
-  gap: 12px;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-3);
 
   width: 100%;
   max-width: 1800px;
-
   height: calc(100vh - 80px);
   min-height: 500px;
+  min-width: 0;
 
   margin: 0 auto;
-  padding: 24px 32px 40px;
-
+  padding: var(--space-6) var(--space-8) var(--space-10);
   box-sizing: border-box;
 
-  min-width: 0;
+  background: var(--color-app-bg);
+  color: var(--color-text);
 }
-
 
 // ============================================================
 // PAINÉIS
@@ -245,17 +193,15 @@
   width: 100%;
   min-width: 0;
   min-height: 0;
-
   overflow: hidden;
-
-  background: #ffffff;
-
-  border: 1px solid #e1e6eb;
-  border-radius: 8px;
-
   box-sizing: border-box;
-}
 
+  background: var(--color-surface);
+  color: var(--color-text);
+
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
 
 // ============================================================
 // CABEÇALHO DOS PAINÉIS
@@ -271,27 +217,21 @@
   width: 100%;
   min-width: 0;
   min-height: 40px;
-
-  padding: 0 14px;
-
+  padding: 0 var(--space-4);
   box-sizing: border-box;
 
-  background: #f8fafb;
-
-  border-bottom: 1px solid #e1e6eb;
+  background: var(--color-surface-secondary);
+  border-bottom: var(--border-width) solid var(--color-divider);
 }
 
 .panel-title span {
   min-width: 0;
-
   overflow: hidden;
 
-  color: #697586;
-
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 1.2;
-
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
   letter-spacing: 0.05em;
   text-overflow: ellipsis;
   text-transform: uppercase;
@@ -300,18 +240,14 @@
 
 .panel-title strong {
   flex: 0 0 auto;
+  margin-left: var(--space-4);
 
-  margin-left: 16px;
-
-  color: #27313c;
-
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1.2;
-
+  color: var(--color-text);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
   white-space: nowrap;
 }
-
 
 // ============================================================
 // CORPO DOS PAINÉIS
@@ -319,14 +255,14 @@
 
 .panel-body {
   flex: 1 1 auto;
-
   width: 100%;
   min-width: 0;
   min-height: 0;
-
   overflow: hidden;
-}
 
+  background: var(--color-surface);
+  color: var(--color-text);
+}
 
 // ============================================================
 // ESTADO VAZIO
@@ -339,45 +275,35 @@
 
   width: 100%;
   height: 100%;
-
-  padding: 24px;
-
+  padding: var(--space-6);
   box-sizing: border-box;
 
-  color: #697586;
-
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.4;
-
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
   text-align: center;
 }
-
 
 // ============================================================
 // RESPONSIVIDADE
 // ============================================================
 
 @media (max-width: 900px) {
-
   .summary {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-
 @media (max-width: 600px) {
-
   .composition-page,
   .composition-workspace {
-    padding-right: 16px;
-    padding-left: 16px;
+    padding-right: var(--space-4);
+    padding-left: var(--space-4);
   }
 
   .summary {
-    grid-template-columns:
-      1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .composition-workspace {
@@ -385,6 +311,19 @@
   }
 
   .page-header h1 {
-    font-size: 22px;
+    font-size: var(--font-size-xl);
+  }
+
+  .root-composition-title,
+  .panel-title {
+    gap: var(--space-2);
+    padding-inline: var(--space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .composition-page *,
+  .composition-workspace * {
+    scroll-behavior: auto;
   }
 }

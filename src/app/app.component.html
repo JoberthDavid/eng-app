@@ -1,38 +1,70 @@
+
 @if (isAuthenticationPage) {
-
-  <!--
-    Login e 2FA não utilizam o shell principal
-    da aplicação.
-  -->
-
   <router-outlet />
-
 } @else {
-
-  <!--
-    Todas as páginas autenticadas utilizam o shell
-    normal do ENG-APP.
-  -->
-
-  <div class="app-shell">
+  <div
+    class="app-shell"
+    (keydown)="onNavigationKeydown($event)"
+  >
+    @if (mobileNavigationOpen) {
+      <button
+        type="button"
+        class="mobile-backdrop"
+        aria-label="Fechar menu de navegação"
+        (click)="closeMobileNavigation()"
+      ></button>
+    }
 
     <app-sidebar
       [appName]="appName"
       [appSubtitle]="appSubtitle"
+      [mobileOpen]="mobileNavigationOpen"
+      (closeRequested)="closeMobileNavigation()"
     />
 
     <main class="content">
-
       <header class="content-header">
-        <span>
+        <button
+          type="button"
+          class="icon-button menu-toggle"
+          aria-label="Abrir menu de navegação"
+          [attr.aria-expanded]="mobileNavigationOpen"
+          (click)="toggleMobileNavigation()"
+        >
+          <span aria-hidden="true">☰</span>
+        </button>
+
+        <span class="current-section">
           {{ currentSection }}
         </span>
+
+        <span class="header-spacer"></span>
+
+        <button
+          type="button"
+          class="theme-toggle"
+          [attr.aria-label]="'Preferência atual: ' + themeLabel + '. Clique para alternar.'"
+          [title]="themeLabel"
+          (click)="cycleTheme()"
+        >
+          <span aria-hidden="true">
+            @if (themePreference === 'light') {
+              ☀
+            } @else if (themePreference === 'dark') {
+              ☾
+            } @else {
+              ◐
+            }
+          </span>
+          <span class="theme-toggle-label">
+            {{ themeLabel }}
+          </span>
+        </button>
       </header>
 
-      <router-outlet />
-
+      <div class="page-content">
+        <router-outlet />
+      </div>
     </main>
-
   </div>
-
 }
