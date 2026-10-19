@@ -1,6 +1,10 @@
+
 import {
   Component,
+  EventEmitter,
+  HostBinding,
   Input,
+  Output,
   inject
 } from '@angular/core';
 
@@ -30,34 +34,24 @@ import {
   AuthService
 } from '../../core/auth/auth.service';
 
-
 @Component({
   selector: 'app-sidebar',
-
   standalone: true,
-
   imports: [
     RouterLink,
     RouterLinkActive,
     CompositionTreeComponent,
     AsyncPipe
   ],
-
   templateUrl: './sidebar.component.html',
-
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
-
   private readonly compositionNavigationService =
     inject(CompositionNavigationService);
 
-  private readonly authService =
-    inject(AuthService);
-
-  private readonly router =
-    inject(Router);
-
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   readonly compositionTree =
     this.compositionNavigationService.activeTree;
@@ -65,29 +59,27 @@ export class SidebarComponent {
   readonly selectedNode =
     this.compositionNavigationService.selectedNode;
 
-
   @Input()
   appName = 'ENG-APP';
-
 
   @Input()
   appSubtitle = 'Engenharia';
 
+  @Input()
+  mobileOpen = false;
 
-  /*
-   * Usuário autenticado.
-   *
-   * Como currentUser$ é um Observable, o template
-   * pode usar async futuramente.
-   */
-  readonly currentUser$ =
-    this.authService.currentUser$;
+  @Output()
+  closeRequested = new EventEmitter<void>();
 
+  readonly currentUser$ = this.authService.currentUser$;
+
+  @HostBinding('class.sidebar-host-open')
+  get hostOpen(): boolean {
+    return this.mobileOpen;
+  }
 
   get selectedCompositionCode(): string | null {
-
-    const node =
-      this.selectedNode();
+    const node = this.selectedNode();
 
     if (!node) {
       return null;
@@ -96,47 +88,26 @@ export class SidebarComponent {
     return node.composition.code;
   }
 
-
-  onCompositionSelected(
-    node: CompositionTreeNode
-  ): void {
-
-    this.compositionNavigationService
-      .selectNode(node);
+  onCompositionSelected(node: CompositionTreeNode): void {
+    this.compositionNavigationService.selectNode(node);
+    this.closeRequested.emit();
   }
 
+  closeNavigation(): void {
+    this.closeRequested.emit();
+  }
 
-  /**
-   * Encerra a sessão no Manifold.
-   */
   logout(): void {
-
-    this.authService
-      .logout()
-      .subscribe({
-
-        next: () => {
-
-          void this.router.navigate([
-            '/login'
-          ]);
-
-        },
-
-        error: () => {
-
-          /*
-           * Mesmo que o servidor esteja indisponível,
-           * não queremos deixar o token local ativo.
-           */
-          this.authService.clearSession();
-
-          void this.router.navigate([
-            '/login'
-          ]);
-
-        }
-
-      });
+    this.authService.logout().subscribe({
+      next: () => {
+        this.closeRequested.emit();
+        void this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.authService.clearSession();
+        this.closeRequested.emit();
+        void this.router.navigate(['/login']);
+      }
+    });
   }
 }

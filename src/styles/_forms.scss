@@ -1,0 +1,168 @@
+/* ============================================================
+   ENG-APP — FORMULÁRIOS COMPARTILHADOS
+   Design System: Engineering Slate
+   ============================================================ */
+
+/* Campos da Timeline */
+
+.form-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-field label {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-normal);
+}
+
+/* Campos de entrada */
+
+.form-field input,
+.input-with-suffix input,
+.group-form-fields input,
+.service-form-fields input,
+.composition-search-field input {
+  box-sizing: border-box;
+  min-width: 0;
+
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  background: var(--color-surface);
+  color: var(--color-text);
+
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+/* Campos convencionais */
+
+.form-field input,
+.group-form-fields input,
+.service-form-fields input,
+.composition-search-field input {
+  width: 100%;
+  height: var(--control-height);
+  padding-inline: var(--space-3);
+}
+
+/* Agrupamento com sufixo */
+
+.input-with-suffix {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  height: var(--control-height);
+
+  overflow: hidden;
+
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  background: var(--color-surface);
+}
+
+.input-with-suffix span {
+  flex-shrink: 0;
+  padding-inline: var(--space-3);
+
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.input-with-suffix input {
+  width: 100%;
+  height: 100%;
+
+  padding-inline: var(--space-2);
+
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Rótulos dos formulários do PATO */
+
+.group-form-fields label,
+.service-form-fields label,
+.composition-search-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.group-form-fields label > span,
+.service-form-fields label > span,
+.composition-search-field label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Estados de interação */
+
+.form-field input::placeholder,
+.group-form-fields input::placeholder,
+.service-form-fields input::placeholder,
+.composition-search-field input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form-field input:hover,
+.group-form-fields input:hover,
+.service-form-fields input:hover,
+.composition-search-field input:hover {
+  border-color: var(--color-text-muted);
+}
+
+.form-field input:focus,
+.group-form-fields input:focus,
+.service-form-fields input:focus,
+.composition-search-field input:focus {
+  border-color: var(--color-focus);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+/* Campos com sufixo */
+
+.input-with-suffix:focus-within {
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+.input-with-suffix input:focus {
+  border: 0;
+  box-shadow: none;
+}
+
+/* Campo somente para leitura */
+
+.readonly-field {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+
+  box-sizing: border-box;
+  height: var(--control-height);
+  padding-inline: var(--space-3);
+
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  background: var(--color-surface-secondary);
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-sm);
+}

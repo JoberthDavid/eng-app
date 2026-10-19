@@ -1,0 +1,113 @@
+/* ============================================================
+   ENG-APP — BOTÕES COMPARTILHADOS
+   Design System: Engineering Slate
+   ============================================================ */
+
+/* Estrutura comum */
+
+.primary-action,
+.secondary-action,
+.primary-button,
+.secondary-button,
+.ghost-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+
+  box-sizing: border-box;
+  min-height: var(--control-height);
+  padding-inline: var(--space-4);
+
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-md);
+
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-normal);
+
+  text-decoration: none;
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+/* Botões primários */
+
+.primary-action,
+.primary-button {
+  border-color: var(--brand-primary);
+  background: var(--brand-primary);
+  color: var(--color-on-brand);
+}
+
+.primary-action:hover:not(:disabled),
+.primary-button:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+/* Botões secundários */
+
+.secondary-action,
+.secondary-button {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.secondary-action:hover:not(:disabled),
+.secondary-button:hover:not(:disabled) {
+  border-color: var(--color-text-muted);
+  background: var(--color-surface-hover);
+}
+
+/* Botões discretos */
+
+.ghost-button {
+  border-color: transparent;
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+.ghost-button:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+/* Estados desabilitados */
+
+.primary-action:disabled,
+.secondary-action:disabled,
+.primary-button:disabled,
+.secondary-button:disabled,
+.ghost-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Foco acessível */
+
+.primary-action:focus-visible,
+.secondary-action:focus-visible,
+.primary-button:focus-visible,
+.secondary-button:focus-visible,
+.ghost-button:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Acessibilidade: movimento reduzido */
+
+@media (prefers-reduced-motion: reduce) {
+  .primary-action,
+  .secondary-action,
+  .primary-button,
+  .secondary-button,
+  .ghost-button {
+    transition: none;
+  }
+}

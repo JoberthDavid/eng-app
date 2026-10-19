@@ -1,344 +1,339 @@
-// ============================================================
-// MATERIALS PAGE
-// ============================================================
+/* =========================================================
+   ENG-APP — CATÁLOGO DE MATERIAIS
+   Design System v1
+   ========================================================= */
 
 :host {
   display: block;
-
   width: 100%;
   min-width: 0;
-
-  color: #27313c;
+  color: var(--color-text);
 }
 
 .materials-page {
+  box-sizing: border-box;
   width: 100%;
   max-width: 1800px;
-
+  min-width: 0;
+  min-height: calc(100vh - var(--content-header-height));
   margin: 0 auto;
-  padding: 24px 32px 40px;
-
-  box-sizing: border-box;
+  padding: var(--space-6) var(--space-8) var(--space-10);
+  background: var(--color-app-bg);
+  color: var(--color-text);
 }
 
-
-// ============================================================
-// CABEÇALHO
-// ============================================================
+/* =========================================================
+   CABEÇALHO
+   ========================================================= */
 
 .page-header {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-6);
 }
 
 .page-eyebrow {
   display: block;
-
-  margin-bottom: 6px;
-
-  color: #697586;
-
-  font-size: 10px;
-  font-weight: 700;
-
+  margin-bottom: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
   letter-spacing: 0.08em;
+  line-height: var(--line-height-normal);
   text-transform: uppercase;
 }
 
 .page-header h1 {
   margin: 0;
-
-  color: #27313c;
-
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 1.15;
+  color: var(--color-text);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
 }
 
 .page-header p {
-  margin: 6px 0 0;
-
-  color: #697586;
-
-  font-size: 13px;
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
 }
 
-
-// ============================================================
-// BARRA DE PESQUISA
-// ============================================================
+/* =========================================================
+   FILTROS
+   ========================================================= */
 
 .toolbar {
   display: flex;
   align-items: flex-end;
-
-  margin-bottom: 12px;
-}
-
-.search {
-  display: flex;
-  flex-direction: column;
-
-  width: 360px;
-}
-
-.search label {
-  margin-bottom: 5px;
-
-  color: #697586;
-
-  font-size: 9px;
-  font-weight: 700;
-
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.search input {
-  height: 36px;
-
-  padding: 0 11px;
-
-  box-sizing: border-box;
-
-  border: 1px solid #d9e0e7;
-  border-radius: 6px;
-
-  background: #ffffff;
-
-  color: #27313c;
-
-  font-family: inherit;
-  font-size: 12px;
-
-  outline: none;
-}
-
-.search input:focus {
-  border-color: #aeb9c4;
-}
-
-
-// ============================================================
-// TABELA
-// ============================================================
-
-.materials-card {
-  width: 100%;
-
-  overflow: hidden;
-
-  background: #ffffff;
-
-  border: 1px solid #e1e6eb;
-  border-radius: 8px;
-}
-
-.table-header,
-.material-row {
-  display: grid;
-
-  grid-template-columns:
-    120px
-    minmax(260px, 1fr)
-    90px
-    70px
-    120px
-    120px;
-
-  column-gap: 12px;
-
-  align-items: center;
-
-  box-sizing: border-box;
-}
-
-.table-header {
-  min-height: 38px;
-
-  padding: 0 14px;
-
-  background: #f8fafb;
-
-  border-bottom: 1px solid #e1e6eb;
-}
-
-.table-header span {
-  color: #697586;
-
-  font-size: 8px;
-  font-weight: 700;
-
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.material-row {
-  min-height: 42px;
-
-  padding: 0 14px;
-
-  border-bottom: 1px solid #eef1f4;
-
-  color: #27313c;
-
-  font-size: 11px;
-
-  text-decoration: none;
-
-  transition:
-    background-color 120ms ease;
-}
-
-.material-row:last-child {
-  border-bottom: 0;
-}
-
-.material-row:hover {
-  background: #f8fafb;
-}
-
-.material-row span {
-  min-width: 0;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.material-code {
-  font-weight: 700;
-}
-
-.material-description {
-  color: #27313c;
-}
-
-.material-value {
-  font-weight: 700;
-  text-align: right;
-}
-
-
-// ============================================================
-// ESTADO VAZIO
-// ============================================================
-
-.empty-state {
-  padding: 40px;
-
-  color: #697586;
-
-  font-size: 12px;
-
-  text-align: center;
-}
-
-
-// ============================================================
-// RESPONSIVIDADE
-// ============================================================
-
-@media (max-width: 900px) {
-
-  .toolbar {
-    flex-wrap: wrap;
-  }
-
-  .search-filter {
-    width: 100%;
-  }
-
-  .filter {
-    flex: 1 1 140px;
-  }
-}
-
-
-// ============================================================
-// FILTROS
-// ============================================================
-
-.toolbar {
-  display: flex;
-  align-items: flex-end;
-
-  gap: 12px;
-
-  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
 .filter {
   display: flex;
+  flex: 0 1 150px;
   flex-direction: column;
-
-  width: 150px;
+  gap: var(--space-2);
+  min-width: 0;
 }
 
 .search-filter {
-  width: 360px;
+  flex: 1 1 320px;
+  max-width: 460px;
 }
 
 .filter label {
-  margin-bottom: 5px;
-
-  color: #697586;
-
-  font-size: 9px;
-  font-weight: 700;
-  line-height: 1.2;
-
-  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-normal);
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .filter input,
 .filter select {
   width: 100%;
-  height: 36px;
-
-  padding: 0 11px;
-
+  min-width: 0;
+  height: var(--control-height);
+  padding: 0 var(--space-3);
   box-sizing: border-box;
-
-  border: 1px solid #d9e0e7;
-  border-radius: 6px;
-
-  background: #ffffff;
-
-  color: #27313c;
-
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
   font-family: inherit;
-  font-size: 12px;
+  font-size: var(--font-size-sm);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
 
-  outline: none;
+  &:hover {
+    border-color: var(--color-text-muted);
+  }
+
+  &:focus-visible {
+    border-color: var(--color-focus);
+    outline: 2px solid var(--color-focus);
+    outline-offset: 1px;
+  }
 }
 
-.filter input:focus,
-.filter select:focus {
-  border-color: #aeb9c4;
+.filter input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
 }
 
 .clear-filters {
-  height: 36px;
-
-  padding: 0 14px;
-
-  border: 1px solid #d9e0e7;
-  border-radius: 6px;
-
-  background: #ffffff;
-
-  color: #697586;
-
-  cursor: pointer;
-
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-height);
+  padding: 0 var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
   font-family: inherit;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+
+  &:hover {
+    border-color: var(--brand-accent);
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
 }
 
-.clear-filters:hover {
-  background: #f8fafb;
-  color: #27313c;
+/* =========================================================
+   CATÁLOGO
+   ========================================================= */
+
+.materials-card {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+/*
+ * Cabeçalho e linhas compartilham a mesma estrutura.
+ * A rolagem horizontal fica restrita ao catálogo.
+ */
+
+.table-header,
+.material-row {
+  display: grid;
+  grid-template-columns:
+    minmax(100px, 0.85fr)
+    minmax(220px, 3fr)
+    minmax(70px, 0.65fr)
+    minmax(55px, 0.5fr)
+    minmax(110px, 0.9fr)
+    minmax(110px, 0.9fr);
+  column-gap: var(--space-3);
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.table-header {
+  min-height: var(--table-row-height);
+  padding: 0 var(--space-4);
+  border-bottom: var(--border-width) solid var(--color-divider);
+  background: var(--color-surface-secondary);
+}
+
+.table-header span {
+  min-width: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.04em;
+  line-height: var(--line-height-normal);
+  text-transform: uppercase;
+}
+
+.material-row {
+  min-height: var(--table-row-height-comfortable);
+  padding: 0 var(--space-4);
+  border-bottom: var(--border-width) solid var(--color-divider);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  text-decoration: none;
+  transition: background-color var(--transition-fast);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  &:hover {
+    background: var(--color-surface-hover);
+  }
+
+  &:focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid var(--color-focus);
+    outline-offset: -2px;
+  }
+
+  > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.material-code {
+  color: var(--color-text);
+  font-weight: var(--font-weight-bold);
+}
+
+.material-description {
+  color: var(--color-text);
+}
+
+.material-value {
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================
+   ESTADO VAZIO
+   ========================================================= */
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  padding: var(--space-6);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  text-align: center;
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .materials-page {
+    padding-right: var(--space-5);
+    padding-left: var(--space-5);
+  }
+
+  .table-header,
+  .material-row {
+    grid-template-columns:
+      minmax(100px, 0.8fr)
+      minmax(200px, 2.5fr)
+      minmax(65px, 0.6fr)
+      minmax(50px, 0.45fr)
+      minmax(105px, 0.85fr)
+      minmax(105px, 0.85fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .materials-page {
+    padding: var(--space-4) var(--space-3) var(--space-8);
+  }
+
+  .page-header h1 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .toolbar {
+    align-items: stretch;
+  }
+
+  .search-filter {
+    flex-basis: 100%;
+    max-width: none;
+  }
+
+  .filter {
+    flex: 1 1 130px;
+  }
+
+  .clear-filters {
+    align-self: flex-end;
+  }
+
+  .materials-card {
+    overflow-x: auto;
+  }
+
+  .table-header,
+  .material-row {
+    min-width: 760px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filter input,
+  .filter select,
+  .clear-filters,
+  .material-row {
+    transition: none;
+  }
 }

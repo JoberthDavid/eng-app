@@ -1,166 +1,191 @@
-:host{
-
-display:block;
-
+:host {
+  display: block;
+  min-width: 0;
+  color: var(--color-text);
 }
 
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
 
+  width: 100%;
+  max-width: 1800px;
+  min-width: 0;
+  min-height: calc(100vh - var(--content-header-height));
 
-.page{
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-8) var(--space-10);
 
+  box-sizing: border-box;
 
-padding:
-
-28px 24px;
-
-
+  background: var(--color-app-bg);
+  color: var(--color-text);
 }
 
+/* Cabeçalho */
 
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
 
-.page-header{
-
-
-margin-bottom:18px;
-
-
+  gap: var(--space-4);
+  margin-bottom: var(--space-1);
 }
 
+.eyebrow {
+  margin-bottom: var(--space-2);
 
+  color: var(--color-text-muted);
 
-.eyebrow{
-
-
-font-size:11px;
-
-font-weight:700;
-
-letter-spacing:.08em;
-
-color:#667085;
-
-
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-transform: uppercase;
 }
 
+.page-header h1 {
+  margin: 0;
 
+  color: var(--color-text);
 
-h1{
-
-
-margin:5px 0;
-
-font-size:26px;
-
-color:#182230;
-
-
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  line-height: 1.2;
 }
 
+.page-header p {
+  margin: var(--space-2) 0 0;
 
+  color: var(--color-text-secondary);
 
-p{
-
-
-margin:0;
-
-font-size:13px;
-
-color:#667085;
-
-
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
 }
 
+/* Filtros de categorias */
 
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
 
-
-.toolbar{
-
-
-display:flex;
-
-gap:8px;
-
-margin-bottom:14px;
-
+  min-width: 0;
 }
 
+.toolbar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
 
+  min-height: var(--control-height);
+  padding: 0 var(--space-4);
 
-button{
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
 
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
 
-border:
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
 
-1px solid #d0d5dd;
+  cursor: pointer;
 
-
-background:white;
-
-
-padding:
-
-8px 14px;
-
-
-border-radius:8px;
-
-
-cursor:pointer;
-
-
-font-size:12px;
-
-font-weight:600;
-
-
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
-
-
-button:hover{
-
-
-background:#f8fafc;
-
-
+.toolbar button:hover {
+  border-color: var(--color-focus);
+  background: var(--color-surface-hover);
+  color: var(--color-text);
 }
 
-
-
-
-
-.map-card{
-
-
-height:
-
-calc(100vh - 260px);
-
-
-border:
-
-1px solid #dfe3e8;
-
-
-border-radius:10px;
-
-
-overflow:hidden;
-
-
-background:white;
-
-
+.toolbar button:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
+.toolbar button:active {
+  background: var(--color-surface-selected);
+}
 
+/* Mapa */
 
-#map{
+.map-card {
+  position: relative;
 
+  width: 100%;
+  min-width: 0;
+  height: clamp(420px, calc(100vh - 290px), 900px);
+  min-height: 420px;
 
-width:100%;
+  overflow: hidden;
 
-height:100%;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
 
+  background: var(--color-surface);
+}
 
+#map {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Acessibilidade e responsividade */
+
+@media (max-width: 900px) {
+  .page {
+    padding: var(--space-5) var(--space-5) var(--space-8);
+  }
+
+  .map-card {
+    height: max(480px, calc(100vh - 300px));
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    gap: var(--space-4);
+    padding: var(--space-4);
+  }
+
+  .page-header h1 {
+    font-size: var(--font-size-xl);
+  }
+
+  .toolbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .toolbar button {
+    width: 100%;
+    min-width: 0;
+    padding: 0 var(--space-2);
+    white-space: normal;
+  }
+
+  .map-card {
+    height: 65vh;
+    min-height: 360px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toolbar button {
+    transition: none;
+  }
 }
