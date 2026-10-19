@@ -56,84 +56,17 @@
 
   gap: 8px;
 }
+/* ============================================================
+   AJUSTES ESPECÍFICOS DOS BOTÕES — PATO
+   ============================================================ */
 
-
-.secondary-action,
 .primary-action,
-.secondary-button,
+.secondary-action,
 .primary-button,
+.secondary-button,
 .ghost-button {
   min-height: 34px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0 12px;
-
-  border-radius: 6px;
-
-  font-size: 12px;
-  font-weight: 600;
-
-  text-decoration: none;
-
-  cursor: pointer;
 }
-
-
-.secondary-action,
-.secondary-button {
-  border: 1px solid var(--color-border);
-
-  background: var(--color-surface);
-
-  color: var(--color-text-secondary);
-}
-
-
-.secondary-action:hover,
-.secondary-button:hover {
-  background: var(--color-surface-hover);
-}
-
-
-.primary-action,
-.primary-button {
-  border: 1px solid var(--brand-primary);
-
-  background: var(--brand-primary);
-
-  color: var(--color-on-brand);
-}
-
-
-.primary-action:hover,
-.primary-button:hover {
-  background: color-mix(in srgb, var(--brand-primary) 85%, black);
-}
-
-
-.primary-button:disabled {
-  opacity: 0.45;
-
-  cursor: not-allowed;
-}
-
-
-.ghost-button {
-  border: 1px solid transparent;
-
-  background: transparent;
-
-  color: var(--color-text-muted);
-}
-
-
-.ghost-button:hover {
-  background: var(--color-surface-hover);
-}
-
 
 /* PLANOS */
 
@@ -144,7 +77,6 @@
 
   background: var(--color-surface);
 }
-
 
 .plans-header {
   display: flex;
@@ -157,7 +89,6 @@
 
   border-bottom: 1px solid var(--color-divider);
 }
-
 
 .plans-header h2 {
   margin: 0;
@@ -373,91 +304,62 @@
 .service-form-title {
   display: flex;
   flex-direction: column;
-
   gap: 4px;
-
   margin-bottom: 14px;
 }
 
-
 .group-form-title strong,
 .service-form-title strong {
-  font-size: 13px;
-
   color: var(--color-text);
+  font-size: 13px;
 }
-
 
 .group-form-title span,
 .service-form-title span {
-  font-size: 11px;
-
   color: var(--color-text-muted);
+  font-size: 11px;
 }
-
 
 .group-form-fields,
 .service-form-fields {
   display: grid;
-
-  grid-template-columns:
-    160px minmax(0, 1fr);
-
+  grid-template-columns: 160px minmax(0, 1fr);
   gap: 12px;
 }
-
 
 .group-form-fields label,
 .service-form-fields label {
   display: flex;
   flex-direction: column;
-
   gap: 6px;
 }
 
-
 .group-form-fields label > span,
 .service-form-fields label > span {
+  color: var(--color-text-muted);
   font-size: 10px;
   font-weight: 700;
-
   letter-spacing: 0.04em;
   text-transform: uppercase;
-
-  color: var(--color-text-muted);
 }
-
 
 .group-form-fields input,
 .service-form-fields input {
   height: 36px;
-
   padding: 0 10px;
-
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-
-  background: var(--color-surface);
-
-  font-size: 12px;
-
-  outline: none;
 }
-
 
 .group-form-fields input:focus,
 .service-form-fields input:focus {
   border-color: var(--color-focus);
+  outline: none;
 }
-
 
 .group-form-actions,
 .service-form-actions {
   display: flex;
   justify-content: flex-end;
-
   gap: 8px;
-
   margin-top: 14px;
 }
 
@@ -965,20 +867,10 @@ tbody td {
 .composition-search-field input {
   width: 100%;
   height: 34px;
-
-  box-sizing: border-box;
-
   padding: 0 10px;
 
-  border: 1px solid var(--color-border);
   border-radius: 5px;
-
-  background: var(--color-surface);
-
-  color: var(--color-text);
-
   font-size: 11px;
-
   outline: none;
 }
 

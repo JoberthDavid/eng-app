@@ -1,0 +1,49 @@
+/* ============================================================
+   ENG-APP — TABELAS COMPARTILHADAS
+   Design System: Engineering Slate
+   Apenas fundamentos visuais comuns.
+   ============================================================ */
+
+/* Contêiner com rolagem */
+
+.table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior: contain;
+}
+
+/* Cabeçalhos */
+
+.table-scroll thead th {
+  border-bottom: var(--border-width) solid var(--color-border);
+  background: var(--color-surface-secondary);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+/* Células */
+
+.table-scroll tbody td {
+  border-bottom: var(--border-width) solid var(--color-divider);
+  color: var(--color-text-secondary);
+  vertical-align: middle;
+}
+
+/* Última linha */
+
+.table-scroll tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Foco acessível */
+
+.table-scroll button:focus-visible,
+.table-scroll a:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}

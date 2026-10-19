@@ -40,13 +40,110 @@
 
         <span class="header-spacer"></span>
 
-        <button
-          type="button"
-          class="theme-toggle"
-          [attr.aria-label]="'Preferência atual: ' + themeLabel + '. Clique para alternar.'"
-          [title]="themeLabel"
-          (click)="cycleTheme()"
+<div
+  class="theme-menu-container"
+  (click)="$event.stopPropagation()"
+>
+  <button
+    type="button"
+    class="theme-toggle"
+    aria-haspopup="true"
+    [attr.aria-expanded]="themeMenuOpen"
+    aria-controls="theme-preferences-menu"
+    [attr.aria-label]="'Aparência. Preferência atual: ' + themeLabel"
+    [title]="'Aparência: ' + themeLabel"
+    (click)="toggleThemeMenu()"
+  >
+    <span aria-hidden="true">
+      @if (themePreference === 'light') {
+        ☀
+      } @else if (themePreference === 'dark') {
+        ☾
+      } @else {
+        ◐
+      }
+    </span>
+
+    <span class="theme-toggle-label">Aparência</span>
+      </button>
+
+      @if (themeMenuOpen) {
+        <div
+          id="theme-preferences-menu"
+          class="theme-menu"
+          aria-label="Preferências de aparência"
         >
+          <div class="theme-menu-heading">Aparência</div>
+
+          <button
+            type="button"
+            class="theme-menu-option"
+            [class.is-selected]="themePreference === 'system'"
+            [attr.aria-pressed]="themePreference === 'system'"
+            (click)="selectTheme('system')"
+          >
+            <span class="theme-menu-icon" aria-hidden="true">◐</span>
+
+            <span class="theme-menu-option-content">
+              <span class="theme-menu-option-title">Sistema</span>
+              <span class="theme-menu-option-description">
+                Acompanhar o sistema operacional
+              </span>
+            </span>
+
+            @if (themePreference === 'system') {
+              <span class="theme-menu-check" aria-hidden="true">✓</span>
+            }
+          </button>
+
+          <div class="theme-menu-divider"></div>
+
+          <div class="theme-menu-heading">Personalizado</div>
+
+          <button
+            type="button"
+            class="theme-menu-option"
+            [class.is-selected]="themePreference === 'light'"
+            [attr.aria-pressed]="themePreference === 'light'"
+            (click)="selectTheme('light')"
+          >
+            <span class="theme-menu-icon" aria-hidden="true">☀</span>
+
+            <span class="theme-menu-option-content">
+              <span class="theme-menu-option-title">Claro</span>
+              <span class="theme-menu-option-description">
+                Manter a aparência clara
+              </span>
+            </span>
+
+            @if (themePreference === 'light') {
+              <span class="theme-menu-check" aria-hidden="true">✓</span>
+            }
+          </button>
+
+          <button
+            type="button"
+            class="theme-menu-option"
+            [class.is-selected]="themePreference === 'dark'"
+            [attr.aria-pressed]="themePreference === 'dark'"
+            (click)="selectTheme('dark')"
+          >
+            <span class="theme-menu-icon" aria-hidden="true">☾</span>
+
+            <span class="theme-menu-option-content">
+              <span class="theme-menu-option-title">Escuro</span>
+              <span class="theme-menu-option-description">
+                Manter a aparência escura
+              </span>
+            </span>
+
+            @if (themePreference === 'dark') {
+              <span class="theme-menu-check" aria-hidden="true">✓</span>
+            }
+          </button>
+        </div>
+      }
+    </div>
           <span aria-hidden="true">
             @if (themePreference === 'light') {
               ☀
@@ -56,10 +153,6 @@
               ◐
             }
           </span>
-          <span class="theme-toggle-label">
-            {{ themeLabel }}
-          </span>
-        </button>
       </header>
 
       <div class="page-content">

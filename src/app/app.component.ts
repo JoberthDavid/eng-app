@@ -53,6 +53,8 @@ export class AppComponent {
     }
   };
 
+  themeMenuOpen = false;
+
   constructor() {
     this.loadThemePreference();
     this.applyTheme();
@@ -119,20 +121,17 @@ export class AppComponent {
     this.applyTheme();
   }
 
-  cycleTheme(): void {
-    const order: ThemePreference[] = [
-      'system',
-      'light',
-      'dark'
-    ];
+  toggleThemeMenu(): void {
+    this.themeMenuOpen = !this.themeMenuOpen;
+  }
 
-    const currentIndex = order.indexOf(
-      this.themePreference
-    );
+  closeThemeMenu(): void {
+    this.themeMenuOpen = false;
+  }
 
-    const nextIndex = (currentIndex + 1) % order.length;
-
-    this.setTheme(order[nextIndex]);
+  selectTheme(preference: ThemePreference): void {
+    this.setTheme(preference);
+    this.closeThemeMenu();
   }
 
   toggleMobileNavigation(): void {
@@ -147,6 +146,7 @@ export class AppComponent {
   onNavigationKeydown(event: KeyboardEvent): void {
     if (event.key === 'Escape') {
       this.closeMobileNavigation();
+      this.closeThemeMenu();
     }
   }
 
