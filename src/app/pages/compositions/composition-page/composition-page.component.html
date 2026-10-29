@@ -8,24 +8,6 @@
 
     <div class="composition-page">
 
-      <header class="page-header">
-
-        <div>
-          <span class="page-eyebrow">
-            COMPOSIÇÃO
-          </span>
-
-          <h1>
-            {{ composition?.code }}
-          </h1>
-
-          <p>
-            Detalhamento da composição
-          </p>
-        </div>
-
-      </header>
-
 
       @if (composition) {
 
@@ -33,29 +15,6 @@
         <!-- RESUMO DA COMPOSIÇÃO                           -->
         <!-- ============================================= -->
 
-    <section class="summary">
-
-      <div class="summary-card">
-        <span class="label">Data-base</span>
-        <strong>{{ composition.referenceDate }}</strong>
-      </div>
-
-      <div class="summary-card">
-        <span class="label">Fator</span>
-        <strong>{{ composition.factor }}</strong>
-      </div>
-
-      <div class="summary-card">
-        <span class="label">Custo unitário</span>
-        <strong>{{ composition.unitCost }}</strong>
-      </div>
-
-      <div class="summary-card">
-        <span class="label">Custo total</span>
-        <strong>{{ composition.totalCost }}</strong>
-      </div>
-
-    </section>
 
 
         <!-- ============================================= -->
@@ -69,10 +28,6 @@
             <span>
               COMPOSIÇÃO PRINCIPAL
             </span>
-
-            <strong>
-              {{ composition.code }}
-            </strong>
 
           </div>
 
@@ -106,22 +61,8 @@
         <header class="panel-title">
 
           <span>
-            Composição pai
+            Composição principal
           </span>
-
-          @if (parentNode) {
-
-            <strong>
-              {{ parentNode.composition.code }}
-            </strong>
-
-          } @else {
-
-            <strong>
-              Composição principal
-            </strong>
-
-          }
 
         </header>
 
@@ -149,14 +90,6 @@
           <span>
             Composição selecionada
           </span>
-
-          @if (childNode) {
-
-            <strong>
-              {{ childNode.composition.code }}
-            </strong>
-
-          }
 
         </header>
 
