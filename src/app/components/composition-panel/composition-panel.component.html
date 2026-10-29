@@ -5,24 +5,21 @@
 
     <header class="panel-header">
       <div>
-        <span class="eyebrow">Composição</span>
-
         <h2>
-          {{ composition.code }}
+          {{ composition.code }} -  {{ composition.description }}
         </h2>
       </div>
 
-      <div class="panel-summary">
-        <span>
-          Data-base:
-          <strong>{{ composition.referenceDate }}</strong>
-        </span>
-
-        <span>
-          Custo:
-          <strong>{{ composition.unitCost }}</strong>
-        </span>
+      <div>
+        @if (calculation) {
+          <strong>
+            R$ {{ calculation.unit_cost }} / inserir a unidade da composição
+          </strong>
+        } @else {
+          <strong>—</strong>
+        }
       </div>
+
     </header>
 
 
@@ -33,32 +30,41 @@
         <div class="section-header">
 
           <h3>
-            Resultado do cálculo
+            Parâmetros da composição
           </h3>
 
-          <span>
-            Composition Engine
-          </span>
-
         </div>
-
 
         <div class="panel-summary calculation-summary">
 
           <span>
-            Data-base de referência:
+            Unidade:
+            <strong>
+               inserir a unidade da composição
+            </strong>
+          </span>
+
+          <span>
+            Produtividade:
+            <strong>
+               inserir a produtividade/produção da composição
+            </strong>
+          </span>
+
+          <span>
+            Data-base monetária do orçamento:
+            <strong>
+              {{ composition.referenceDate }}
+            </strong>
+          </span>
+
+          <span>
+            Data-base de referência da composição:
             <strong>
               {{ calculation.reference_base_date }}
             </strong>
           </span>
 
-
-          <span>
-            Custo unitário:
-            <strong>
-              R$ {{ calculation.unit_cost | number:'1.2-2':'pt-BR' }}
-            </strong>
-          </span>
 
         </div>
 
@@ -74,7 +80,7 @@
         <div class="section-header">
 
           <h3>
-            Equipamentos — cálculo
+            Equipamentos
           </h3>
 
           <span>
@@ -174,7 +180,7 @@
         <div class="section-header">
 
           <h3>
-            Mão de obra — cálculo
+            Mão de obra
           </h3>
 
           <span>
@@ -265,7 +271,7 @@
         <div class="section-header">
 
           <h3>
-            Materiais — cálculo
+            Materiais
           </h3>
 
           <span>
@@ -348,7 +354,7 @@
 
 
       <!-- ================================================= -->
-      <!-- COMPOSIÇÕES AUXILIARES — CÁLCULO                  -->
+      <!-- COMPOSIÇÕES AUXILIARES                  -->
       <!-- ================================================= -->
 
       <section class="input-section">
@@ -356,7 +362,7 @@
         <div class="section-header">
 
           <h3>
-            Composições auxiliares — cálculo
+            Composições auxiliares
           </h3>
 
           <span>
@@ -438,7 +444,7 @@
     </section>
 
       <!-- ================================================= -->
-      <!-- TEMPOS FIXOS — CÁLCULO                            -->
+      <!-- TEMPOS FIXOS                            -->
       <!-- ================================================= -->
 
       <section class="input-section">
@@ -446,7 +452,7 @@
         <div class="section-header">
 
           <h3>
-            Tempos fixos — cálculo
+            Tempos fixos
           </h3>
 
           <span>
