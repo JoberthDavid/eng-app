@@ -25,6 +25,12 @@ export class CompositionNavigationService {
     this.selectedNodeSignal.set(tree);
   }
 
+  updateActiveTree(
+    tree: CompositionTreeNode
+  ): void {
+    this.activeTreeSignal.set(tree);
+  }
+
   selectNode(
     node: CompositionTreeNode
   ): void {

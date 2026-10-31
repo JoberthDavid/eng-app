@@ -1,124 +1,58 @@
-@if (compositionTree) {
+@if (composition) {
+  <div class="composition-workspace" [class.has-selected-composition]="childNode">
+    <section class="composition-panel">
+      <header class="panel-title">
+        <span>Composição principal</span>
+      </header>
 
-  @if (!isChildSelection) {
-
-    <!-- ================================================= -->
-    <!-- MODO NORMAL — COMPOSIÇÃO PRINCIPAL                -->
-    <!-- ================================================= -->
-
-    <div class="composition-page">
-
-
-      @if (composition) {
-
-        <!-- ============================================= -->
-        <!-- RESUMO DA COMPOSIÇÃO                           -->
-        <!-- ============================================= -->
-
-
-
-        <!-- ============================================= -->
-        <!-- COMPOSIÇÃO PRINCIPAL                           -->
-        <!-- ============================================= -->
-
-        <section class="root-composition-card">
-
-          <div class="root-composition-title">
-
-            <span>
-              COMPOSIÇÃO PRINCIPAL
-            </span>
-
-          </div>
-
-
+      <div class="panel-body">
+        @if (calculation) {
           <app-composition-panel
             [composition]="composition"
             [compositionCatalog]="compositionCatalog"
             [calculation]="calculation"
             [sectionTotals]="sectionTotals"
-            [scrollable]="false"
-          />
-
-        </section>
-
-      }
-
-    </div>
-
-  } @else {
-
-    <!-- ================================================= -->
-    <!-- MODO NAVEGAÇÃO — AX / TF                          -->
-    <!-- ================================================= -->
-
-    <div class="composition-workspace">
-
-      <!-- =============================================== -->
-      <!-- PAINEL SUPERIOR — COMPOSIÇÃO PAI                 -->
-      <!-- =============================================== -->
-
-      <section class="composition-panel">
-
-        <header class="panel-title">
-
-          <span>
-            Composição principal
-          </span>
-
-        </header>
-
-
-        <div class="panel-body">
-
-          <app-composition-panel
-            [composition]="parentNode?.composition ?? composition"
             [scrollable]="true"
           />
+        } @else if (isCalculating) {
+          <div class="panel-status">Carregando composição principal...</div>
+        } @else if (calculationError) {
+          <div class="panel-status panel-status--error">
+            {{ calculationError }}
+          </div>
+        }
+      </div>
+    </section>
 
-        </div>
-
-      </section>
-
-
-      <!-- =============================================== -->
-      <!-- PAINEL INFERIOR — COMPOSIÇÃO SELECIONADA         -->
-      <!-- =============================================== -->
-
+    @if (childNode; as selectedComposition) {
       <section class="composition-panel">
-
         <header class="panel-title">
-
-          <span>
-            Composição selecionada
-          </span>
-
+          <span>Composição selecionada</span>
+          <strong>{{ selectedComposition.composition.code }}</strong>
         </header>
 
-
         <div class="panel-body">
-
-          @if (childNode) {
-
-          <app-composition-panel
-            [composition]="childNode.composition"
-            [scrollable]="true"
-          />
-
-          } @else {
-
-            <div class="no-child">
-              Nenhuma composição selecionada.
+          @if (isSelectedCompositionLoading) {
+            <div class="no-child">Carregando composição selecionada...</div>
+          } @else if (selectedCompositionError) {
+            <div class="no-child panel-status--error">
+              {{ selectedCompositionError }}
             </div>
-
+          } @else if (selectedCalculation) {
+            <app-composition-panel
+              [composition]="selectedComposition.composition"
+              [compositionCatalog]="selectedCompositionCatalog"
+              [calculation]="selectedCalculation"
+              [sectionTotals]="selectedSectionTotals"
+              [scrollable]="true"
+            />
           }
-
         </div>
-
       </section>
-
-    </div>
-
-  }
-
+    }
+  </div>
+} @else {
+  <div class="no-child">
+    Não foi possível carregar a composição principal deste orçamento.
+  </div>
 }

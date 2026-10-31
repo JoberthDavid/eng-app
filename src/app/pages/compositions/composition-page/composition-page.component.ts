@@ -1,5 +1,6 @@
 import {
   Component,
+  effect,
   OnDestroy,
   inject
 } from '@angular/core';
@@ -9,7 +10,15 @@ import {
 } from '@angular/router';
 
 import {
+  catchError,
+  forkJoin,
+  of,
+  Subscription
+} from 'rxjs';
+
+import {
   CompositionCalculationDetailResponse,
+  CompositionCalculationRequest,
   CompositionSectionTotals
 } from '../../../core/integrations/composition/composition.models';
 
@@ -32,6 +41,10 @@ import {
 import {
   CompositionTreeNode
 } from '../../../models/composition-tree.model';
+
+import {
+  CompositionCatalogItem
+} from '../../../models/budget.model';
 
 import {
   CompositionPanelComponent
@@ -125,12 +138,35 @@ export class CompositionPageComponent
 
   calculationError: string | null = null;
 
+  selectedCalculation: CompositionCalculationDetailResponse | null = null;
+
+  selectedSectionTotals: CompositionSectionTotals | null = null;
+
+  selectedCompositionCatalog: CompositionCatalogData | null = null;
+
+  isSelectedCompositionLoading = false;
+
+  selectedCompositionError: string | null = null;
+
+  private selectedCompositionSubscription: Subscription | null = null;
+
 
   constructor() {
 
     this.compositionNavigationService.setActiveTree(
       this.compositionTree
     );
+
+    effect(() => {
+      const selected = this.selectedNode();
+
+      if (!selected || selected.referenceType === 'ROOT') {
+        this.clearSelectedComposition();
+        return;
+      }
+
+      this.loadSelectedComposition(selected);
+    });
 
     this.loadCompositionCatalog();
 
@@ -184,31 +220,13 @@ export class CompositionPageComponent
 
     const composition = this.composition;
 
-    const request = {
+    const request = this.createCalculationRequest(composition);
 
-      composition_code:
-        composition.code,
-
-      source_file_uf:
-        this.project.uf,
-
-      type_system:
-        this.budget.typeSystem,
-
-      methodology:
-        this.budget.methodology,
-
-      monetary_base_date:
-        this.normalizeDateForApi(
-          this.project.monetaryBaseDate
-        ),
-
-      reference_base_date:
-        this.normalizeDateForApi(
-          composition.referenceDate
-        )
-
-    };
+    if (!request) {
+      this.calculationError =
+        'Não foi possível determinar o contexto da composição.';
+      return;
+    }
 
 
     this.isCalculating = true;
@@ -259,6 +277,110 @@ export class CompositionPageComponent
 
       });
 
+  }
+
+  private loadSelectedComposition(
+    node: CompositionTreeNode
+  ): void {
+    this.selectedCompositionSubscription?.unsubscribe();
+
+    this.selectedCalculation = null;
+    this.selectedSectionTotals = null;
+    this.selectedCompositionCatalog = null;
+    this.selectedCompositionError = null;
+
+    const request = this.createCalculationRequest(node.composition);
+
+    if (!request) {
+      this.selectedCompositionError =
+        'Não foi possível determinar o contexto da composição selecionada.';
+      return;
+    }
+
+    this.isSelectedCompositionLoading = true;
+
+    this.selectedCompositionSubscription = forkJoin({
+      catalog: this.compositionCatalogService
+        .getCompositionByCode(
+          node.composition.code,
+          node.composition.referenceDate
+        )
+        .pipe(
+          catchError(error => {
+            console.error(
+              'Erro ao carregar catálogo da composição selecionada:',
+              error
+            );
+
+            return of(null);
+          })
+        ),
+      calculation: this.compositionService.calculateDetail(request)
+    }).subscribe({
+      next: response => {
+        this.selectedCompositionCatalog = response.catalog;
+        this.selectedCalculation = response.calculation;
+        this.selectedSectionTotals =
+          this.calculateSectionTotals(response.calculation);
+
+        if (this.compositionTree) {
+          this.compositionTree =
+            this.compositionTreeService.replaceNodeChildren(
+              this.compositionTree,
+              node,
+              response.calculation.detail.composition_references
+            );
+
+          this.compositionNavigationService.updateActiveTree(
+            this.compositionTree
+          );
+        }
+
+        this.isSelectedCompositionLoading = false;
+      },
+      error: error => {
+        console.error(
+          'Erro ao carregar composição selecionada:',
+          error
+        );
+
+        this.selectedCompositionError =
+          'Não foi possível carregar os detalhes da composição selecionada.';
+        this.isSelectedCompositionLoading = false;
+      }
+    });
+  }
+
+  private clearSelectedComposition(): void {
+    this.selectedCompositionSubscription?.unsubscribe();
+    this.selectedCompositionSubscription = null;
+
+    this.selectedCalculation = null;
+    this.selectedSectionTotals = null;
+    this.selectedCompositionCatalog = null;
+    this.selectedCompositionError = null;
+    this.isSelectedCompositionLoading = false;
+  }
+
+  private createCalculationRequest(
+    composition: Pick<CompositionCatalogItem, 'code' | 'referenceDate'>
+  ): CompositionCalculationRequest | null {
+    if (!this.budget || !this.project) {
+      return null;
+    }
+
+    return {
+      composition_code: composition.code,
+      source_file_uf: this.project.uf,
+      type_system: this.budget.typeSystem,
+      methodology: this.budget.methodology,
+      monetary_base_date: this.normalizeDateForApi(
+        this.project.monetaryBaseDate
+      ),
+      reference_base_date: this.normalizeDateForApi(
+        composition.referenceDate
+      )
+    };
   }
 
   private calculateSectionTotals(
@@ -344,51 +466,19 @@ export class CompositionPageComponent
 
   ngOnDestroy(): void {
 
+    this.selectedCompositionSubscription?.unsubscribe();
+
     this.compositionNavigationService.clear();
 
   }
 
 
-  get isChildSelection(): boolean {
-
-    const selected =
-      this.selectedNode();
-
-
-    return (
-      selected !== null &&
-      selected.referenceType !== 'ROOT'
-    );
-
-  }
-
-
-  get parentNode(): CompositionTreeNode | null {
-
-    const tree =
-      this.compositionTree;
-
-
-    const selected =
-      this.selectedNode();
-
-
-    if (!tree || !selected) {
-      return null;
-    }
-
-
-    return this.compositionTreeService.findParent(
-      tree,
-      selected.composition.code
-    );
-
-  }
-
-
   get childNode(): CompositionTreeNode | null {
+    const selected = this.selectedNode();
 
-    return this.selectedNode();
+    return selected && selected.referenceType !== 'ROOT'
+      ? selected
+      : null;
 
   }
 

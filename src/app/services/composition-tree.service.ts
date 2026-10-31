@@ -10,6 +10,10 @@ import {
   CompositionTreeNode
 } from '../models/composition-tree.model';
 
+import {
+  CompositionReferenceLineResponse
+} from '../core/integrations/composition/composition.models';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -118,6 +122,38 @@ export class CompositionTreeService {
       level: 0,
       children
     };
+  }
+
+  replaceNodeChildren(
+    root: CompositionTreeNode,
+    target: CompositionTreeNode,
+    references: CompositionReferenceLineResponse[]
+  ): CompositionTreeNode {
+    const childNodes = this.buildTreeFromReferences(
+      target.composition,
+      references
+    ).children;
+
+    const updateNode = (
+      node: CompositionTreeNode
+    ): CompositionTreeNode => {
+      if (node === target) {
+        return {
+          ...node,
+          children: childNodes.map(child => ({
+            ...child,
+            level: node.level + 1
+          }))
+        };
+      }
+
+      return {
+        ...node,
+        children: node.children.map(updateNode)
+      };
+    };
+
+    return updateNode(root);
   }
 
 }

@@ -255,12 +255,13 @@
 .section-metrics {
   display: flex;
   align-items: center;
-  justify-self: center;
+  justify-self: end;
   grid-column: -2 / -1;
   grid-row: 1;
   gap: 12px;
 
   margin-left: 0;
+  padding-right: 6px;
   white-space: nowrap;
 }
 

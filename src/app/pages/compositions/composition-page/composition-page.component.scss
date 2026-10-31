@@ -165,8 +165,8 @@
 
 .composition-workspace {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--space-3);
+  grid-template-rows: minmax(0, 1fr);
+  gap: 1.75rem;
 
   width: 100%;
   max-width: 1800px;
@@ -180,6 +180,10 @@
 
   background: var(--color-app-bg);
   color: var(--color-text);
+}
+
+.composition-workspace.has-selected-composition {
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
 }
 
 // ============================================================
@@ -262,6 +266,25 @@
 
   background: var(--color-surface);
   color: var(--color-text);
+}
+
+.panel-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+  padding: var(--space-6);
+  box-sizing: border-box;
+
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  text-align: center;
+}
+
+.panel-status--error {
+  color: var(--color-danger, var(--color-text-secondary));
 }
 
 // ============================================================
