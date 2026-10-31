@@ -13,7 +13,7 @@
       <div>
         @if (calculation) {
           <strong>
-            R$ {{ calculation.unit_cost }} / inserir a unidade da composição
+            R$ {{ calculation.unit_cost }} / {{ compositionCatalog?.unit }}
           </strong>
         } @else {
           <strong>—</strong>
@@ -37,33 +37,45 @@
 
         <div class="panel-summary calculation-summary">
 
-          <span>
-            Unidade:
-            <strong>
-               inserir a unidade da composição
-            </strong>
-          </span>
+          <div class="calculation-summary-column">
+            <span>
+              Unidade:
+              <strong>
+                {{ compositionCatalog?.unit }}
+              </strong>
+            </span>
 
-          <span>
-            Produtividade:
-            <strong>
-               inserir a produtividade/produção da composição
-            </strong>
-          </span>
+            <span>
+              Produtividade:
+              <strong>
+                {{ compositionCatalog?.production }}
+              </strong>
+            </span>
 
-          <span>
-            Data-base monetária do orçamento:
-            <strong>
-              {{ composition.referenceDate }}
-            </strong>
-          </span>
+            <span>
+              Fator de influência de chuva:
+              <strong>
+                {{ compositionCatalog?.fic }}
+              </strong>
+            </span>
 
-          <span>
-            Data-base de referência da composição:
-            <strong>
-              {{ calculation.reference_base_date }}
-            </strong>
-          </span>
+          </div>
+
+          <div class="calculation-summary-column calculation-summary-column--right">
+            <span>
+              Data-base monetária do orçamento:
+              <strong>
+                {{ formatMonthYear(composition.referenceDate) }}
+              </strong>
+            </span>
+
+            <span>
+              Data-base de referência da composição:
+              <strong>
+                {{ formatMonthYear(calculation.reference_base_date) }}
+              </strong>
+            </span>
+          </div>
 
 
         </div>
@@ -77,15 +89,23 @@
 
       <section class="input-section">
 
-        <div class="section-header">
+        <div class="section-header section-header-equipment">
 
           <h3>
             Equipamentos
           </h3>
 
-          <span>
-            {{ getCalculatedEquipments().length }}
-          </span>
+          <div class="section-metrics">
+            @if (sectionTotals) {
+              <span class="section-total">
+                @if (sectionTotals.equipment !== null) {
+                  R$ {{ sectionTotals.equipment | number:'1.4-4':'pt-BR' }}
+                } @else {
+                  —
+                }
+              </span>
+            }
+          </div>
 
         </div>
 
@@ -177,15 +197,23 @@
 
       <section class="input-section">
 
-        <div class="section-header">
+        <div class="section-header section-header-standard">
 
           <h3>
             Mão de obra
           </h3>
 
-          <span>
-            {{ getCalculatedLabor().length }}
-          </span>
+          <div class="section-metrics">
+            @if (sectionTotals) {
+              <span class="section-total">
+                @if (sectionTotals.labor !== null) {
+                  R$ {{ sectionTotals.labor | number:'1.4-4':'pt-BR' }}
+                } @else {
+                  —
+                }
+              </span>
+            }
+          </div>
 
         </div>
 
@@ -268,15 +296,23 @@
 
       <section class="input-section">
 
-        <div class="section-header">
+        <div class="section-header section-header-standard">
 
           <h3>
             Materiais
           </h3>
 
-          <span>
-            {{ getCalculatedMaterials().length }}
-          </span>
+          <div class="section-metrics">
+            @if (sectionTotals) {
+              <span class="section-total">
+                @if (sectionTotals.materials !== null) {
+                  R$ {{ sectionTotals.materials | number:'1.4-4':'pt-BR' }}
+                } @else {
+                  —
+                }
+              </span>
+            }
+          </div>
 
         </div>
 
@@ -359,15 +395,23 @@
 
       <section class="input-section">
 
-        <div class="section-header">
+        <div class="section-header section-header-standard">
 
           <h3>
             Composições auxiliares
           </h3>
 
-          <span>
-            {{ getCalculatedAuxiliaryCompositions().length }}
-          </span>
+          <div class="section-metrics">
+            @if (sectionTotals) {
+              <span class="section-total">
+                @if (sectionTotals.auxiliaryCompositions !== null) {
+                  R$ {{ sectionTotals.auxiliaryCompositions | number:'1.4-4':'pt-BR' }}
+                } @else {
+                  —
+                }
+              </span>
+            }
+          </div>
 
         </div>
 
@@ -449,15 +493,23 @@
 
       <section class="input-section">
 
-        <div class="section-header">
+        <div class="section-header section-header-standard">
 
           <h3>
             Tempos fixos
           </h3>
 
-          <span>
-            {{ getCalculatedFixedTimeCompositions().length }}
-          </span>
+          <div class="section-metrics">
+            @if (sectionTotals) {
+              <span class="section-total">
+                @if (sectionTotals.fixedTimeCompositions !== null) {
+                  R$ {{ sectionTotals.fixedTimeCompositions | number:'1.4-4':'pt-BR' }}
+                } @else {
+                  —
+                }
+              </span>
+            }
+          </div>
 
         </div>
 

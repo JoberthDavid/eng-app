@@ -138,6 +138,34 @@
   font-weight: 700;
 }
 
+.calculation-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 10px 14px;
+
+  gap: 4px 24px;
+}
+
+.calculation-summary-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  gap: 4px;
+  min-width: 0;
+  white-space: normal;
+}
+
+.calculation-summary-column--right {
+  align-items: flex-end;
+  text-align: right;
+}
+
 
 // ============================================================
 // SEÇÕES
@@ -182,6 +210,20 @@
   border-bottom: 1px solid var(--color-border);
 }
 
+.section-header-standard,
+.section-header-equipment {
+  display: grid;
+  padding: 0;
+}
+
+.section-header-standard {
+  grid-template-columns: 10% 40% 9% 9% 19% 13%;
+}
+
+.section-header-equipment {
+  grid-template-columns: 10% 40% 9% 9% 6% 7% 6% 13%;
+}
+
 .section-header h3 {
   margin: 0;
 
@@ -190,6 +232,12 @@
   font-size: 11px;
   font-weight: 700;
   line-height: 1.2;
+}
+
+.section-header-standard h3,
+.section-header-equipment h3 {
+  grid-column: 1 / -2;
+  padding-left: 6px;
 }
 
 .section-header span {
@@ -202,6 +250,27 @@
   font-size: 10px;
   font-weight: 700;
   line-height: 1.2;
+}
+
+.section-metrics {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  grid-column: -2 / -1;
+  grid-row: 1;
+  gap: 12px;
+
+  margin-left: 0;
+  white-space: nowrap;
+}
+
+.section-metrics span {
+  margin-left: 0;
+}
+
+.section-metrics .section-total {
+  color: var(--color-text);
+  font-weight: 600;
 }
 
 
@@ -240,42 +309,42 @@
 
 .calculation-table-equipment th:nth-child(1),
 .calculation-table-equipment td:nth-child(1) {
-  width: 9%;
+  width: 10%;
 }
 
 .calculation-table-equipment th:nth-child(2),
 .calculation-table-equipment td:nth-child(2) {
-  width: 36%;
+  width: 40%;
 }
 
 .calculation-table-equipment th:nth-child(3),
 .calculation-table-equipment td:nth-child(3) {
-  width: 7%;
+  width: 9%;
 }
 
 .calculation-table-equipment th:nth-child(4),
 .calculation-table-equipment td:nth-child(4) {
-  width: 10%;
+  width: 9%;
 }
 
 .calculation-table-equipment th:nth-child(5),
 .calculation-table-equipment td:nth-child(5) {
-  width: 8%;
+  width: 6%;
 }
 
 .calculation-table-equipment th:nth-child(6),
 .calculation-table-equipment td:nth-child(6) {
-  width: 10%;
+  width: 7%;
 }
 
 .calculation-table-equipment th:nth-child(7),
 .calculation-table-equipment td:nth-child(7) {
-  width: 10%;
+  width: 6%;
 }
 
 .calculation-table-equipment th:nth-child(8),
 .calculation-table-equipment td:nth-child(8) {
-  width: 10%;
+  width: 13%;
 }
 
 
@@ -290,22 +359,22 @@
 
 .calculation-table-standard th:nth-child(2),
 .calculation-table-standard td:nth-child(2) {
-  width: 38%;
+  width: 40%;
 }
 
 .calculation-table-standard th:nth-child(3),
 .calculation-table-standard td:nth-child(3) {
-  width: 13%;
+  width: 9%;
 }
 
 .calculation-table-standard th:nth-child(4),
 .calculation-table-standard td:nth-child(4) {
-  width: 13%;
+  width: 9%;
 }
 
 .calculation-table-standard th:nth-child(5),
 .calculation-table-standard td:nth-child(5) {
-  width: 13%;
+  width: 19%;
 }
 
 .calculation-table-standard th:nth-child(6),
@@ -375,31 +444,6 @@
 .input-section td:last-child {
   padding-right: 6px;
 }
-
-// ============================================================
-// COLUNAS
-// ============================================================
-
-.input-section th:nth-child(1),
-.input-section td:nth-child(1) {
-  width: 10%;
-}
-
-.input-section th:nth-child(2),
-.input-section td:nth-child(2) {
-  width: 64%;
-}
-
-.input-section th:nth-child(3),
-.input-section td:nth-child(3) {
-  width: 13%;
-}
-
-.input-section th:nth-child(4),
-.input-section td:nth-child(4) {
-  width: 13%;
-}
-
 
 // ============================================================
 // LINHAS
@@ -527,9 +571,28 @@
     font-size: 17px;
   }
 
+  .calculation-summary {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .calculation-summary-column--right {
+    align-items: flex-start;
+    text-align: left;
+  }
+
   .section-header {
-    padding-right: 9px;
-    padding-left: 9px;
+    padding: 0 9px;
+  }
+
+  .section-header-standard,
+  .section-header-equipment {
+    padding: 0;
+  }
+
+  .section-metrics {
+    gap: 8px;
   }
 
   .input-section th {

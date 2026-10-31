@@ -7,6 +7,7 @@ import { ProjectService } from '../../../services/project.service';
 import { CompositionService } from '../../../core/integrations/composition/composition.service';
 import { CompositionTreeService } from '../../../services/composition-tree.service';
 import { CompositionNavigationService } from '../../../services/composition-navigation.service';
+import { CompositionCatalogService } from '../../../services/composition-catalog.service';
 
 describe('CompositionPageComponent', () => {
   let component: CompositionPageComponent;
@@ -30,6 +31,12 @@ describe('CompositionPageComponent', () => {
     selectedNode: () => null,
     setActiveTree: jasmine.createSpy('setActiveTree'),
     clear: jasmine.createSpy('clear')
+  };
+
+  const compositionCatalogServiceMock = {
+    getCompositionByCode: jasmine
+      .createSpy('getCompositionByCode')
+      .and.returnValue(of(null))
   };
 
   beforeEach(async () => {
@@ -61,6 +68,10 @@ describe('CompositionPageComponent', () => {
         {
           provide: CompositionNavigationService,
           useValue: compositionNavigationServiceMock
+        },
+        {
+          provide: CompositionCatalogService,
+          useValue: compositionCatalogServiceMock
         }
       ]
     }).compileComponents();

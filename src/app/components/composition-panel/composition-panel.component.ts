@@ -17,9 +17,13 @@ import {
 } from '../../models/budget.model';
 
 import {
-  CompositionCalculationDetailResponse
+  CompositionCalculationDetailResponse,
+  CompositionSectionTotals
 } from '../../core/integrations/composition/composition.models';
 
+import {
+  CompositionCatalogData
+} from '../../services/composition-catalog.service';
 
 @Component({
   selector: 'app-composition-panel',
@@ -34,14 +38,60 @@ export class CompositionPanelComponent {
   composition:
     CompositionCatalogItem | null = null;
 
+  @Input() compositionCatalog:
+    CompositionCatalogData | null = null;
 
   @Input()
   calculation:
     CompositionCalculationDetailResponse | null = null;
 
+  @Input()
+  sectionTotals: CompositionSectionTotals | null = null;
+
 
   @Input()
   scrollable = false;
+
+
+  formatMonthYear(value: string | null | undefined): string {
+    if (!value?.trim()) {
+      return '—';
+    }
+
+    const date = value.trim();
+    const isoMatch = /^(\d{4})-(\d{2})-\d{2}(?:$|T)/.exec(date);
+    const brazilianMatch = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(date);
+    const monthYearMatch = /^(\d{2})\/(\d{4})$/.exec(date);
+
+    const month = isoMatch
+      ? isoMatch[2]
+      : brazilianMatch
+        ? brazilianMatch[2]
+        : monthYearMatch?.[1];
+
+    const year = isoMatch
+      ? isoMatch[1]
+      : brazilianMatch
+        ? brazilianMatch[3]
+        : monthYearMatch?.[2];
+
+    const monthNames = [
+      'jan', 'fev', 'mar', 'abr', 'mai', 'jun',
+      'jul', 'ago', 'set', 'out', 'nov', 'dez'
+    ];
+    const monthIndex = Number(month) - 1;
+
+    if (
+      year &&
+      Number.isInteger(monthIndex) &&
+      monthIndex >= 0 &&
+      monthIndex < monthNames.length
+    ) {
+      return `${monthNames[monthIndex]}/${year}`;
+    }
+
+    return '—';
+  }
 
 
   getCalculatedEquipments() {

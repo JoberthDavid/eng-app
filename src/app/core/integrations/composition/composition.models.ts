@@ -56,6 +56,14 @@ export interface CompositionCalculationDetailResponse {
   detail: CompositionCalculationLinesResponse;
 }
 
+export interface CompositionSectionTotals {
+  equipment: number | null;
+  labor: number | null;
+  materials: number | null;
+  auxiliaryCompositions: number | null;
+  fixedTimeCompositions: number | null;
+}
+
 export interface CompositionCalculationRequest {
   composition_code: string;
   source_file_uf: string;

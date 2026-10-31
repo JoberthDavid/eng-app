@@ -9,7 +9,8 @@ import {
 } from '@angular/router';
 
 import {
-  CompositionCalculationDetailResponse
+  CompositionCalculationDetailResponse,
+  CompositionSectionTotals
 } from '../../../core/integrations/composition/composition.models';
 
 import {
@@ -36,6 +37,10 @@ import {
   CompositionPanelComponent
 } from '../../../components/composition-panel/composition-panel.component';
 
+import {
+  CompositionCatalogData,
+  CompositionCatalogService
+} from '../../../services/composition-catalog.service';
 
 @Component({
   selector: 'app-composition-page',
@@ -68,6 +73,8 @@ export class CompositionPageComponent
   private readonly compositionNavigationService =
     inject(CompositionNavigationService);
 
+  private readonly compositionCatalogService =
+      inject(CompositionCatalogService);
 
   readonly selectedNode =
     this.compositionNavigationService.selectedNode;
@@ -108,13 +115,13 @@ export class CompositionPageComponent
 
   compositionTree: CompositionTreeNode | null = null;
 
+  calculation: CompositionCalculationDetailResponse | null = null;
 
-  calculation:
-    CompositionCalculationDetailResponse | null = null;
+  sectionTotals: CompositionSectionTotals | null = null;
 
+  compositionCatalog: CompositionCatalogData | null = null;
 
   isCalculating = false;
-
 
   calculationError: string | null = null;
 
@@ -125,11 +132,40 @@ export class CompositionPageComponent
       this.compositionTree
     );
 
+    this.loadCompositionCatalog();
 
     this.calculateComposition();
 
   }
 
+  private loadCompositionCatalog(): void {
+
+    if (!this.composition) {
+      this.compositionCatalog = null;
+      return;
+    }
+
+    this.compositionCatalogService
+      .getCompositionByCode(
+        this.composition.code,
+        this.composition.referenceDate
+      )
+      .subscribe({
+        next: catalog => {
+          this.compositionCatalog = catalog;
+        },
+
+        error: error => {
+          console.error(
+            'Erro ao carregar catálogo da composição:',
+            error
+          );
+
+          this.compositionCatalog = null;
+        }
+      });
+
+  }
 
   private calculateComposition(): void {
 
@@ -189,6 +225,9 @@ export class CompositionPageComponent
             this.calculation =
               response;
 
+            this.sectionTotals =
+              this.calculateSectionTotals(response);
+
             this.compositionTree =
               this.compositionTreeService.buildTreeFromReferences(
                 composition,
@@ -220,6 +259,43 @@ export class CompositionPageComponent
 
       });
 
+  }
+
+  private calculateSectionTotals(
+    response: CompositionCalculationDetailResponse
+  ): CompositionSectionTotals {
+    const sumLineCosts = (
+      lines: Array<{ line_cost: string }>
+    ): number | null => {
+      let total = 0;
+
+      for (const line of lines) {
+        const lineCost = Number(line.line_cost);
+
+        if (!Number.isFinite(lineCost)) {
+          return null;
+        }
+
+        total += lineCost;
+      }
+
+      return total;
+    };
+
+    const compositionReferences =
+      response.detail.composition_references;
+
+    return {
+      equipment: sumLineCosts(response.detail.equipment),
+      labor: sumLineCosts(response.detail.labor),
+      materials: sumLineCosts(response.detail.materials),
+      auxiliaryCompositions: sumLineCosts(
+        compositionReferences.filter(reference => reference.group === 'AX')
+      ),
+      fixedTimeCompositions: sumLineCosts(
+        compositionReferences.filter(reference => reference.group === 'TF')
+      )
+    };
   }
 
 
