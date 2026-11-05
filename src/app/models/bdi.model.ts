@@ -9,6 +9,7 @@ export interface BdiQuota {
   description: string;
   percentage: number;
   variable: string;
+  base: 'CD' | 'PV';
 }
 
 export interface Bdi {

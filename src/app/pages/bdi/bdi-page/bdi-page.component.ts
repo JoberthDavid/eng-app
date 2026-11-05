@@ -155,44 +155,12 @@ export class BdiPageComponent implements OnInit {
       group: quota.group,
       description: quota.description,
       variable: quota.variable,
-      base: this.extractBase(quota.variable),
+      base: quota.base,
       parameter: Number(quota.percentage),
       pvPercent: 0,
       cdPercent: 0
     };
   }
-
-
-  /**
-   * Extrai a base do formato atualmente retornado
-   * pelo budget-engine.
-   *
-   * Exemplos:
-   *
-   * 12,00% do CD -> CD
-   * 0,50% do PV  -> PV
-   *
-   * A base deverá futuramente ser um atributo próprio
-   * de BdiQuota no budget-engine.
-   */
-  private extractBase(
-    variable: string
-  ): 'CD' | 'PV' {
-    const normalized = variable
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toUpperCase();
-
-    if (
-      normalized.includes(' DO PV') ||
-      normalized.includes('PV')
-    ) {
-      return 'PV';
-    }
-
-    return 'CD';
-  }
-
 
   /**
    * Calcula a composição do BDI.
