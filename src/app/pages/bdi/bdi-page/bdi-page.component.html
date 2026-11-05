@@ -46,80 +46,190 @@
 
     <div class="identification-grid">
 
-      <div class="field">
-
-        <label>
-          Rodovia
-        </label>
-
-        <input
-          [(ngModel)]="highway"
-        />
-
-      </div>
-
+      <!-- BDI DO CATÁLOGO -->
 
       <div class="field">
 
         <label>
-          Data-base
-        </label>
-
-        <input
-          [(ngModel)]="baseDate"
-        />
-
-      </div>
-
-
-      <div class="field">
-
-        <label>
-          KM
-        </label>
-
-        <input
-          [(ngModel)]="km"
-        />
-
-      </div>
-
-
-      <div class="field">
-
-        <label>
-          SNV
-        </label>
-
-        <input
-          [(ngModel)]="snv"
-        />
-
-      </div>
-
-
-      <div class="field">
-
-        <label>
-          Regime
+          BDI
         </label>
 
         <select
-          [(ngModel)]="regime"
-          (change)="calculate()"
+          [ngModel]="selectedBdi"
+          (ngModelChange)="onBdiChange($event)"
+          [disabled]="bdiLoading || bdis.length === 0"
         >
 
-          <option value="onerado">
-            Onerado
+          <option [ngValue]="null">
+
+            {{
+              bdiLoading
+                ? 'Carregando...'
+                : 'Selecione o BDI'
+            }}
+
           </option>
 
-          <option value="desonerado">
-            Desonerado
+          <option
+            *ngFor="let bdi of bdis"
+            [ngValue]="bdi"
+          >
+
+            {{ bdi.name }}
+
           </option>
 
         </select>
 
       </div>
+
+
+      <!-- MÉTODO -->
+
+      <div class="field">
+
+        <label>
+          Método
+        </label>
+
+        <input
+          type="text"
+          [value]="selectedBdi?.method?.method ?? ''"
+          readonly
+        />
+
+      </div>
+
+
+      <!-- SLUG -->
+
+      <div class="field">
+
+        <label>
+          Código
+        </label>
+
+        <input
+          type="text"
+          [value]="selectedBdi?.slug ?? ''"
+          readonly
+        />
+
+      </div>
+
+    </div>
+
+
+    <!-- ESTADO DO CATÁLOGO -->
+
+    <div
+      *ngIf="bdiLoading"
+      class="field"
+    >
+
+      <span>
+        Carregando dados de BDI...
+      </span>
+
+    </div>
+
+
+    <div
+      *ngIf="bdiError"
+      class="field"
+    >
+
+      <span>
+        {{ bdiError }}
+      </span>
+
+    </div>
+
+
+    <!-- BDI SELECIONADO -->
+
+    <div
+      *ngIf="selectedBdi as bdi"
+      class="section-header"
+    >
+
+      <div>
+
+        <h3>
+          {{ bdi.name }}
+        </h3>
+
+        <p>
+          Método: {{ bdi.method.method }}
+          · Código: {{ bdi.slug }}
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- QUOTAS DO BDI -->
+
+    <div
+      *ngIf="selectedBdi as bdi"
+      class="table-wrapper"
+    >
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Grupo
+            </th>
+
+            <th>
+              Descrição
+            </th>
+
+            <th>
+              Variável
+            </th>
+
+            <th>
+              Percentual
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="let quota of bdi.quotas"
+          >
+
+            <td>
+              {{ quota.group }}
+            </td>
+
+            <td class="description">
+              {{ quota.description }}
+            </td>
+
+            <td class="variable">
+              {{ quota.variable }}
+            </td>
+
+            <td class="number">
+              {{ formatNumber(quota.percentage) }}%
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
 
     </div>
 
@@ -150,6 +260,8 @@
     <div class="parameters-grid">
 
 
+      <!-- BENEFÍCIOS -->
+
       <div class="parameter-group">
 
         <div class="group-title">
@@ -174,6 +286,8 @@
 
       </div>
 
+
+      <!-- DESPESAS INDIRETAS -->
 
       <div class="parameter-group">
 
@@ -247,6 +361,8 @@
 
       </div>
 
+
+      <!-- TRIBUTOS -->
 
       <div class="parameter-group">
 

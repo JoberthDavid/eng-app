@@ -1,15 +1,9 @@
-import {
-  Component
-} from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
-import {
-  CommonModule
-} from '@angular/common';
-
-import {
-  FormsModule
-} from '@angular/forms';
-
+import { Bdi, BdiQuota } from '../../../models/bdi.model';
+import { BdiService } from '../../../services/bdi.service';
 
 interface BdiRow {
   group: string;
@@ -19,112 +13,139 @@ interface BdiRow {
   cdPercent: number;
 }
 
-
 @Component({
   selector: 'app-bdi-page',
-
   standalone: true,
-
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-
+  imports: [CommonModule, FormsModule],
   templateUrl: './bdi-page.component.html',
-
   styleUrl: './bdi-page.component.scss'
 })
-export class BdiPageComponent {
+export class BdiPageComponent implements OnInit {
+  private readonly bdiService = inject(BdiService);
 
+  bdis: Bdi[] = [];
+  selectedBdi: Bdi | null = null;
 
-  /*
-   * IDENTIFICAÇÃO
-   */
-
-  highway = 'BR-010/GO';
-
-  km = 'KM 0,0 ao KM 227,3 (eixo principal)';
-
-  snv = '202310A';
-
-  baseDate = 'jan/24';
-
+  bdiLoading = false;
+  bdiError: string | null = null;
 
   /*
-   * REGIME
-   */
-
-  regime = 'onerado';
-
-
-  /*
-   * PARÂMETROS DO BDI
+   * Parâmetros do BDI.
    *
-   * Valores da imagem de referência.
+   * Estes valores deixam de ser a fonte de dados.
+   * São preenchidos a partir das quotas retornadas pelo budget-engine.
    */
+  profit = 0;
+  centralAdministration = 0;
+  selicAnnual = 0;
+  risks = 0;
+  insurance = 0;
 
-  profit = 12.00;
-
-  centralAdministration = 9.00;
-
-  selicAnnual = 10.65;
-
-  risks = 0.50;
-
-  insurance = 0.25;
-
-
-  /*
-   * TRIBUTOS
-   */
-
-  cofins = 3.00;
-
-  iss = 5.00;
-
-  issMaterialDeduction = 40.00;
-
-  pis = 0.65;
-
-
-  /*
-   * RESULTADOS
-   */
+  cofins = 0;
+  iss = 0;
+  issMaterialDeduction = 0;
+  pis = 0;
 
   rows: BdiRow[] = [];
 
   bdiOverPv = 0;
-
   bdiOverCd = 0;
-
   pvOverCd = 1;
 
-
-  /*
-   * CONSTRUTOR
-   */
-
-  constructor() {
-
-    this.calculate();
-
+  ngOnInit(): void {
+    this.loadBdis();
   }
 
+  loadBdis(): void {
+    this.bdiLoading = true;
+    this.bdiError = null;
 
-  /*
-   * CÁLCULO PRINCIPAL
+    this.bdiService.getBdis().subscribe({
+      next: bdis => {
+        this.bdis = bdis;
+        this.bdiLoading = false;
+
+        if (bdis.length > 0) {
+          this.selectedBdi = bdis[0];
+          this.applyBdiParameters();
+          this.calculate();
+        }
+      },
+      error: error => {
+        console.error('Erro ao carregar BDI:', error);
+
+        this.bdis = [];
+        this.selectedBdi = null;
+        this.bdiLoading = false;
+        this.bdiError = 'Não foi possível carregar os dados de BDI.';
+      }
+    });
+  }
+
+  onBdiChange(bdi: Bdi | null): void {
+    this.selectedBdi = bdi;
+
+    if (!bdi) {
+      this.resetCalculation();
+      return;
+    }
+
+    this.applyBdiParameters();
+    this.calculate();
+  }
+
+  /**
+   * Obtém o percentual de uma quota diretamente do BDI
+   * retornado pelo budget-engine.
    */
+  private getQuotaPercentage(description: string): number {
+    const quota = this.selectedBdi?.quotas.find(
+      item => item.description === description
+    );
+
+    return quota ? Number(quota.percentage) : 0;
+  }
+
+  /**
+   * Transforma as quotas do budget-engine nos parâmetros
+   * utilizados pela fórmula atualmente existente no eng-app.
+   *
+   * Não há valores mockados aqui.
+   */
+  private applyBdiParameters(): void {
+    this.profit = this.getQuotaPercentage('LUCRO');
+
+    this.centralAdministration =
+      this.getQuotaPercentage('ADMINISTRAÇÃO CENTRAL');
+
+    this.selicAnnual =
+      this.getQuotaPercentage('DESPESAS FINANCEIRAS');
+
+    this.risks =
+      this.getQuotaPercentage('RISCOS');
+
+    this.insurance =
+      this.getQuotaPercentage(
+        'SEGUROS E GARANTIAS CONTRATUAIS'
+      );
+
+    this.cofins =
+      this.getQuotaPercentage('COFINS');
+
+    this.iss =
+      this.getQuotaPercentage('ISS');
+
+    this.issMaterialDeduction =
+      this.getQuotaPercentage(
+        'DEDUÇÃO DE MATERIAIS NO ISS'
+      );
+
+    this.pis =
+      this.getQuotaPercentage('PIS');
+  }
 
   calculate(): void {
-
-    /*
-     * Conversão dos percentuais
-     * para valores decimais.
-     */
-
-    const profit =
-      this.profit / 100;
-
+    const profit = this.profit / 100;
     const administration =
       this.centralAdministration / 100;
 
@@ -134,43 +155,14 @@ export class BdiPageComponent {
     const insurance =
       this.insurance / 100;
 
-
-    /*
-     * ISS efetivamente aplicado
-     *
-     * ISS = 5%
-     *
-     * Dedução de materiais = 40%
-     *
-     * ISS efetivo:
-     *
-     * 5% × (100% - 40%)
-     *
-     * = 3%
-     */
-
     const effectiveIss =
       (this.iss / 100) *
       (1 - this.issMaterialDeduction / 100);
-
-
-    /*
-     * Tributos sobre PV.
-     */
 
     const taxes =
       (this.cofins / 100) +
       effectiveIss +
       (this.pis / 100);
-
-
-    /*
-     * SELIC mensal equivalente.
-     *
-     * i_m =
-     *
-     * (1 + i_a)^(1/12) - 1
-     */
 
     const monthlySelic =
       Math.pow(
@@ -178,28 +170,11 @@ export class BdiPageComponent {
         1 / 12
       ) - 1;
 
-
-    /*
-     * Relação:
-     *
-     * PV / CD
-     *
-     * considerando:
-     *
-     * lucro sobre CD
-     * administração sobre CD
-     * financeiro sobre (PV - lucro)
-     * riscos sobre PV
-     * seguros sobre PV
-     * tributos sobre PV
-     */
-
     const numerator =
       1 +
       profit +
       administration -
       monthlySelic * profit;
-
 
     const denominator =
       1 -
@@ -208,72 +183,43 @@ export class BdiPageComponent {
       insurance -
       taxes;
 
+    if (denominator === 0) {
+      this.resetCalculation();
+      return;
+    }
 
     this.pvOverCd =
       numerator / denominator;
 
-
-    /*
-     * BDI sobre CD.
-     */
-
     this.bdiOverCd =
       (this.pvOverCd - 1) * 100;
-
-
-    /*
-     * BDI sobre PV.
-     */
 
     this.bdiOverPv =
       (1 - 1 / this.pvOverCd) * 100;
 
-
-    /*
-     * Monta as linhas da tabela.
-     */
-
     const financeAmountOverCd =
       monthlySelic *
-      (
-        this.pvOverCd -
-        profit
-      );
-
+      (this.pvOverCd - profit);
 
     const financePercentPv =
       financeAmountOverCd /
       this.pvOverCd *
       100;
 
-
     const financePercentCd =
       financeAmountOverCd *
       100;
 
-
     this.rows = [
-
-      /*
-       * BENEFÍCIOS
-       */
-
       {
         group: 'BENEFÍCIOS',
         description: 'LUCRO',
         variable: `${this.formatNumber(this.profit)}% do CD`,
         pvPercent:
-          this.profit /
-          this.pvOverCd,
+          this.profit / this.pvOverCd,
         cdPercent:
           this.profit
       },
-
-
-      /*
-       * DESPESAS INDIRETAS
-       */
-
       {
         group: 'DESPESAS INDIRETAS',
         description: 'ADMINISTRAÇÃO CENTRAL',
@@ -285,8 +231,6 @@ export class BdiPageComponent {
         cdPercent:
           this.centralAdministration
       },
-
-
       {
         group: 'DESPESAS INDIRETAS',
         description: 'DESPESAS FINANCEIRAS',
@@ -297,8 +241,6 @@ export class BdiPageComponent {
         cdPercent:
           financePercentCd
       },
-
-
       {
         group: 'DESPESAS INDIRETAS',
         description: 'RISCOS',
@@ -310,8 +252,6 @@ export class BdiPageComponent {
           this.risks *
           this.pvOverCd
       },
-
-
       {
         group: 'DESPESAS INDIRETAS',
         description:
@@ -324,12 +264,6 @@ export class BdiPageComponent {
           this.insurance *
           this.pvOverCd
       },
-
-
-      /*
-       * TRIBUTOS
-       */
-
       {
         group: 'TRIBUTOS',
         description: 'COFINS',
@@ -341,8 +275,6 @@ export class BdiPageComponent {
           this.cofins *
           this.pvOverCd
       },
-
-
       {
         group: 'TRIBUTOS',
         description: 'ISS',
@@ -355,8 +287,6 @@ export class BdiPageComponent {
           this.pvOverCd *
           100
       },
-
-
       {
         group: 'TRIBUTOS',
         description: 'PIS',
@@ -368,165 +298,106 @@ export class BdiPageComponent {
           this.pis *
           this.pvOverCd
       }
-
     ];
-
   }
-
-
-  /*
-   * FORMATAÇÃO
-   */
 
   formatNumber(
     value: number,
     digits = 2
   ): string {
-
-    return value.toLocaleString(
-      'pt-BR',
-      {
-        minimumFractionDigits: digits,
-        maximumFractionDigits: digits
-      }
-    );
-
+    return value.toLocaleString('pt-BR', {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits
+    });
   }
-
-
-  /*
-   * TOTAL DE DESPESAS INDIRETAS
-   */
 
   get indirectPv(): number {
-
-    return (
-      this.rows
-        .filter(
-          row =>
-            row.group ===
-            'DESPESAS INDIRETAS'
-        )
-        .reduce(
-          (sum, row) =>
-            sum + row.pvPercent,
-          0
-        )
-    );
-
+    return this.rows
+      .filter(
+        row =>
+          row.group === 'DESPESAS INDIRETAS'
+      )
+      .reduce(
+        (total, row) =>
+          total + row.pvPercent,
+        0
+      );
   }
-
 
   get indirectCd(): number {
-
-    return (
-      this.rows
-        .filter(
-          row =>
-            row.group ===
-            'DESPESAS INDIRETAS'
-        )
-        .reduce(
-          (sum, row) =>
-            sum + row.cdPercent,
-          0
-        )
-    );
-
+    return this.rows
+      .filter(
+        row =>
+          row.group === 'DESPESAS INDIRETAS'
+      )
+      .reduce(
+        (total, row) =>
+          total + row.cdPercent,
+        0
+      );
   }
-
-
-  /*
-   * TOTAL DE TRIBUTOS
-   */
 
   get taxesPv(): number {
-
-    return (
-      this.rows
-        .filter(
-          row =>
-            row.group === 'TRIBUTOS'
-        )
-        .reduce(
-          (sum, row) =>
-            sum + row.pvPercent,
-          0
-        )
-    );
-
+    return this.rows
+      .filter(
+        row =>
+          row.group === 'TRIBUTOS'
+      )
+      .reduce(
+        (total, row) =>
+          total + row.pvPercent,
+        0
+      );
   }
-
 
   get taxesCd(): number {
-
-    return (
-      this.rows
-        .filter(
-          row =>
-            row.group === 'TRIBUTOS'
-        )
-        .reduce(
-          (sum, row) =>
-            sum + row.cdPercent,
-          0
-        )
-    );
-
+    return this.rows
+      .filter(
+        row =>
+          row.group === 'TRIBUTOS'
+      )
+      .reduce(
+        (total, row) =>
+          total + row.cdPercent,
+        0
+      );
   }
-
-
-  /*
-   * TOTAL DE BENEFÍCIOS
-   */
 
   get benefitsPv(): number {
-
-    return (
-      this.rows
-        .filter(
-          row =>
-            row.group === 'BENEFÍCIOS'
-        )
-        .reduce(
-          (sum, row) =>
-            sum + row.pvPercent,
-          0
-        )
-    );
-
+    return this.rows
+      .filter(
+        row =>
+          row.group === 'BENEFÍCIOS'
+      )
+      .reduce(
+        (total, row) =>
+          total + row.pvPercent,
+        0
+      );
   }
-
 
   get benefitsCd(): number {
-
-    return (
-      this.rows
-        .filter(
-          row =>
-            row.group === 'BENEFÍCIOS'
-        )
-        .reduce(
-          (sum, row) =>
-            sum + row.cdPercent,
-          0
-        )
-    );
-
+    return this.rows
+      .filter(
+        row =>
+          row.group === 'BENEFÍCIOS'
+      )
+      .reduce(
+        (total, row) =>
+          total + row.cdPercent,
+        0
+      );
   }
-
-
-  /*
-   * ISS EFETIVO
-   */
 
   get effectiveIss(): number {
-
-    return (
-      this.iss *
-      (1 - this.issMaterialDeduction / 100)
-    );
-
+    return this.iss *
+      (1 - this.issMaterialDeduction / 100);
   }
 
+  private resetCalculation(): void {
+    this.rows = [];
+    this.bdiOverPv = 0;
+    this.bdiOverCd = 0;
+    this.pvOverCd = 1;
+  }
 }
