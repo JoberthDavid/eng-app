@@ -2,16 +2,15 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { Bdi, BdiQuota } from '../../../models/bdi.model';
+import {
+  Bdi,
+  BdiQuota,
+  BdiRow,
+  BdiGroupTotal
+} from '../../../models/bdi.model';
+
 import { BdiService } from '../../../services/bdi.service';
 
-interface BdiRow {
-  group: string;
-  description: string;
-  variable: string;
-  pvPercent: number;
-  cdPercent: number;
-}
 
 @Component({
   selector: 'app-bdi-page',
@@ -29,23 +28,6 @@ export class BdiPageComponent implements OnInit {
   bdiLoading = false;
   bdiError: string | null = null;
 
-  /*
-   * Parâmetros do BDI.
-   *
-   * Estes valores deixam de ser a fonte de dados.
-   * São preenchidos a partir das quotas retornadas pelo budget-engine.
-   */
-  profit = 0;
-  centralAdministration = 0;
-  selicAnnual = 0;
-  risks = 0;
-  insurance = 0;
-
-  cofins = 0;
-  iss = 0;
-  issMaterialDeduction = 0;
-  pis = 0;
-
   rows: BdiRow[] = [];
 
   bdiOverPv = 0;
@@ -56,346 +38,555 @@ export class BdiPageComponent implements OnInit {
     this.loadBdis();
   }
 
+
   loadBdis(): void {
     this.bdiLoading = true;
     this.bdiError = null;
+    this.selectedBdi = null;
+
+    this.resetCalculation();
 
     this.bdiService.getBdis().subscribe({
       next: bdis => {
         this.bdis = bdis;
-        this.bdiLoading = false;
 
         if (bdis.length > 0) {
-          this.selectedBdi = bdis[0];
-          this.applyBdiParameters();
-          this.calculate();
+          this.onBdiChange(bdis[0]);
+          return;
         }
+
+        this.bdiLoading = false;
       },
+
       error: error => {
-        console.error('Erro ao carregar BDI:', error);
+        console.error(
+          'Erro ao carregar BDI:',
+          error
+        );
 
         this.bdis = [];
         this.selectedBdi = null;
         this.bdiLoading = false;
-        this.bdiError = 'Não foi possível carregar os dados de BDI.';
+
+        this.bdiError =
+          'Não foi possível carregar os dados de BDI.';
+
+        this.resetCalculation();
       }
     });
   }
 
-  onBdiChange(bdi: Bdi | null): void {
-    this.selectedBdi = bdi;
 
+  onBdiChange(bdi: Bdi | null): void {
     if (!bdi) {
+      this.selectedBdi = null;
+      this.bdiLoading = false;
+      this.bdiError = null;
+
+      this.resetCalculation();
+
+      return;
+    }
+
+    this.selectedBdi = null;
+    this.bdiLoading = true;
+    this.bdiError = null;
+
+    this.resetCalculation();
+
+    this.bdiService.getBdi(bdi.id).subscribe({
+      next: selectedBdi => {
+        this.selectedBdi = selectedBdi;
+        this.bdiLoading = false;
+
+        this.loadRowsFromQuotas();
+        this.calculate();
+      },
+
+      error: error => {
+        console.error(
+          'Erro ao carregar BDI:',
+          error
+        );
+
+        this.selectedBdi = null;
+        this.bdiLoading = false;
+
+        this.bdiError =
+          'Não foi possível carregar os dados de BDI.';
+
+        this.resetCalculation();
+      }
+    });
+  }
+
+
+  compareBdis(
+    option: Bdi | null,
+    selected: Bdi | null
+  ): boolean {
+    return option?.id === selected?.id;
+  }
+
+
+  /**
+   * Constrói as linhas da interface diretamente a partir
+   * das quotas retornadas pelo budget-engine.
+   */
+  private loadRowsFromQuotas(): void {
+    const quotas =
+      this.selectedBdi?.quotas ?? [];
+
+    this.rows = quotas.map(
+      quota => this.createRowFromQuota(quota)
+    );
+  }
+
+
+  /**
+   * Transforma uma quota do budget-engine em uma
+   * linha editável da interface.
+   */
+  private createRowFromQuota(
+    quota: BdiQuota
+  ): BdiRow {
+    return {
+      id: quota.id,
+      group: quota.group,
+      description: quota.description,
+      variable: quota.variable,
+      base: this.extractBase(quota.variable),
+      parameter: Number(quota.percentage),
+      pvPercent: 0,
+      cdPercent: 0
+    };
+  }
+
+
+  /**
+   * Extrai a base do formato atualmente retornado
+   * pelo budget-engine.
+   *
+   * Exemplos:
+   *
+   * 12,00% do CD -> CD
+   * 0,50% do PV  -> PV
+   *
+   * A base deverá futuramente ser um atributo próprio
+   * de BdiQuota no budget-engine.
+   */
+  private extractBase(
+    variable: string
+  ): 'CD' | 'PV' {
+    const normalized = variable
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toUpperCase();
+
+    if (
+      normalized.includes(' DO PV') ||
+      normalized.includes('PV')
+    ) {
+      return 'PV';
+    }
+
+    return 'CD';
+  }
+
+
+  /**
+   * Calcula a composição do BDI.
+   *
+   * A fórmula atual permanece preservada.
+   * As quotas utilizadas como parâmetros são obtidas
+   * exclusivamente das linhas carregadas do backend.
+   */
+  calculate(): void {
+    if (
+      !this.selectedBdi ||
+      this.rows.length === 0
+    ) {
       this.resetCalculation();
       return;
     }
 
-    this.applyBdiParameters();
-    this.calculate();
-  }
+    /*
+     * Os parâmetros necessários para a fórmula são
+     * localizados pelas propriedades da quota.
+     *
+     * A composição visual, entretanto, continua
+     * completamente genérica.
+     */
+    const profit =
+      this.getParameterByDescription('LUCRO');
 
-  /**
-   * Obtém o percentual de uma quota diretamente do BDI
-   * retornado pelo budget-engine.
-   */
-  private getQuotaPercentage(description: string): number {
-    const quota = this.selectedBdi?.quotas.find(
-      item => item.description === description
-    );
+    const administration =
+      this.getParameterByDescription(
+        'ADMINISTRAÇÃO CENTRAL'
+      );
 
-    return quota ? Number(quota.percentage) : 0;
-  }
+    const selicAnnual =
+      this.getParameterByDescription(
+        'DESPESAS FINANCEIRAS'
+      );
 
-  /**
-   * Transforma as quotas do budget-engine nos parâmetros
-   * utilizados pela fórmula atualmente existente no eng-app.
-   *
-   * Não há valores mockados aqui.
-   */
-  private applyBdiParameters(): void {
-    this.profit = this.getQuotaPercentage('LUCRO');
+    const risks =
+      this.getParameterByDescription('RISCOS');
 
-    this.centralAdministration =
-      this.getQuotaPercentage('ADMINISTRAÇÃO CENTRAL');
-
-    this.selicAnnual =
-      this.getQuotaPercentage('DESPESAS FINANCEIRAS');
-
-    this.risks =
-      this.getQuotaPercentage('RISCOS');
-
-    this.insurance =
-      this.getQuotaPercentage(
+    const insurance =
+      this.getParameterByDescription(
         'SEGUROS E GARANTIAS CONTRATUAIS'
       );
 
-    this.cofins =
-      this.getQuotaPercentage('COFINS');
+    const cofins =
+      this.getParameterByDescription('COFINS');
 
-    this.iss =
-      this.getQuotaPercentage('ISS');
+    const iss =
+      this.getParameterByDescription('ISS');
 
-    this.issMaterialDeduction =
-      this.getQuotaPercentage(
+    const issMaterialDeduction =
+      this.getParameterByDescription(
         'DEDUÇÃO DE MATERIAIS NO ISS'
       );
 
-    this.pis =
-      this.getQuotaPercentage('PIS');
-  }
+    const pis =
+      this.getParameterByDescription('PIS');
 
-  calculate(): void {
-    const profit = this.profit / 100;
-    const administration =
-      this.centralAdministration / 100;
 
-    const risk =
-      this.risks / 100;
+    const profitDecimal =
+      profit / 100;
 
-    const insurance =
-      this.insurance / 100;
+    const administrationDecimal =
+      administration / 100;
+
+    const riskDecimal =
+      risks / 100;
+
+    const insuranceDecimal =
+      insurance / 100;
+
 
     const effectiveIss =
-      (this.iss / 100) *
-      (1 - this.issMaterialDeduction / 100);
+      (iss / 100) *
+      (1 - issMaterialDeduction / 100);
+
 
     const taxes =
-      (this.cofins / 100) +
+      (cofins / 100) +
       effectiveIss +
-      (this.pis / 100);
+      (pis / 100);
+
 
     const monthlySelic =
       Math.pow(
-        1 + this.selicAnnual / 100,
+        1 + selicAnnual / 100,
         1 / 12
       ) - 1;
 
+
     const numerator =
       1 +
-      profit +
-      administration -
-      monthlySelic * profit;
+      profitDecimal +
+      administrationDecimal -
+      monthlySelic * profitDecimal;
+
 
     const denominator =
       1 -
       monthlySelic -
-      risk -
-      insurance -
+      riskDecimal -
+      insuranceDecimal -
       taxes;
+
 
     if (denominator === 0) {
       this.resetCalculation();
       return;
     }
 
+
     this.pvOverCd =
       numerator / denominator;
+
 
     this.bdiOverCd =
       (this.pvOverCd - 1) * 100;
 
+
     this.bdiOverPv =
       (1 - 1 / this.pvOverCd) * 100;
 
+
     const financeAmountOverCd =
       monthlySelic *
-      (this.pvOverCd - profit);
+      (this.pvOverCd - profitDecimal);
+
 
     const financePercentPv =
       financeAmountOverCd /
       this.pvOverCd *
       100;
 
+
     const financePercentCd =
       financeAmountOverCd *
       100;
 
-    this.rows = [
-      {
-        group: 'BENEFÍCIOS',
-        description: 'LUCRO',
-        variable: `${this.formatNumber(this.profit)}% do CD`,
-        pvPercent:
-          this.profit / this.pvOverCd,
-        cdPercent:
-          this.profit
-      },
-      {
-        group: 'DESPESAS INDIRETAS',
-        description: 'ADMINISTRAÇÃO CENTRAL',
-        variable:
-          `${this.formatNumber(this.centralAdministration)}% do CD`,
-        pvPercent:
-          this.centralAdministration /
-          this.pvOverCd,
-        cdPercent:
-          this.centralAdministration
-      },
-      {
-        group: 'DESPESAS INDIRETAS',
-        description: 'DESPESAS FINANCEIRAS',
-        variable:
-          `[(1+SELIC)1/12 - 1] do (PV - Lucro)`,
-        pvPercent:
-          financePercentPv,
-        cdPercent:
-          financePercentCd
-      },
-      {
-        group: 'DESPESAS INDIRETAS',
-        description: 'RISCOS',
-        variable:
-          `${this.formatNumber(this.risks)}% do PV`,
-        pvPercent:
-          this.risks,
-        cdPercent:
-          this.risks *
-          this.pvOverCd
-      },
-      {
-        group: 'DESPESAS INDIRETAS',
-        description:
-          'SEGUROS E GARANTIAS CONTRATUAIS',
-        variable:
-          `${this.formatNumber(this.insurance)}% do PV`,
-        pvPercent:
-          this.insurance,
-        cdPercent:
-          this.insurance *
-          this.pvOverCd
-      },
-      {
-        group: 'TRIBUTOS',
-        description: 'COFINS',
-        variable:
-          `${this.formatNumber(this.cofins)}% do PV`,
-        pvPercent:
-          this.cofins,
-        cdPercent:
-          this.cofins *
-          this.pvOverCd
-      },
-      {
-        group: 'TRIBUTOS',
-        description: 'ISS',
-        variable:
-          `${this.formatNumber(this.iss)}% do PV`,
-        pvPercent:
-          effectiveIss * 100,
-        cdPercent:
-          effectiveIss *
-          this.pvOverCd *
-          100
-      },
-      {
-        group: 'TRIBUTOS',
-        description: 'PIS',
-        variable:
-          `${this.formatNumber(this.pis)}% do PV`,
-        pvPercent:
-          this.pis,
-        cdPercent:
-          this.pis *
-          this.pvOverCd
-      }
-    ];
+
+    this.updateRowPercentages(
+      profit,
+      administration,
+      risks,
+      insurance,
+      cofins,
+      iss,
+      issMaterialDeduction,
+      pis,
+      financePercentPv,
+      financePercentCd
+    );
   }
+
+
+  /**
+   * Obtém o parâmetro de uma quota pela descrição.
+   *
+   * Essa busca existe somente porque a fórmula atual
+   * possui regras matemáticas específicas para essas
+   * parcelas.
+   *
+   * A apresentação e os totais não dependem dessas
+   * descrições.
+   */
+  private getParameterByDescription(
+    description: string
+  ): number {
+    const row = this.rows.find(
+      item =>
+        item.description === description
+    );
+
+    return row
+      ? Number(row.parameter) || 0
+      : 0;
+  }
+
+
+  /**
+   * Atualiza os percentuais calculados de cada quota.
+   */
+  private updateRowPercentages(
+    profit: number,
+    administration: number,
+    risks: number,
+    insurance: number,
+    cofins: number,
+    iss: number,
+    issMaterialDeduction: number,
+    pis: number,
+    financePercentPv: number,
+    financePercentCd: number
+  ): void {
+    this.rows.forEach(row => {
+      switch (row.description) {
+
+        case 'LUCRO':
+          row.pvPercent =
+            profit / this.pvOverCd;
+
+          row.cdPercent =
+            profit;
+
+          break;
+
+
+        case 'ADMINISTRAÇÃO CENTRAL':
+          row.pvPercent =
+            administration /
+            this.pvOverCd;
+
+          row.cdPercent =
+            administration;
+
+          break;
+
+
+        case 'DESPESAS FINANCEIRAS':
+          row.pvPercent =
+            financePercentPv;
+
+          row.cdPercent =
+            financePercentCd;
+
+          break;
+
+
+        case 'RISCOS':
+          row.pvPercent =
+            risks;
+
+          row.cdPercent =
+            risks *
+            this.pvOverCd;
+
+          break;
+
+
+        case 'SEGUROS E GARANTIAS CONTRATUAIS':
+          row.pvPercent =
+            insurance;
+
+          row.cdPercent =
+            insurance *
+            this.pvOverCd;
+
+          break;
+
+
+        case 'COFINS':
+          row.pvPercent =
+            cofins;
+
+          row.cdPercent =
+            cofins *
+            this.pvOverCd;
+
+          break;
+
+
+        case 'ISS':
+          row.pvPercent =
+            (
+              iss / 100
+            ) *
+            (
+              1 -
+              issMaterialDeduction / 100
+            ) *
+            100;
+
+          row.cdPercent =
+            row.pvPercent *
+            this.pvOverCd;
+
+          break;
+
+
+        case 'DEDUÇÃO DE MATERIAIS NO ISS':
+          row.pvPercent = 0;
+          row.cdPercent = 0;
+          break;
+
+
+        case 'PIS':
+          row.pvPercent =
+            pis;
+
+          row.cdPercent =
+            pis *
+            this.pvOverCd;
+
+          break;
+
+
+        default:
+          /*
+           * Quotas ainda não contempladas pela fórmula
+           * específica permanecem sem percentual calculado.
+           *
+           * Elas continuam sendo exibidas normalmente
+           * porque a apresentação é genérica.
+           */
+          row.pvPercent = 0;
+          row.cdPercent = 0;
+      }
+    });
+  }
+
+
+  /**
+   * Retorna os totais agrupados dinamicamente pelo
+   * valor de row.group.
+   *
+   * Nenhum grupo é conhecido previamente pelo componente.
+   */
+  get groupTotals(): BdiGroupTotal[] {
+    const totals =
+      new Map<string, BdiGroupTotal>();
+
+    for (const row of this.rows) {
+      const group =
+        row.group?.trim();
+
+      if (!group) {
+        continue;
+      }
+
+      const existing =
+        totals.get(group);
+
+      if (existing) {
+        existing.pvPercent +=
+          row.pvPercent;
+
+        existing.cdPercent +=
+          row.cdPercent;
+
+        continue;
+      }
+
+      totals.set(group, {
+        group,
+        pvPercent: row.pvPercent,
+        cdPercent: row.cdPercent
+      });
+    }
+
+    return Array.from(
+      totals.values()
+    );
+  }
+
+
+  /**
+   * Total geral calculado diretamente sobre todas
+   * as quotas.
+   */
+  get totalPv(): number {
+    return this.rows.reduce(
+      (total, row) =>
+        total + row.pvPercent,
+      0
+    );
+  }
+
+
+  get totalCd(): number {
+    return this.rows.reduce(
+      (total, row) =>
+        total + row.cdPercent,
+      0
+    );
+  }
+
 
   formatNumber(
     value: number,
     digits = 2
   ): string {
-    return value.toLocaleString('pt-BR', {
-      minimumFractionDigits: digits,
-      maximumFractionDigits: digits
-    });
+    return value.toLocaleString(
+      'pt-BR',
+      {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      }
+    );
   }
 
-  get indirectPv(): number {
-    return this.rows
-      .filter(
-        row =>
-          row.group === 'DESPESAS INDIRETAS'
-      )
-      .reduce(
-        (total, row) =>
-          total + row.pvPercent,
-        0
-      );
-  }
-
-  get indirectCd(): number {
-    return this.rows
-      .filter(
-        row =>
-          row.group === 'DESPESAS INDIRETAS'
-      )
-      .reduce(
-        (total, row) =>
-          total + row.cdPercent,
-        0
-      );
-  }
-
-  get taxesPv(): number {
-    return this.rows
-      .filter(
-        row =>
-          row.group === 'TRIBUTOS'
-      )
-      .reduce(
-        (total, row) =>
-          total + row.pvPercent,
-        0
-      );
-  }
-
-  get taxesCd(): number {
-    return this.rows
-      .filter(
-        row =>
-          row.group === 'TRIBUTOS'
-      )
-      .reduce(
-        (total, row) =>
-          total + row.cdPercent,
-        0
-      );
-  }
-
-  get benefitsPv(): number {
-    return this.rows
-      .filter(
-        row =>
-          row.group === 'BENEFÍCIOS'
-      )
-      .reduce(
-        (total, row) =>
-          total + row.pvPercent,
-        0
-      );
-  }
-
-  get benefitsCd(): number {
-    return this.rows
-      .filter(
-        row =>
-          row.group === 'BENEFÍCIOS'
-      )
-      .reduce(
-        (total, row) =>
-          total + row.cdPercent,
-        0
-      );
-  }
-
-  get effectiveIss(): number {
-    return this.iss *
-      (1 - this.issMaterialDeduction / 100);
-  }
 
   private resetCalculation(): void {
     this.rows = [];
+
     this.bdiOverPv = 0;
     this.bdiOverCd = 0;
     this.pvOverCd = 1;

@@ -16,5 +16,23 @@ export interface Bdi {
   name: string;
   slug: string;
   method: BdiMethod;
+  observation: string;
   quotas: BdiQuota[];
+}
+
+export interface BdiRow {
+  id: number;
+  group: string;
+  description: string;
+  variable: string;
+  base: 'CD' | 'PV';
+  parameter: number;
+  pvPercent: number;
+  cdPercent: number;
+}
+
+export interface BdiGroupTotal {
+  group: string;
+  pvPercent: number;
+  cdPercent: number;
 }

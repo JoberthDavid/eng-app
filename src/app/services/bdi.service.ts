@@ -14,4 +14,8 @@ export class BdiService {
   getBdis(): Observable<Bdi[]> {
     return this.http.get<Bdi[]>(`${this.apiUrl}/bdi`);
   }
+
+  getBdi(id: number): Observable<Bdi> {
+    return this.http.get<Bdi>(`${this.apiUrl}/bdi/${id}`);
+  }
 }

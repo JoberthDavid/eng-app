@@ -104,33 +104,74 @@
 // PARÂMETROS
 // ============================================================
 
-.parameters-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: stretch;
-  gap: var(--space-3);
-  padding: var(--space-4);
+
+.parameter-column {
+  width: 150px;
+  text-align: right;
 }
 
-.parameter-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  min-width: 0;
-  padding: var(--space-3);
-  border: var(--border-width) solid var(--color-border);
+.parameter-cell {
+  width: 150px;
+  text-align: right;
+
+  input {
+    width: 100%;
+    min-width: 110px;
+    box-sizing: border-box;
+    min-height: var(--control-height);
+    padding: 0 var(--space-2);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+
+    &:hover {
+      border-color: var(--color-text-muted);
+    }
+
+    &:focus-visible {
+      border-color: var(--color-focus);
+      outline: none;
+      box-shadow: 0 0 0 3px
+        color-mix(in srgb, var(--color-focus) 18%, transparent);
+    }
+  }
+}
+
+.parameter-only-row td {
+  background: color-mix(
+    in srgb,
+    var(--color-surface-secondary) 55%,
+    transparent
+  );
+  color: var(--color-text-secondary);
+}
+
+.status-message {
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.status-message.error {
+  color: var(--color-danger);
+}
+
+.empty-state {
+  margin: 0 var(--space-4) var(--space-4);
+  padding: var(--space-5);
+  border: var(--border-width) dashed var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface-secondary);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  text-align: center;
 }
 
-.group-title {
-  margin-bottom: var(--space-1);
-  color: var(--color-text);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
 
 // ============================================================
 // CAMPOS
@@ -370,6 +411,10 @@ tbody td:first-child {
 @media (max-width: 800px) {
   .page {
     padding: var(--space-5) var(--space-4) var(--space-8);
+  .parameter-column,
+    .parameter-cell {
+      width: 120px;
+    }
   }
 
   .identification-grid,
