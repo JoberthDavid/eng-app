@@ -209,6 +209,12 @@ export const routes: Routes = [
   },
 
   {
+    path: 'bdi/:id',
+    component: BdiPageComponent,
+    canActivate: [authGuard]
+  },
+
+  {
     path: 'fit',
     component: FitPageComponent,
     canActivate: [authGuard]

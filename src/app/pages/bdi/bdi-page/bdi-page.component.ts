@@ -1,13 +1,19 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { finalize } from 'rxjs';
 
 import {
   Bdi,
   BdiQuota,
   BdiMethod,
   BdiRow,
-  BdiGroupTotal
+  BdiGroupTotal,
+  BdiCreateRequest,
+  BdiUpdateRequest,
+  BdiQuotaInput
 } from '../../../models/bdi.model';
 
 import { BdiService } from '../../../services/bdi.service';
@@ -22,6 +28,8 @@ import { BdiService } from '../../../services/bdi.service';
 })
 export class BdiPageComponent implements OnInit {
   private readonly bdiService = inject(BdiService);
+  private readonly route = inject(ActivatedRoute);
+  readonly router = inject(Router);
 
   bdis: Bdi[] = [];
   selectedBdi: Bdi | null = null;
@@ -38,12 +46,90 @@ export class BdiPageComponent implements OnInit {
   isCreating = false;
   bdiMethods: BdiMethod[] = [];
 
-  ngOnInit(): void {
-    this.loadBdis();
+  isEditing = false;
+  isSaving = false;
+  isDeleting = false;
+  originalBdi: Bdi | null = null;
+
+
+  get isFormEditable(): boolean {
+    return this.isCreating || this.isEditing;
   }
 
+  ngOnInit(): void {
+
+    this.loadBdiMethods();
+
+    this.route.paramMap.subscribe(params => {
+
+      const id = params.get('id');
+
+      if (id) {
+
+        this.loadBdi(Number(id));
+
+        return;
+      }
+
+      this.loadBdis();
+
+    });
+
+  }
+
+  loadBdi(id: number): void {
+
+    this.bdiLoading = true;
+
+    this.bdiError = null;
+
+    this.isCreating = false;
+
+    this.isEditing = true;
+
+    this.bdiService.getBdi(id)
+      .pipe(
+        finalize(() => {
+          this.bdiLoading = false;
+        })
+      )
+      .subscribe({
+
+        next: bdi => {
+
+          this.selectedBdi = structuredClone(bdi);
+
+          this.originalBdi = structuredClone(bdi);
+
+          this.bdis = [
+            ...this.bdis.filter(item => item.id !== bdi.id),
+            bdi
+          ];
+
+          this.loadRowsFromQuotas();
+
+          this.calculate();
+
+        },
+
+        error: error => {
+
+          console.error(error);
+
+          this.bdiError =
+            'Não foi possível carregar o BDI solicitado.';
+
+          this.selectedBdi = null;
+
+        }
+
+      });
+
+  }
 
   loadBdis(): void {
+    console.log('[BDI] loadBdis() iniciado');
+
     this.bdiLoading = true;
     this.bdiError = null;
     this.selectedBdi = null;
@@ -52,21 +138,20 @@ export class BdiPageComponent implements OnInit {
 
     this.bdiService.getBdis().subscribe({
       next: bdis => {
-        this.bdis = bdis;
+        console.log('[BDI] Callback next executado');
+        console.log('[BDI] Tipo da resposta:', Array.isArray(bdis));
+        console.log('[BDI] Registros recebidos:', bdis);
 
-        if (bdis.length > 0) {
-          this.onBdiChange(bdis[0]);
-          return;
-        }
+        this.bdis = [...bdis];
+
+        console.log('[BDI] this.bdis:', this.bdis);
+        console.log('[BDI] Quantidade:', this.bdis.length);
 
         this.bdiLoading = false;
       },
 
       error: error => {
-        console.error(
-          'Erro ao carregar BDI:',
-          error
-        );
+        console.error('[BDI] Callback error executado:', error);
 
         this.bdis = [];
         this.selectedBdi = null;
@@ -78,7 +163,7 @@ export class BdiPageComponent implements OnInit {
         this.resetCalculation();
       }
     });
-    }
+  }
     
   private loadBdiMethods(): void {
     this.bdiService.getBdiMethods().subscribe({
@@ -121,30 +206,63 @@ export class BdiPageComponent implements OnInit {
   }
 
   onBdiChange(bdi: Bdi | null): void {
+
     if (!bdi) {
+
+      this.selectedBdi = null;
+      this.originalBdi = null;
+
+      this.isCreating = false;
+      this.isEditing = false;
+
+      this.bdiError = null;
+
+      this.resetCalculation();
+
       return;
     }
 
     this.isCreating = false;
+    this.isEditing = false;
+
     this.bdiLoading = true;
     this.bdiError = null;
 
     this.bdiService.getBdi(bdi.id).subscribe({
+
       next: selectedBdi => {
-        this.selectedBdi = selectedBdi;
+
+        this.selectedBdi = structuredClone(selectedBdi);
+        this.originalBdi = structuredClone(selectedBdi);
+
         this.loadRowsFromQuotas();
+
+        this.calculate();
+
         this.bdiLoading = false;
+
       },
+
       error: error => {
-        console.error(
-          'Erro ao carregar BDI:',
-          error
+
+        console.error('Erro ao carregar BDI:', error);
+
+        this.selectedBdi = null;
+        this.originalBdi = null;
+
+        this.bdiError = this.getApiErrorMessage(
+          error,
+          'Não foi possível carregar o BDI selecionado.'
         );
-        this.bdiError =
-          'Não foi possível carregar o BDI selecionado.';
+
+        this.resetCalculation();
+
         this.bdiLoading = false;
+
       }
+
     });
+
   }
 
   onMethodChange(method: BdiMethod | null): void {
@@ -174,6 +292,175 @@ export class BdiPageComponent implements OnInit {
     return option?.id === selected?.id;
   }
 
+
+  saveNewBdi(): void {
+
+    const request = this.buildBdiRequest();
+
+    if (!request) {
+
+      this.bdiError =
+        'Informe todos os dados obrigatórios do BDI.';
+
+      return;
+
+    }
+
+    this.isSaving = true;
+
+    this.bdiService.createBdi(request)
+      .pipe(
+        finalize(() => {
+          this.isSaving = false;
+        })
+      )
+      .subscribe({
+
+        next: bdi => {
+
+          this.bdis = [
+            ...this.bdis,
+            bdi
+          ];
+
+          this.router.navigate([
+            '/bdi',
+            bdi.id
+          ]);
+
+        },
+
+        error: error => {
+
+          console.error(error);
+
+          this.bdiError =
+            this.getApiErrorMessage(
+              error,
+              'Não foi possível criar o BDI.'
+            );
+
+        }
+
+      });
+
+  }
+
+  updateBdi(): void {
+
+    if (!this.selectedBdi) {
+      return;
+    }
+
+    const request = this.buildBdiRequest();
+
+    if (!request) {
+
+      this.bdiError =
+        'Não foi possível preparar os dados do BDI.';
+
+      return;
+
+    }
+
+    this.isSaving = true;
+
+    this.bdiService.updateBdi(
+      this.selectedBdi.id,
+      request
+    )
+    .pipe(
+      finalize(() => {
+        this.isSaving = false;
+      })
+    )
+    .subscribe({
+
+      next: bdi => {
+
+        this.selectedBdi = structuredClone(bdi);
+
+        this.originalBdi = structuredClone(bdi);
+
+        this.rows = bdi.quotas.map(
+          quota => this.createRowFromQuota(quota)
+        );
+
+        this.bdis = this.bdis.map(item =>
+          item.id === bdi.id ? bdi : item
+        );
+
+        this.calculate();
+
+      },
+
+      error: error => {
+
+        console.error(error);
+
+        this.bdiError =
+          this.getApiErrorMessage(
+            error,
+            'Não foi possível atualizar o BDI.'
+          );
+
+      }
+
+    });
+
+  }
+
+  deleteBdi(): void {
+
+    if (!this.selectedBdi) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Confirma a exclusão do BDI "${this.selectedBdi.name}"?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const id = this.selectedBdi.id;
+
+    this.isDeleting = true;
+
+    this.bdiService.deleteBdi(id)
+      .pipe(
+        finalize(() => {
+          this.isDeleting = false;
+        })
+      )
+      .subscribe({
+
+          next: () => {
+
+            this.bdis = this.bdis.filter(
+              item => item.id !== id
+            );
+
+            this.router.navigate(['/bdi']);
+
+          },
+
+        error: error => {
+
+          console.error(error);
+
+          this.bdiError =
+            this.getApiErrorMessage(
+              error,
+              'Não foi possível excluir o BDI.'
+            );
+
+        }
+
+      });
+
+  }
 
   /**
    * Constrói as linhas da interface diretamente a partir
@@ -605,4 +892,133 @@ export class BdiPageComponent implements OnInit {
     this.bdiOverCd = 0;
     this.pvOverCd = 1;
   }
+    
+  private buildBdiRequest(): BdiCreateRequest | null {
+
+    if (!this.selectedBdi) {
+      return null;
+    }
+
+    const name = this.selectedBdi.name?.trim();
+    const slug = this.selectedBdi.slug?.trim();
+    const methodId = this.selectedBdi.method?.id;
+
+    if (!name || !slug || !methodId) {
+      return null;
+    }
+
+    const quotas: BdiQuotaInput[] = [];
+
+    for (const row of this.rows) {
+
+      const group = row.group?.trim();
+      const description = row.description?.trim();
+      const variable = row.variable?.trim();
+
+      if (!group || !description || !variable) {
+        return null;
+      }
+
+      if (
+        row.parameter === null ||
+        row.parameter === undefined ||
+        String(row.parameter).trim() === ''
+      ) {
+        return null;
+      }
+
+      const percentage = Number(row.parameter);
+
+      if (!Number.isFinite(percentage) || percentage < 0) {
+        return null;
+      }
+
+      if (row.base !== 'CD' && row.base !== 'PV') {
+        return null;
+      }
+
+      quotas.push({
+        group,
+        description,
+        percentage,
+        variable,
+        base: row.base
+      });
+    }
+
+    return {
+      name,
+      slug,
+      method_id: methodId,
+      observation: this.selectedBdi.observation ?? '',
+      quotas
+    };
+  }
+
+  addQuota(): void {
+
+    this.rows = [
+      ...this.rows,
+      {
+        id: 0,
+        group: '',
+        description: '',
+        variable: '',
+        base: 'CD',
+        parameter: 0,
+        pvPercent: 0,
+        cdPercent: 0
+      }
+    ];
+
+  }
+
+  removeQuota(index: number): void {
+
+    this.rows = this.rows.filter(
+      (_, currentIndex) => currentIndex !== index
+    );
+
+    this.calculate();
+
+  }
+
+  private getApiErrorMessage(
+    error: any,
+    fallback: string
+  ): string {
+
+    const apiError = error?.error;
+
+    if (apiError?.message) {
+
+      const details = apiError.details;
+
+      if (details && typeof details === 'object') {
+
+        const messages = Object.entries(details)
+          .flatMap(([field, errors]) => {
+
+            const values = Array.isArray(errors)
+              ? errors
+              : [errors];
+
+            return values.map(
+              message => `${field}: ${message}`
+            );
+
+          });
+
+        if (messages.length > 0) {
+          return `${apiError.message} ${messages.join('; ')}`;
+        }
+      }
+
+      return apiError.message;
+    }
+
+    return apiError?.detail ?? fallback;
+  }
+
+
 }

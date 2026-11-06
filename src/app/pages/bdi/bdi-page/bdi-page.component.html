@@ -1,5 +1,7 @@
 <div class="page">
 
+  <!-- CABEÇALHO -->
+
   <header class="page-header">
 
     <div>
@@ -7,9 +9,7 @@
         ORÇAMENTO
       </div>
 
-      <h1>
-        BDI
-      </h1>
+      <h1>BDI</h1>
 
       <p>
         Benefícios e Despesas Indiretas
@@ -18,13 +18,82 @@
 
     <div class="page-actions">
 
-      <button
-        type="button"
-        class="button button-primary"
-        (click)="novoBdi()"
-      >
-        Novo
-      </button>
+      <!-- CONSULTA -->
+
+      <ng-container *ngIf="!isFormEditable">
+
+        <button
+          type="button"
+          class="button button-primary"
+          (click)="novoBdi()"
+        >
+          Novo
+        </button>
+
+        <button
+          type="button"
+          class="button button-secondary"
+          *ngIf="selectedBdi"
+          (click)="router.navigate(['/bdi', selectedBdi.id])"
+        >
+          Editar
+        </button>
+
+      </ng-container>
+
+      <!-- CRIAÇÃO E EDIÇÃO -->
+
+      <ng-container *ngIf="isFormEditable">
+
+        <button
+          type="button"
+          class="button button-secondary"
+          [disabled]="isSaving || isDeleting"
+          (click)="router.navigate(['/bdi'])"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="button button-secondary"
+          (click)="addQuota()"
+          [disabled]="isSaving"
+        >
+          Adicionar parcela
+        </button>
+
+        <button
+          type="button"
+          class="button button-primary"
+          (click)="saveNewBdi()"
+          [disabled]="isSaving"
+          *ngIf="isCreating"
+        >
+          {{ isSaving ? 'Salvando...' : 'Criar BDI' }}
+        </button>
+
+        <button
+          type="button"
+          class="button button-primary"
+          (click)="updateBdi()"
+          [disabled]="isSaving || isDeleting"
+          *ngIf="isEditing"
+        >
+          {{ isSaving ? 'Salvando...' : 'Salvar alterações' }}
+        </button>
+
+        <button
+          type="button"
+          class="button button-danger"
+          (click)="deleteBdi()"
+          [disabled]="isSaving || isDeleting"
+          *ngIf="isEditing"
+        >
+          {{ isDeleting ? 'Excluindo...' : 'Excluir' }}
+        </button>
+
+      </ng-container>
 
     </div>
 
@@ -36,116 +105,48 @@
   <section class="card">
 
     <div class="section-header">
+
       <div>
-        <h2>
-          Identificação
-        </h2>
+        <h2>Identificação</h2>
 
         <p>
           Dados de referência do BDI.
         </p>
       </div>
+
     </div>
 
 
     <div class="identification-grid">
 
-      <div class="field">
-
-        <label>
-          BDI
-        </label>
-
-        <select
-          [ngModel]="selectedBdi"
-          (ngModelChange)="onBdiChange($event)"
-          [compareWith]="compareBdis"
-          [disabled]="bdiLoading || bdis.length === 0"
-        >
-
-          <option [ngValue]="null">
-            {{
-              bdiLoading
-                ? 'Carregando...'
-                : 'Selecione o BDI'
-            }}
-          </option>
-
-          <option
-            *ngFor="let bdi of bdis"
-            [ngValue]="bdi"
-          >
-            {{ bdi.name }}
-          </option>
-
-        </select>
-
-      </div>
-
+      <!-- NOME -->
 
       <div class="field">
 
-        <label>
-          Método
+        <label for="bdi-name">
+          Nome do BDI
         </label>
 
-        <ng-container *ngIf="!isCreating; else methodCreate">
+        <input
+          *ngIf="isFormEditable && selectedBdi; else nameView"
+          id="bdi-name"
+          type="text"
+          [(ngModel)]="selectedBdi!.name"
+          placeholder="Nome do BDI"
+          [disabled]="isSaving"
+        />
 
-          <input
-            type="text"
-            [value]="selectedBdi?.method?.method ?? ''"
-            readonly
-          />
-
-        </ng-container>
-
-        <ng-template #methodCreate>
+        <ng-template #nameView>
 
           <select
-            [ngModel]="selectedBdi?.method"
-            (ngModelChange)="onMethodChange($event)"
-            [compareWith]="compareMethods"
-            [disabled]="bdiLoading"
-          >
-
-            <option [ngValue]="null">
-              Selecione o método
-            </option>
-
-            <option
-              *ngFor="let method of bdiMethods"
-              [ngValue]="method"
-            >
-              {{ method.method }}
-            </option>
-
-          </select>
-
-        </ng-template>
-
-      </div>
-
-      <div class="field">
-
-        <label>
-          BDI
-        </label>
-
-        <ng-container *ngIf="!isCreating; else nameCreate">
-
-          <select
+            id="bdi-name"
             [ngModel]="selectedBdi"
             (ngModelChange)="onBdiChange($event)"
             [compareWith]="compareBdis"
             [disabled]="bdiLoading || bdis.length === 0"
           >
-
             <option [ngValue]="null">
-              {{
-                bdiLoading
-                  ? 'Carregando...'
-                  : 'Selecione o BDI'
-              }}
+              {{ bdiLoading ? 'Carregando...' : 'Selecione o BDI' }}
             </option>
 
             <option
@@ -154,18 +155,82 @@
             >
               {{ bdi.name }}
             </option>
-
           </select>
 
-        </ng-container>
+        </ng-template>
 
-        <ng-template #nameCreate>
+      </div>
+
+
+      <!-- SLUG -->
+
+      <div class="field">
+
+        <label for="bdi-slug">
+          Identificador (slug)
+        </label>
+
+        <input
+          *ngIf="selectedBdi; else emptySlug"
+          id="bdi-slug"
+          type="text"
+          [(ngModel)]="selectedBdi.slug"
+          [readonly]="!isFormEditable"
+          [disabled]="isSaving"
+          placeholder="identificador-do-bdi"
+        />
+
+        <ng-template #emptySlug>
+          <input
+            id="bdi-slug"
+            type="text"
+            value=""
+            readonly
+            [disabled]="isSaving"
+            placeholder="identificador-do-bdi"
+          />
+        </ng-template>
+
+      </div>
+
+
+      <!-- MÉTODO -->
+
+      <div class="field">
+
+        <label for="bdi-method">
+          Método
+        </label>
+
+        <select
+          *ngIf="isFormEditable; else methodView"
+          id="bdi-method"
+          [ngModel]="selectedBdi?.method"
+          (ngModelChange)="onMethodChange($event)"
+          [compareWith]="compareMethods"
+          [disabled]="isSaving"
+        >
+
+          <option [ngValue]="null">
+            Selecione o método
+          </option>
+
+          <option
+            *ngFor="let method of bdiMethods"
+            [ngValue]="method"
+          >
+            {{ method.method }}
+          </option>
+
+        </select>
+
+        <ng-template #methodView>
 
           <input
+            id="bdi-method"
             type="text"
-            [(ngModel)]="selectedBdi!.name"
-            placeholder="Nome do BDI"
-            aria-label="Nome do BDI"
+            [value]="selectedBdi?.method?.method ?? ''"
+            readonly
           />
 
         </ng-template>
@@ -174,6 +239,8 @@
 
     </div>
 
+
+    <!-- CARREGAMENTO -->
 
     <div
       *ngIf="bdiLoading"
@@ -183,20 +250,30 @@
     </div>
 
 
+    <!-- ERROS -->
+
     <div
       *ngIf="bdiError"
       class="status-message error"
+      role="alert"
     >
       {{ bdiError }}
     </div>
 
 
+    <!-- ESTADO VAZIO -->
+
     <div
       *ngIf="!selectedBdi && !bdiLoading && !bdiError"
       class="empty-state"
     >
-      Selecione um BDI para visualizar seus parâmetros
-      e calcular sua composição.
+
+      Nenhum BDI selecionado.
+
+      <span *ngIf="bdis.length === 0">
+        Cadastre um novo BDI para começar.
+      </span>
+
     </div>
 
   </section>
@@ -235,21 +312,13 @@
 
           <tr>
 
-            <th>
-              Grupo
-            </th>
+            <th>Grupo</th>
 
-            <th>
-              Parcela
-            </th>
+            <th>Parcela</th>
 
-            <th>
-              Variável
-            </th>
+            <th>Variável</th>
 
-            <th>
-              Base
-            </th>
+            <th>Base</th>
 
             <th class="parameter-column">
               Parâmetro
@@ -263,6 +332,13 @@
               % sobre CD
             </th>
 
+            <th
+              *ngIf="isFormEditable"
+              class="action-column"
+            >
+              Ações
+            </th>
+
           </tr>
 
         </thead>
@@ -272,86 +348,139 @@
 
           <!-- QUOTAS -->
 
-          <tr
-            *ngFor="let row of rows"
-          >
+          <tr *ngFor="let row of rows; let i = index">
 
-            <td class="editable-cell">
+            <!-- GRUPO -->
+
+            <td>
 
               <input
+                *ngIf="isFormEditable; else groupView"
                 type="text"
                 [(ngModel)]="row.group"
+                [disabled]="isSaving"
                 aria-label="Grupo"
               />
 
+              <ng-template #groupView>
+                {{ row.group }}
+              </ng-template>
+
             </td>
 
 
-            <td class="editable-cell">
+            <!-- DESCRIÇÃO -->
+
+            <td>
 
               <input
+                *ngIf="isFormEditable; else descriptionView"
                 type="text"
                 [(ngModel)]="row.description"
+                (ngModelChange)="calculate()"
+                [disabled]="isSaving"
                 aria-label="Parcela"
               />
 
+              <ng-template #descriptionView>
+                {{ row.description }}
+              </ng-template>
+
             </td>
 
 
-            <td class="editable-cell">
+            <!-- VARIÁVEL -->
+
+            <td>
 
               <input
+                *ngIf="isFormEditable; else variableView"
                 type="text"
                 [(ngModel)]="row.variable"
+                [disabled]="isSaving"
                 aria-label="Variável"
               />
 
+              <ng-template #variableView>
+                {{ row.variable }}
+              </ng-template>
+
             </td>
 
 
-            <td class="editable-cell">
+            <!-- BASE -->
+
+            <td>
 
               <select
+                *ngIf="isFormEditable; else baseView"
                 [(ngModel)]="row.base"
+                [disabled]="isSaving"
                 aria-label="Base de cálculo"
               >
 
-                <option value="CD">
-                  CD
-                </option>
+                <option value="CD">CD</option>
 
-                <option value="PV">
-                  PV
-                </option>
+                <option value="PV">PV</option>
 
               </select>
 
+              <ng-template #baseView>
+                {{ row.base }}
+              </ng-template>
+
             </td>
 
+
+            <!-- PARÂMETRO -->
 
             <td class="parameter-cell">
 
               <input
+                *ngIf="isFormEditable; else parameterView"
                 type="number"
-                step="0.01"
+                step="0.000001"
+                min="0"
                 [(ngModel)]="row.parameter"
                 (ngModelChange)="calculate()"
+                [disabled]="isSaving"
                 aria-label="Parâmetro"
               />
 
+              <ng-template #parameterView>
+                {{ formatNumber(row.parameter, 6) }}%
+              </ng-template>
+
             </td>
 
 
-            <td class="number">
+            <!-- RESULTADOS -->
 
+            <td class="number">
               {{ formatNumber(row.pvPercent) }}%
+            </td>
 
+            <td class="number">
+              {{ formatNumber(row.cdPercent) }}%
             </td>
 
 
-            <td class="number">
+            <!-- AÇÕES -->
 
-              {{ formatNumber(row.cdPercent) }}%
+            <td
+              *ngIf="isFormEditable"
+              class="quota-actions"
+            >
+
+              <button
+                type="button"
+                class="button button-danger button-small"
+                (click)="removeQuota(i)"
+                [disabled]="isSaving"
+                [attr.aria-label]="'Remover parcela ' + row.description"
+              >
+                Remover
+              </button>
 
             </td>
 
@@ -369,9 +498,7 @@
               {{ total.group }}
             </td>
 
-            <td>
-              Total
-            </td>
+            <td>Total</td>
 
             <td></td>
 
@@ -387,6 +514,8 @@
               {{ formatNumber(total.cdPercent) }}%
             </td>
 
+            <td *ngIf="isFormEditable"></td>
+
           </tr>
 
 
@@ -394,9 +523,7 @@
 
           <tr class="grand-total">
 
-            <td>
-              TOTAL GERAL
-            </td>
+            <td>TOTAL GERAL</td>
 
             <td></td>
 
@@ -414,6 +541,8 @@
               {{ formatNumber(totalCd) }}%
             </td>
 
+            <td *ngIf="isFormEditable"></td>
+
           </tr>
 
         </tbody>
@@ -422,10 +551,25 @@
 
     </div>
 
+
+    <!-- TABELA VAZIA -->
+
+    <div
+      *ngIf="rows.length === 0"
+      class="empty-state"
+    >
+      Nenhuma parcela cadastrada.
+
+      <span *ngIf="isFormEditable">
+        Utilize "Adicionar parcela" para incluir os parâmetros.
+      </span>
+
+    </div>
+
   </section>
 
 
-  <!-- RESULTADO -->
+  <!-- RESULTADOS -->
 
   <section
     *ngIf="selectedBdi"
@@ -487,7 +631,7 @@
   </section>
 
 
-  <!-- OBSERVAÇÃO DO BDI -->
+  <!-- OBSERVAÇÃO -->
 
   <section
     *ngIf="selectedBdi"
@@ -496,15 +640,17 @@
 
     <div class="field">
 
-      <label>
+      <label for="bdi-observation">
         Observação
       </label>
 
-      <input
-        type="text"
+      <textarea
+        id="bdi-observation"
         [(ngModel)]="selectedBdi.observation"
-        aria-label="Observação do BDI"
-      />
+        [readonly]="!isFormEditable"
+        [disabled]="isSaving"
+        rows="3"
+      ></textarea>
 
     </div>
 

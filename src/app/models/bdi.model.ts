@@ -53,3 +53,5 @@ export interface BdiCreateRequest {
   observation?: string;
   quotas: BdiQuotaInput[];
 }
+
+export type BdiUpdateRequest = BdiCreateRequest;
