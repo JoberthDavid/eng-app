@@ -137,31 +137,31 @@ export const routes: Routes = [
    */
 
   {
-    path: 'projects',
+    path: 'projetos',
     component: ProjectsPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'projects/:id',
+    path: 'projetos/:id',
     component: ProjectPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'budgets',
+    path: 'orcamentos',
     component: BudgetsPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'budgets/:id',
+    path: 'orcamentos/:id',
     component: BudgetPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'annual-work-plan-budget/:budgetId',
+    path: 'plano-de-trabalho/:budgetId',
     component: AnnualWorkPlanBudgetPageComponent,
     canActivate: [authGuard]
   },
@@ -173,31 +173,31 @@ export const routes: Routes = [
   },
 
   {
-    path: 'budgets/:budgetId/compositions/:code',
+    path: 'orcamentos/:budgetId/composicoes/:code',
     component: CompositionPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'materials',
+    path: 'materiais',
     component: MaterialsPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'materials-quotation',
+    path: 'cotacoes-de-materiais',
     component: MaterialsQuotationPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'bituminous-material',
+    path: 'materiais-betuminosos',
     component: BituminousMaterialsComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'mowing-workload-level',
+    path: 'nivel-esforco-rocada',
     component: NerPageComponent,
     canActivate: [authGuard]
   },
@@ -221,19 +221,19 @@ export const routes: Routes = [
   },
 
   {
-    path: 'occurrences',
+    path: 'ocorrencias',
     component: OccurrencesMapComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'logistics',
+    path: 'logistica',
     component: TransportsPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'timeline/:budgetId',
+    path: 'cronograma/:budgetId',
     component: TimelinePageComponent,
     canActivate: [authGuard]
   }
