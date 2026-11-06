@@ -1,6 +1,7 @@
 <div class="page">
 
   <header class="page-header">
+
     <div>
       <div class="eyebrow">
         ORÇAMENTO
@@ -14,6 +15,19 @@
         Benefícios e Despesas Indiretas
       </p>
     </div>
+
+    <div class="page-actions">
+
+      <button
+        type="button"
+        class="button button-primary"
+        (click)="novoBdi()"
+      >
+        Novo
+      </button>
+
+    </div>
+
   </header>
 
 
@@ -75,26 +89,86 @@
           Método
         </label>
 
-        <input
-          type="text"
-          [value]="selectedBdi?.method?.method ?? ''"
-          readonly
-        />
+        <ng-container *ngIf="!isCreating; else methodCreate">
+
+          <input
+            type="text"
+            [value]="selectedBdi?.method?.method ?? ''"
+            readonly
+          />
+
+        </ng-container>
+
+        <ng-template #methodCreate>
+
+          <select
+            [ngModel]="selectedBdi?.method"
+            (ngModelChange)="onMethodChange($event)"
+            [compareWith]="compareMethods"
+            [disabled]="bdiLoading"
+          >
+
+            <option [ngValue]="null">
+              Selecione o método
+            </option>
+
+            <option
+              *ngFor="let method of bdiMethods"
+              [ngValue]="method"
+            >
+              {{ method.method }}
+            </option>
+
+          </select>
+
+        </ng-template>
 
       </div>
-
 
       <div class="field">
 
         <label>
-          Código
+          BDI
         </label>
 
-        <input
-          type="text"
-          [value]="selectedBdi?.slug ?? ''"
-          readonly
-        />
+        <ng-container *ngIf="!isCreating; else nameCreate">
+
+          <select
+            [ngModel]="selectedBdi"
+            (ngModelChange)="onBdiChange($event)"
+            [compareWith]="compareBdis"
+            [disabled]="bdiLoading || bdis.length === 0"
+          >
+
+            <option [ngValue]="null">
+              {{
+                bdiLoading
+                  ? 'Carregando...'
+                  : 'Selecione o BDI'
+              }}
+            </option>
+
+            <option
+              *ngFor="let bdi of bdis"
+              [ngValue]="bdi"
+            >
+              {{ bdi.name }}
+            </option>
+
+          </select>
+
+        </ng-container>
+
+        <ng-template #nameCreate>
+
+          <input
+            type="text"
+            [(ngModel)]="selectedBdi!.name"
+            placeholder="Nome do BDI"
+            aria-label="Nome do BDI"
+          />
+
+        </ng-template>
 
       </div>
 

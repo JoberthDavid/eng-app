@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import {
   Bdi,
   BdiQuota,
+  BdiMethod,
   BdiRow,
   BdiGroupTotal
 } from '../../../models/bdi.model';
@@ -33,6 +34,9 @@ export class BdiPageComponent implements OnInit {
   bdiOverPv = 0;
   bdiOverCd = 0;
   pvOverCd = 1;
+
+  isCreating = false;
+  bdiMethods: BdiMethod[] = [];
 
   ngOnInit(): void {
     this.loadBdis();
@@ -74,50 +78,92 @@ export class BdiPageComponent implements OnInit {
         this.resetCalculation();
       }
     });
+    }
+    
+  private loadBdiMethods(): void {
+    this.bdiService.getBdiMethods().subscribe({
+      next: methods => {
+        this.bdiMethods = methods;
+      },
+      error: error => {
+        console.error(
+          'Erro ao carregar métodos de BDI:',
+          error
+        );
+        this.bdiMethods = [];
+        this.bdiError =
+          'Não foi possível carregar os métodos de BDI.';
+      }
+    });
   }
 
-
-  onBdiChange(bdi: Bdi | null): void {
-    if (!bdi) {
-      this.selectedBdi = null;
-      this.bdiLoading = false;
-      this.bdiError = null;
-
-      this.resetCalculation();
-
-      return;
-    }
-
-    this.selectedBdi = null;
-    this.bdiLoading = true;
+  novoBdi(): void {
+    this.isCreating = true;
+    this.bdiLoading = false;
     this.bdiError = null;
 
     this.resetCalculation();
 
+    this.selectedBdi = {
+      id: 0,
+      name: '',
+      slug: '',
+      method: {
+        id: 0,
+        method: ''
+      },
+      observation: '',
+      quotas: []
+    };
+
+    this.rows = [];
+    this.loadBdiMethods();
+  }
+
+  onBdiChange(bdi: Bdi | null): void {
+    if (!bdi) {
+      return;
+    }
+
+    this.isCreating = false;
+    this.bdiLoading = true;
+    this.bdiError = null;
+
     this.bdiService.getBdi(bdi.id).subscribe({
       next: selectedBdi => {
         this.selectedBdi = selectedBdi;
-        this.bdiLoading = false;
-
         this.loadRowsFromQuotas();
-        this.calculate();
+        this.bdiLoading = false;
       },
-
       error: error => {
         console.error(
           'Erro ao carregar BDI:',
           error
         );
-
-        this.selectedBdi = null;
-        this.bdiLoading = false;
-
         this.bdiError =
-          'Não foi possível carregar os dados de BDI.';
-
-        this.resetCalculation();
+          'Não foi possível carregar o BDI selecionado.';
+        this.bdiLoading = false;
       }
     });
+  }
+
+  onMethodChange(method: BdiMethod | null): void {
+    if (!this.selectedBdi) {
+      return;
+    }
+
+    this.selectedBdi.method =
+      method ?? {
+        id: 0,
+        method: ''
+      };
+  }
+
+  compareMethods(
+    option: BdiMethod | null,
+    selected: BdiMethod | null
+  ): boolean {
+    return option?.id === selected?.id;
   }
 
 

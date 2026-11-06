@@ -37,3 +37,19 @@ export interface BdiGroupTotal {
   pvPercent: number;
   cdPercent: number;
 }
+
+export interface BdiQuotaInput {
+  group: string;
+  description: string;
+  percentage: number;
+  variable: string;
+  base: 'CD' | 'PV';
+}
+
+export interface BdiCreateRequest {
+  name: string;
+  slug: string;
+  method_id: number;
+  observation?: string;
+  quotas: BdiQuotaInput[];
+}
