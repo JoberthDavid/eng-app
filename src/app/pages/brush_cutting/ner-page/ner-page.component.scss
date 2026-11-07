@@ -646,3 +646,28 @@ tfoot td {
     transition: none;
   }
 }
+
+.ner-warning {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+
+  strong {
+    display: block;
+    margin-bottom: 3px;
+  }
+}
+
+.ner-warning-limit {
+  border: 1px solid #a87932;
+  background: rgba(168, 121, 50, 0.12);
+  color: #e7c58c;
+}
+
+.ner-warning-exploratory {
+  border: 1px solid #bd704b;
+  background: rgba(189, 112, 75, 0.13);
+  color: #f0b49b;
+}

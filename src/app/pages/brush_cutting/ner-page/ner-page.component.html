@@ -20,35 +20,46 @@
       <div class="coordinates">
         <div class="field">
           <label for="latitude">Latitude</label>
-          <input 
-            id="latitude" 
-            type="number" 
-            step="0.000001" 
-            [(ngModel)]="latitude" 
-            (change)="latitude !== null && longitude !== null && setCalculationPoint(latitude, longitude)" 
+          <input
+            id="latitude"
+            type="number"
+            min="-90"
+            max="90"
+            step="0.000001"
+            [(ngModel)]="latitude"
+            (change)="onCoordinatesChange()"
           />
         </div>
-        
+
         <div class="field">
           <label for="longitude">Longitude</label>
-          <input 
-            id="longitude" 
-            type="number" 
-            step="0.000001" 
-            [(ngModel)]="longitude" 
-            (change)="latitude !== null && longitude !== null && setCalculationPoint(latitude, longitude)" 
+          <input
+            id="longitude"
+            type="number"
+            min="-180"
+            max="180"
+            step="0.000001"
+            [(ngModel)]="longitude"
+            (change)="onCoordinatesChange()"
           />
         </div>
-        
+
         <div class="coordinate-help">
           <strong>Como definir o ponto?</strong>
           <span>Clique diretamente no mapa ou informe latitude e longitude.</span>
         </div>
-        
+
         <button
           class="primary-button"
           type="button"
-          [disabled]="latitude === null || longitude === null"
+          [disabled]="
+            latitude === null ||
+            longitude === null ||
+            latitude < -90 ||
+            latitude > 90 ||
+            longitude < -180 ||
+            longitude > 180
+          "
           (click)="calculate()"
         >
           Calcular nível de esforço
@@ -71,22 +82,58 @@
     <div class="parameters">
       <div class="field">
         <label for="station-count">Estações consideradas</label>
-        <select id="station-count" [(ngModel)]="stationCount" (change)="onStationCountChange()">
-          <option [value]="2">2</option>
-          <option [value]="3">3</option>
-          <option [value]="4">4</option>
-          <option [value]="5">5</option>
+
+        <select
+          id="station-count"
+          [(ngModel)]="stationCount"
+          (change)="onStationCountChange()"
+        >
+          <option
+            *ngFor="let count of stationCountOptions"
+            [ngValue]="count"
+          >
+            {{ count }}
+          </option>
         </select>
+
         <small>Serão utilizadas as estações mais próximas.</small>
+        <div
+          *ngIf="isAtNormativeLimit"
+          class="ner-warning ner-warning-limit"
+          role="status"
+        >
+          <strong>Limite superior normativo.</strong>
+          Você está utilizando cinco estações, quantidade máxima
+          prevista na metodologia da DNIT 182/2018 – PRO.
+        </div>
+
+        <div
+          *ngIf="isExploratoryCalculation"
+          class="ner-warning ner-warning-exploratory"
+          role="alert"
+        >
+          <strong>Cálculo exploratório — não recomendado para aplicação normativa.</strong>
+          A utilização de mais de cinco estações ultrapassa o limite
+          previsto na metodologia da DNIT 182/2018 – PRO.
+          O resultado deve ser interpretado como análise complementar
+          de sensibilidade.
+        </div>
+
       </div>
 
       <div class="field">
         <label for="adjustment">Ajuste técnico</label>
-        <select id="adjustment" [(ngModel)]="adjustment" (change)="onAdjustmentChange()">
-          <option [value]="-1">-1 — reduzir um nível</option>
-          <option [value]="0">0 — sem ajuste</option>
-          <option [value]="1">+1 — aumentar um nível</option>
+
+        <select
+          id="adjustment"
+          [(ngModel)]="adjustment"
+          (change)="onAdjustmentChange()"
+        >
+          <option [ngValue]="-1">-1 — reduzir um nível</option>
+          <option [ngValue]="0">0 — sem ajuste</option>
+          <option [ngValue]="1">+1 — aumentar um nível</option>
         </select>
+
         <small>Aplicável mediante justificativa técnica.</small>
       </div>
     </div>
@@ -142,17 +189,17 @@
     <div class="calculation-card">
       <div class="card-title">Memória de cálculo</div>
       <div class="formula">NERP = Σ(NERE × 1/di) / Σ(1/di)</div>
-      
+
       <div class="calculation-line">
         <span>Σ(NERE × 1/di)</span>
         <strong>{{ sumWeightedNere | number:'1.6-6' }}</strong>
       </div>
-      
+
       <div class="calculation-line">
         <span>Σ(1/di)</span>
         <strong>{{ sumWeights | number:'1.6-6' }}</strong>
       </div>
-      
+
       <div class="calculation-line total">
         <span>NERP calculado</span>
         <strong>{{ formatNumber(nerp) }}</strong>
@@ -163,7 +210,7 @@
       <div class="card-title">Nível de esforço</div>
       <div class="ner-value">{{ ner ?? '—' }}</div>
       <div class="ner-label">NER adotado</div>
-      
+
       <div class="adjustment" *ngIf="adjustment !== 0">
         Ajuste aplicado: {{ adjustment > 0 ? '+' : '' }}{{ adjustment }}
       </div>
@@ -173,7 +220,7 @@
   <!-- TODAS AS ESTAÇÕES -->
   <details class="card all-stations" *ngIf="calculated">
     <summary>Ver todas as estações avaliadas</summary>
-    
+
     <div class="table-wrapper">
       <table>
         <thead>

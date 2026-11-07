@@ -137,31 +137,31 @@ export const routes: Routes = [
    */
 
   {
-    path: 'projetos',
+    path: 'projects',
     component: ProjectsPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'projetos/:id',
+    path: 'projects/:id',
     component: ProjectPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'orcamentos',
+    path: 'budgets',
     component: BudgetsPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'orcamentos/:id',
+    path: 'budgets/:id',
     component: BudgetPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'plano-de-trabalho/:budgetId',
+    path: 'annual-work-plan-budget/:budgetId',
     component: AnnualWorkPlanBudgetPageComponent,
     canActivate: [authGuard]
   },
@@ -173,31 +173,31 @@ export const routes: Routes = [
   },
 
   {
-    path: 'orcamentos/:budgetId/composicoes/:code',
+    path: 'budgets/:budgetId/compositions/:code',
     component: CompositionPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'materiais',
+    path: 'materials',
     component: MaterialsPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'cotacoes-de-materiais',
+    path: 'materials-quotation',
     component: MaterialsQuotationPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'materiais-betuminosos',
+    path: 'bituminous-materials',
     component: BituminousMaterialsComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'nivel-esforco-rocada',
+    path: 'ner',
     component: NerPageComponent,
     canActivate: [authGuard]
   },
@@ -221,19 +221,19 @@ export const routes: Routes = [
   },
 
   {
-    path: 'ocorrencias',
+    path: 'occurrences',
     component: OccurrencesMapComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'logistica',
+    path: 'logistics',
     component: TransportsPageComponent,
     canActivate: [authGuard]
   },
 
   {
-    path: 'cronograma/:budgetId',
+    path: 'timeline/:budgetId',
     component: TimelinePageComponent,
     canActivate: [authGuard]
   }
