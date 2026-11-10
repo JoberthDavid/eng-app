@@ -12,6 +12,8 @@ import {
 } from 'rxjs';
 
 import {
+  NerCalculationRequest,
+  NerCalculationResponse,
   PluviometricStationResponse
 } from './ner-station.models';
 
@@ -21,6 +23,9 @@ const MANIFOLD_API_URL = 'http://127.0.0.1:8000';
 const NER_STATIONS_ENDPOINT =
   '/api/integrations/budget-engine/listar-estacoes-pluviometricas/';
 
+const NER_CALCULATION_ENDPOINT =
+  '/api/integrations/budget-engine/criar-calculo-ner/';
+
 
 @Injectable({
   providedIn: 'root'
@@ -29,10 +34,9 @@ export class NerStationService {
 
   private readonly http = inject(HttpClient);
 
-
   /**
    * Consulta o cadastro oficial de estações
-   * pluviométricas mantido pelo budget-engine.
+   * pluviométricas mantido pelo Budget Engine.
    *
    * A comunicação ocorre exclusivamente
    * através do Manifold API.
@@ -41,6 +45,26 @@ export class NerStationService {
 
     return this.http.get<PluviometricStationResponse[]>(
       `${MANIFOLD_API_URL}${NER_STATIONS_ENDPOINT}`
+    );
+
+  }
+
+  /**
+   * Solicita a execução de um cálculo NER oficial.
+   *
+   * O Manifold autentica o usuário e encaminha
+   * a solicitação ao Budget Engine.
+   *
+   * A seleção das estações, o cálculo e a
+   * persistência são realizados no backend.
+   */
+  createCalculation(
+    payload: NerCalculationRequest
+  ): Observable<NerCalculationResponse> {
+
+    return this.http.post<NerCalculationResponse>(
+      `${MANIFOLD_API_URL}${NER_CALCULATION_ENDPOINT}`,
+      payload
     );
 
   }

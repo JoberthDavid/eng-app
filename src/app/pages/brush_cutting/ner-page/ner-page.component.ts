@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   Component,
   OnDestroy,
-  OnInit,
   inject
 } from '@angular/core';
 
@@ -14,6 +13,11 @@ import {
   FormsModule
 } from '@angular/forms';
 
+import {
+  Subscription,
+  finalize
+} from 'rxjs';
+
 import * as L from 'leaflet';
 
 import {
@@ -21,14 +25,10 @@ import {
 } from '../../../core/integrations/ner/ner-station.service';
 
 import {
-  PluviometricStationResponse,
-  PluviometricStation,
-  StationCalculation
+  NerCalculationRequest,
+  NerCalculationResponse,
+  NerCalculationStation
 } from '../../../core/integrations/ner/ner-station.models';
-
-import {
-  finalize
-} from 'rxjs/operators';
 
 
 @Component({
@@ -42,19 +42,15 @@ import {
   styleUrl: './ner-page.component.scss'
 })
 export class NerPageComponent
-  implements OnInit, AfterViewInit, OnDestroy {
+  implements AfterViewInit, OnDestroy {
 
-  private readonly nerStationService = inject(NerStationService);
-
-  stationsDatabase: PluviometricStation[] = [];
-
-  stationsLoading = false;
-
-  stationsError: string | null = null;
+  private readonly nerStationService =
+    inject(NerStationService);
 
   /*
    * MAPA
    */
+
   private map?: L.Map;
 
   private pointMarker?: L.CircleMarker;
@@ -67,174 +63,44 @@ export class NerPageComponent
 
 
   /*
-   * CONSTANTES DE CÁLCULO
+   * CONTROLE DA REQUISIÇÃO
    */
 
-  private readonly EARTH_RADIUS_KM = 6371;
+  private calculationSubscription?: Subscription;
 
-  /*
-   * Tolerância numérica para identificar
-   * uma estação coincidente com o ponto.
-   *
-   * 1e-9 km equivale a 1 micrômetro.
-   * Evita resíduos de ponto flutuante sem
-   * tratar pontos geograficamente distintos
-   * como coincidentes.
-   */
-  private readonly ZERO_DISTANCE_TOLERANCE_KM = 1e-9;
+  isCalculating = false;
+
+  calculationError: string | null = null;
+
 
   /*
    * PONTO DE CÁLCULO
    */
+
   latitude: number | null = null;
 
   longitude: number | null = null;
 
 
   /*
-   * PARÂMETROS
+   * PARÂMETROS NORMATIVOS
    */
+
   stationCount = 5;
 
   adjustment = 0;
-  /**
-   * Limite exploratório:
-   * até 10% das estações válidas cadastradas.
-   */
-  readonly MAX_STATION_PERCENTAGE = 0.10;
 
-  get maxStationCount(): number {
-    return Math.floor(
-      this.stationsDatabase.length * this.MAX_STATION_PERCENTAGE
-    );
-  }
-
-  get stationCountOptions(): number[] {
-    return Array.from(
-      { length: Math.max(0, this.maxStationCount - 1) },
-      (_, index) => index + 2
-    );
-  }
-
-  /**
-   * Cinco estações: limite superior normativo.
-   * Mais de cinco: utilização exploratória.
-   */
-  get isAtNormativeLimit(): boolean {
-    return this.stationCount === 5;
-  }
-
-  get isExploratoryCalculation(): boolean {
-    return this.stationCount > 5;
-  }
-
-  /*
-   * RESULTADOS
-   */
-  nerp: number | null = null;
-
-  ner: number | null = null;
-
-  sumWeightedNere = 0;
-
-  sumWeights = 0;
-
-  calculated = false;
+  readonly stationCountOptions = [2, 3, 4, 5];
 
 
   /*
-   * ESTAÇÕES
+   * RESULTADO OFICIAL
    */
-  stations: StationCalculation[] = [];
 
-  ngOnInit(): void {
-    this.loadStations();
-  }
+  calculationResult: NerCalculationResponse | null = null;
 
-  private loadStations(): void {
-    this.stationsLoading = true;
-    this.stationsError = null;
+  stations: NerCalculationStation[] = [];
 
-    this.nerStationService.getStations()
-      .pipe(
-        finalize(() => {
-          this.stationsLoading = false;
-        })
-      )
-      .subscribe({
-        next: (response) => {
-          const stations = response
-            .map(station => this.mapStation(station))
-            .filter(station => this.isValidStation(station));
-
-          this.stationsDatabase = stations;
-          // Garante que a quantidade selecionada permaneça válida.
-          if (this.stationCount > this.maxStationCount) {
-            this.stationCount = this.maxStationCount;
-          }
-          if (this.maxStationCount < 2) {
-            this.stationsError =
-              'O cadastro não possui estações válidas suficientes para realizar o cálculo.';
-          }
-          if (stations.length < this.stationCount) {
-            this.stationsError =
-              `Foram carregadas ${stations.length} estações válidas. ` +
-              `São necessárias pelo menos ${this.stationCount} para o cálculo.`;
-          }
-
-          if (this.isValidCoordinates(this.latitude, this.longitude)) {
-            this.calculate();
-          }
-        },
-
-        error: (error) => {
-          console.error(
-            'Erro ao carregar estações pluviométricas:',
-            error
-          );
-
-          this.stationsDatabase = [];
-
-          this.stationsError =
-            'Não foi possível carregar o cadastro de estações pluviométricas.';
-        }
-      });
-  }
-
-  private mapStation(
-    station: PluviometricStationResponse
-  ): PluviometricStation {
-    return {
-      id: station.id,
-      code: station.code,
-      name: station.name,
-      municipality: station.municipality,
-      state: station.state,
-      operator: station.operator,
-      latitude: Number(station.latitude),
-      longitude: Number(station.longitude),
-      nd: station.nd === null ? null : Number(station.nd),
-      nere: Number(station.nere),
-      normReference: station.norm_reference
-    };
-  }
-
-  private isValidStation(
-    station: PluviometricStation
-  ): boolean {
-    return (
-      Number.isInteger(station.id) &&
-      station.code.trim().length > 0 &&
-      station.name.trim().length > 0 &&
-      Number.isFinite(station.latitude) &&
-      Number.isFinite(station.longitude) &&
-      Number.isFinite(station.nere) &&
-      station.latitude >= -90 &&
-      station.latitude <= 90 &&
-      station.longitude >= -180 &&
-      station.longitude <= 180
-    );
-  }
 
   /*
    * CICLO DE VIDA
@@ -248,73 +114,51 @@ export class NerPageComponent
       this.map?.invalidateSize();
     }, 100);
 
-
     const container =
       document.getElementById('ner-map');
-
 
     if (container) {
 
       this.resizeObserver =
         new ResizeObserver(() => {
-
           this.map?.invalidateSize();
-
         });
 
       this.resizeObserver.observe(container);
-
     }
-
   }
 
 
   ngOnDestroy(): void {
 
+    this.calculationSubscription?.unsubscribe();
+
     this.resizeObserver?.disconnect();
 
     this.map?.remove();
-
   }
 
 
   /*
-   * INICIALIZAÇÃO DO MAPA
+   * MAPA
    */
 
   private initializeMap(): void {
 
     this.map = L.map('ner-map', {
-
       center: [-15.7801, -47.9292],
-
       zoom: 6,
-
       zoomControl: true,
-
       scrollWheelZoom: false
-
     });
-
-
-    /*
-     * OpenStreetMap
-     */
 
     L.tileLayer(
       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
         maxZoom: 19,
-
-        attribution:
-          '&copy; OpenStreetMap contributors'
+        attribution: '&copy; OpenStreetMap contributors'
       }
     ).addTo(this.map);
-
-
-    /*
-     * Clique no mapa
-     */
 
     this.map.on(
       'click',
@@ -325,136 +169,95 @@ export class NerPageComponent
           event.latlng.lng
         );
 
-        this.calculate();
-
+        this.invalidateCalculation();
       }
     );
 
-
     setTimeout(() => {
-
       this.map?.invalidateSize();
-
     }, 100);
-
   }
 
+
   /*
-   * DEFINE O PONTO DE CÁLCULO
+   * DEFINIÇÃO DO PONTO
    */
 
-    setCalculationPoint(
-      latitude: number,
-      longitude: number
-    ): void {
+  private setCalculationPoint(
+    latitude: number,
+    longitude: number
+  ): void {
 
-      if (!this.isValidCoordinates(latitude, longitude)) {
+    this.latitude = Number(latitude.toFixed(6));
 
-        this.resetCalculation();
+    this.longitude = Number(longitude.toFixed(6));
 
-        return;
+    this.pointMarker?.remove();
 
-      }
-
-      this.latitude =
-        Number(latitude.toFixed(6));
-
-      this.longitude =
-        Number(longitude.toFixed(6));
-
-
-      if (!this.map) {
-        return;
-      }
-
-
-      /*
-      * Remove marcador anterior.
-      */
-
-      this.pointMarker?.remove();
-
-
-      /*
-      * Cria novo marcador.
-      */
-
-      this.pointMarker =
-        L.circleMarker(
-          [
-            this.latitude,
-            this.longitude
-          ],
-          {
-            radius: 9,
-            weight: 3,
-            fillOpacity: 1,
-            color: '#18212b',
-            fillColor: '#ffffff'
-          }
-        ).addTo(this.map);
-
-
-      /*
-      * Tooltip do ponto.
-      */
-
-      this.pointMarker.bindTooltip(
-        `
-        <strong>Ponto de cálculo</strong><br>
-        Latitude: ${this.latitude}<br>
-        Longitude: ${this.longitude}
-        `,
-        {
-          direction: 'top'
-        }
-      );
-
-
-      this.pointMarker.bringToFront();
-
+    if (!this.map) {
+      return;
     }
 
+    this.pointMarker =
+      L.circleMarker(
+        [
+          latitude,
+          longitude
+        ],
+        {
+          radius: 9,
+          weight: 3,
+          fillOpacity: 1,
+          color: '#18212b',
+          fillColor: '#ffffff'
+        }
+      ).addTo(this.map);
+
+    this.pointMarker.bindTooltip(
+      `
+      <strong>Ponto de cálculo</strong><br>
+      Latitude: ${this.latitude}<br>
+      Longitude: ${this.longitude}
+      `,
+      {
+        direction: 'top'
+      }
+    );
+
+    this.pointMarker.bringToFront();
+  }
+
+
   /*
-   * VALIDAÇÃO DAS COORDENADAS
+   * VALIDAÇÃO
    */
 
-  private isValidCoordinates(
-    latitude: number | null,
-    longitude: number | null
-  ): boolean {
+  private isValidCoordinates(): boolean {
 
     if (
-      latitude === null ||
-      longitude === null ||
-      !Number.isFinite(latitude) ||
-      !Number.isFinite(longitude)
+      this.latitude === null ||
+      this.longitude === null ||
+      !Number.isFinite(this.latitude) ||
+      !Number.isFinite(this.longitude)
     ) {
-
       return false;
-
     }
 
     return (
-      latitude >= -90 &&
-      latitude <= 90 &&
-      longitude >= -180 &&
-      longitude <= 180
+      this.latitude >= -90 &&
+      this.latitude <= 90 &&
+      this.longitude >= -180 &&
+      this.longitude <= 180
     );
-
   }
 
 
-  /*
-   * VALIDAÇÃO DOS PARÂMETROS
-   */
-
   private isValidParameters(): boolean {
+
     return (
       Number.isInteger(this.stationCount) &&
       this.stationCount >= 2 &&
-      this.stationCount <= this.maxStationCount &&
-      this.stationsDatabase.length >= this.stationCount &&
+      this.stationCount <= 5 &&
       Number.isInteger(this.adjustment) &&
       this.adjustment >= -1 &&
       this.adjustment <= 1
@@ -463,26 +266,33 @@ export class NerPageComponent
 
 
   /*
-   * LIMPA RESULTADOS ANTERIORES
+   * INVALIDAÇÃO DO RESULTADO
+   *
+   * Qualquer alteração nos parâmetros
+   * invalida o resultado anteriormente exibido.
    */
 
-  private resetCalculation(): void {
+  private invalidateCalculation(): void {
 
-    this.nerp = null;
+    this.calculationSubscription?.unsubscribe();
 
-    this.ner = null;
+    this.calculationSubscription = undefined;
 
-    this.sumWeightedNere = 0;
-
-    this.sumWeights = 0;
-
-    this.calculated = false;
+    this.calculationResult = null;
 
     this.stations = [];
 
-    this.pointMarker?.remove();
+    this.calculationError = null;
 
-    this.pointMarker = undefined;
+    this.clearStationMarkers();
+  }
+
+
+  /*
+   * LIMPEZA DOS ELEMENTOS DO MAPA
+   */
+
+  private clearStationMarkers(): void {
 
     this.stationMarkers.forEach(
       marker => marker.remove()
@@ -490,333 +300,161 @@ export class NerPageComponent
 
     this.stationMarkers = [];
 
-
     this.stationLines.forEach(
       line => line.remove()
     );
 
     this.stationLines = [];
-
   }
 
 
   /*
-   * CÁLCULO PRINCIPAL
-   */
-
-  calculate(): void {
-
-    /*
-     * Valida coordenadas.
-     */
-
-    if (
-      !this.isValidCoordinates(
-        this.latitude,
-        this.longitude
-      )
-    ) {
-
-      this.resetCalculation();
-
-      return;
-
-    }
-
-
-    /*
-     * Valida parâmetros.
-     */
-
-    if (!this.isValidParameters()) {
-
-      this.resetCalculation();
-
-      return;
-
-    }
-
-
-    /*
-     * ETAPA 1
-     *
-     * Calcula distância de todas
-     * as estações ao ponto.
-     */
-
-    const calculations =
-      this.stationsDatabase
-
-        .map(station => {
-
-          const distanceKm =
-            this.calculateDistanceKm(
-
-              this.latitude!,
-              this.longitude!,
-
-              station.latitude,
-              station.longitude
-
-            );
-
-
-          return {
-
-            ...station,
-
-            distanceKm,
-
-            weight: 0,
-
-            weightedNere: 0,
-
-            considered: false
-
-          };
-
-        })
-
-        /*
-         * Ordena pela menor distância.
-         */
-
-        .sort(
-          (a, b) =>
-            a.distanceKm - b.distanceKm
-        );
-
-
-    /*
-     * ETAPA 2
-     *
-     * Seleciona as estações
-     * consideradas no cálculo.
-     */
-
-    calculations.forEach(
-      (station, index) => {
-
-        station.considered =
-          index < this.stationCount;
-
-      }
-    );
-
-
-    const considered =
-      calculations.filter(
-        station =>
-          station.considered
-      );
-
-
-    /*
-     * ETAPA 3
-     *
-     * Identifica estações coincidentes
-     * com o ponto de cálculo.
-     */
-
-    const coincidentStations =
-      considered.filter(
-        station =>
-          station.distanceKm <=
-          this.ZERO_DISTANCE_TOLERANCE_KM
-      );
-
-
-    if (coincidentStations.length > 0) {
-
-      /*
-       * Quando existem estações
-       * coincidentes, elas recebem
-       * pesos iguais.
-       *
-       * As demais recebem peso zero.
-       */
-
-      const equalWeight =
-        1 / coincidentStations.length;
-
-
-      coincidentStations.forEach(
-        station => {
-
-          station.weight =
-            equalWeight;
-
-        }
-      );
-
-    } else {
-
-      /*
-       * Caso normal:
-       *
-       * Peso inversamente proporcional
-       * à distância.
-       */
-
-      considered.forEach(
-        station => {
-
-          station.weight =
-            1 / station.distanceKm;
-
-        }
-      );
-
-    }
-
-
-    /*
-     * Calcula NERE × peso.
-     *
-     * As estações não consideradas
-     * permanecem com peso zero.
-     */
-
-    calculations.forEach(
-      station => {
-
-        station.weightedNere =
-          station.nere * station.weight;
-
-      }
-    );
-
-
-    /*
-     * Atualiza lista completa.
-     */
-
-    this.stations =
-      calculations;
-
-
-    /*
-     * ETAPA 4
-     *
-     * Soma NERE × peso.
-     */
-
-    this.sumWeightedNere =
-      considered.reduce(
-        (sum, station) =>
-
-          sum + station.weightedNere,
-
-        0
-      );
-
-
-    /*
-     * Soma dos pesos.
-     */
-
-    this.sumWeights =
-      considered.reduce(
-        (sum, station) =>
-
-          sum + station.weight,
-
-        0
-      );
-
-
-    /*
-     * NERP
-     */
-
-    this.nerp =
-      this.sumWeights > 0
-
-        ? this.sumWeightedNere /
-          this.sumWeights
-
-        : null;
-
-
-    /*
-     * NER
-     */
-
-    if (this.nerp !== null) {
-
-      const baseNer =
-        Math.round(this.nerp);
-
-
-      this.ner =
-        Math.max(
-
-          1,
-
-          Math.min(
-
-            5,
-
-            baseNer +
-            this.adjustment
-
-          )
-
-        );
-
-    } else {
-
-      this.ner = null;
-
-    }
-
-
-    this.calculated =
-      this.nerp !== null &&
-      this.ner !== null;
-
-
-    /*
-     * Atualiza representação espacial.
-     */
-
-    this.updateStationMarkers();
-
-  }
-
-
-  /*
-   * ALTERAÇÃO DO NÚMERO DE ESTAÇÕES
+   * ALTERAÇÕES DOS PARÂMETROS
    */
 
   onStationCountChange(): void {
-
-    if (this.calculated) {
-
-      this.calculate();
-
-    }
-
+    this.invalidateCalculation();
   }
 
-
-  /*
-   * ALTERAÇÃO DO AJUSTE
-   */
 
   onAdjustmentChange(): void {
+    this.invalidateCalculation();
+  }
 
-    if (this.calculated) {
 
-      this.calculate();
+  onCoordinatesChange(): void {
 
+    if (!this.isValidCoordinates()) {
+
+      this.invalidateCalculation();
+
+      this.pointMarker?.remove();
+
+      this.pointMarker = undefined;
+
+      return;
     }
 
+    this.setCalculationPoint(
+      this.latitude!,
+      this.longitude!
+    );
+
+    this.invalidateCalculation();
   }
 
 
   /*
-   * DESENHA ESTAÇÕES E LINHAS
+   * CÁLCULO OFICIAL
+   *
+   * Toda a lógica normativa é executada
+   * exclusivamente pelo Budget Engine.
+   */
+  calculate(): void {
+
+    if (this.isCalculating) {
+      return;
+    }
+
+    this.invalidateCalculation();
+
+    if (!this.isValidCoordinates()) {
+
+      this.calculationError =
+        'Informe coordenadas geográficas válidas.';
+
+      return;
+    }
+
+    if (!this.isValidParameters()) {
+
+      this.calculationError =
+        'Verifique os parâmetros do cálculo.';
+
+      return;
+    }
+
+    const payload: NerCalculationRequest = {
+
+      latitude: this.latitude!,
+
+      longitude: this.longitude!,
+
+      station_count: this.stationCount,
+
+      adjustment: this.adjustment,
+
+      location_name:
+        `Cálculo NER - ${this.latitude}, ${this.longitude}`,
+
+      location_description:
+        'Cálculo de Nível de Esforço de Roçada realizado pelo Eng-app através do Manifold API e Budget Engine.'
+    };
+
+  this.isCalculating = true;
+
+  this.calculationSubscription =
+    this.nerStationService
+      .createCalculation(payload)
+      .pipe(
+        finalize(() => {
+          this.isCalculating = false;
+        })
+      )
+      .subscribe({
+
+        next: (response) => {
+
+          this.calculationResult = response;
+
+          this.stations =
+            response.stations.map(station => ({
+
+              id: station.station_id,
+              code: station.station_code,
+              name: station.station_name,
+              latitude: Number(station.latitude),
+              longitude: Number(station.longitude),
+              nere: Number(station.nere),
+
+              nd:
+                station.nd === null
+                  ? null
+                  : Number(station.nd),
+
+              sequence: station.sequence,
+              distanceKm: Number(station.distance_km),
+              weight: Number(station.weight),
+              weightedNere: Number(station.weighted_nere)
+
+            }));
+
+          this.updateStationMarkers();
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Erro ao realizar cálculo NER:',
+            error
+          );
+
+          this.calculationResult = null;
+          this.stations = [];
+
+          this.calculationError =
+            'Não foi possível realizar o cálculo NER. Verifique a comunicação com o Manifold API e o Budget Engine.';
+        }
+
+      });
+    };
+
+
+  /*
+   * REPRESENTAÇÃO ESPACIAL
+   *
+   * O mapa recebe exclusivamente as estações
+   * devolvidas pelo cálculo oficial.
    */
 
   private updateStationMarkers(): void {
@@ -825,320 +463,150 @@ export class NerPageComponent
       return;
     }
 
-
-    /*
-     * Remove marcadores das estações
-     * desenhados anteriormente.
-     */
-
-    this.stationMarkers.forEach(
-      marker => marker.remove()
-    );
-
-    this.stationMarkers = [];
-
-
-    /*
-     * Remove linhas anteriores.
-     */
-
-    this.stationLines.forEach(
-      line => line.remove()
-    );
-
-    this.stationLines = [];
-
-
-    /*
-     * Não continua sem ponto.
-     */
+    this.clearStationMarkers();
 
     if (
       this.latitude === null ||
       this.longitude === null
     ) {
-
       return;
-
     }
 
+    const latitude = this.latitude;
+    const longitude = this.longitude;
 
-    /*
-     * Somente estações adotadas
-     * entram no mapa.
-     */
+    this.stations.forEach(station => {
 
-    const adoptedStations =
-      this.stations.filter(
-        station =>
-          station.considered
+      const marker =
+        L.circleMarker(
+          [
+            station.latitude,
+            station.longitude
+          ],
+          {
+            radius: 7,
+            weight: 2,
+            color: '#ffffff',
+            fillColor: '#35623e',
+            fillOpacity: 1
+          }
+        ).addTo(this.map!);
+
+      marker.bindTooltip(
+        `
+        <strong>${station.code} — ${station.name}</strong><br>
+        NERE: ${this.formatNumber(station.nere)}<br>
+        Distância: ${this.formatNumber(station.distanceKm)} km
+        `,
+        {
+          direction: 'top'
+        }
       );
 
+      this.stationMarkers.push(marker);
 
-    /*
-     * Desenha cada estação.
-     */
-
-    adoptedStations.forEach(
-      station => {
-
-        /*
-         * Marcador da estação.
-         *
-         * Menor que o marcador do
-         * ponto de cálculo.
-         */
-
-        const marker =
-          L.circleMarker(
+      const line =
+        L.polyline(
+          [
+            [
+              latitude,
+              longitude
+            ],
             [
               station.latitude,
               station.longitude
-            ],
-            {
-
-              radius: 7,
-
-              weight: 2,
-
-              color: '#ffffff',
-
-              fillColor: '#35623e',
-
-              fillOpacity: 1
-
-            }
-          ).addTo(this.map!);
-
-
-        /*
-         * Tooltip técnico.
-         */
-
-        marker.bindTooltip(
-          `
-          <strong>
-            ${station.code} — ${station.name}
-          </strong><br>
-
-          ${station.municipality}
-          - ${station.state}<br>
-
-          NERE:
-          ${this.formatNumber(station.nere)}<br>
-
-          Distância:
-          ${this.formatNumber(station.distanceKm)}
-          km
-          `,
+            ]
+          ],
           {
-            direction: 'top'
+            color: '#667085',
+            weight: 1.5,
+            dashArray: '6 6',
+            opacity: 0.8
           }
-        );
+        ).addTo(this.map!);
 
+      this.stationLines.push(line);
+    });
 
-        /*
-         * Guarda referência
-         * para futura remoção.
-         */
-
-        this.stationMarkers.push(
-          marker
-        );
-
-
-        /*
-         * Linha entre o ponto
-         * de cálculo e a estação.
-         */
-
-        const line =
-          L.polyline(
-
-            [
-              [
-                this.latitude!,
-                this.longitude!
-              ],
-
-              [
-                station.latitude,
-                station.longitude
-              ]
-            ],
-
-            {
-
-              color: '#667085',
-
-              weight: 1.5,
-
-              dashArray: '6 6',
-
-              opacity: 0.8
-
-            }
-
-          ).addTo(this.map!);
-
-
-        this.stationLines.push(
-          line
-        );
-
-      }
-    );
-
-
-    /*
-     * Enquadra automaticamente
-     * todos os elementos.
-     */
-
-    if (adoptedStations.length > 0) {
+    if (this.stations.length > 0) {
 
       const bounds =
-        L.latLngBounds(
+        L.latLngBounds([
 
           [
-            [
-              this.latitude,
-              this.longitude
-            ],
+            latitude,
+            longitude
+          ],
 
-            ...adoptedStations.map(
-              station => [
+          ...this.stations.map(
+            station => [
+              station.latitude,
+              station.longitude
+            ] as [number, number]
+          )
 
-                station.latitude,
-
-                station.longitude
-
-              ] as [number, number]
-            )
-
-          ]
-
-        );
-
+        ]);
 
       this.map.fitBounds(
         bounds,
         {
           padding: [40, 40],
-
-          /*
-           * Evita que o mapa dê zoom
-           * excessivo quando os pontos
-           * estiverem muito próximos.
-           */
-
           maxZoom: 9
         }
       );
-
     }
-
-
-    /*
-     * Garante que o ponto de cálculo
-     * fique visualmente acima das linhas.
-     */
 
     this.pointMarker?.bringToFront();
 
-
-    /*
-     * E garante que as estações
-     * também fiquem acima das linhas.
-     */
-
     this.stationMarkers.forEach(
-      marker =>
-        marker.bringToFront()
+      marker => marker.bringToFront()
     );
-
   }
 
 
   /*
-   * DISTÂNCIA HAVERSINE
+   * PROPRIEDADES DE APRESENTAÇÃO
+   *
+   * Os valores abaixo são obtidos diretamente
+   * da resposta do Budget Engine.
    */
 
-  private calculateDistanceKm(
-    lat1: number,
-    lon1: number,
-    lat2: number,
-    lon2: number
-  ): number {
-
-    const earthRadiusKm =
-      this.EARTH_RADIUS_KM;
+  get calculated(): boolean {
+    return this.calculationResult !== null;
+  }
 
 
-    const dLat =
-      this.toRadians(
-        lat2 - lat1
-      );
+  get nerp(): number | null {
+    return this.calculationResult?.nerp ?? null;
+  }
 
 
-    const dLon =
-      this.toRadians(
-        lon2 - lon1
-      );
+  get ner(): number | null {
+    return this.calculationResult?.ner ?? null;
+  }
 
 
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-
-      Math.cos(
-        this.toRadians(lat1)
-      ) *
-
-      Math.cos(
-        this.toRadians(lat2)
-      ) *
-
-      Math.sin(dLon / 2) ** 2;
-
-
-    const c =
-      2 *
-
-      Math.atan2(
-
-        Math.sqrt(a),
-
-        Math.sqrt(1 - a)
-
-      );
-
-
-    return (
-      earthRadiusKm * c
+  get sumWeightedNere(): number {
+    return Number(
+      this.calculationResult?.sum_weighted_nere ?? 0
     );
+  }
 
+
+  get sumWeights(): number {
+    return Number(
+      this.calculationResult?.sum_weights ?? 0
+    );
+  }
+
+
+  get consideredStations(): NerCalculationStation[] {
+    return this.stations;
   }
 
 
   /*
-   * GRAUS → RADIANOS
-   */
-
-  private toRadians(
-    degrees: number
-  ): number {
-
-    return (
-      degrees *
-      Math.PI /
-      180
-    );
-
-  }
-
-
-  /*
-   * FORMATAÇÃO NUMÉRICA
+   * FORMATAÇÃO
    */
 
   formatNumber(
@@ -1146,84 +614,17 @@ export class NerPageComponent
     digits = 2
   ): string {
 
-    if (value === null) {
-
+    if (value === null || !Number.isFinite(value)) {
       return '—';
-
     }
-
 
     return value.toLocaleString(
       'pt-BR',
       {
-
-        minimumFractionDigits:
-          digits,
-
-        maximumFractionDigits:
-          digits
-
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
       }
     );
-
-  }
-
-
-  /*
-   * ESTAÇÕES CONSIDERADAS
-   */
-
-  get consideredStations():
-    StationCalculation[] {
-
-    return this.stations.filter(
-      station =>
-        station.considered
-    );
-
-  }
-
-
-  /*
-   * TODAS AS ESTAÇÕES
-   */
-
-  get allStations():
-    StationCalculation[] {
-
-    return this.stations;
-
-  }
-
-
-    /*
-   * ALTERAÇÃO MANUAL DAS COORDENADAS
-   */
-
-  onCoordinatesChange(): void {
-
-    if (
-      !this.isValidCoordinates(
-        this.latitude,
-        this.longitude
-      )
-    ) {
-
-      this.resetCalculation();
-
-      return;
-
-    }
-
-
-    this.setCalculationPoint(
-      this.latitude!,
-      this.longitude!
-    );
-
-
-    this.calculate();
-
   }
 
 }
