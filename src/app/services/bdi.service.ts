@@ -4,7 +4,8 @@ import {
 } from '@angular/core';
 
 import {
-  HttpClient
+  HttpClient,
+  HttpParams
 } from '@angular/common/http';
 
 import {
@@ -19,6 +20,10 @@ import {
 } from '../models/bdi.model';
 
 
+const MANIFOLD_API_URL =
+  'http://127.0.0.1:8000/api/integrations/budget-engine';
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,67 +31,95 @@ export class BdiService {
 
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = 'http://127.0.0.1:8002';
 
-
+  /**
+   * Consulta todos os BDIs cadastrados.
+   */
   getBdis(): Observable<Bdi[]> {
 
     return this.http.get<Bdi[]>(
-      `${this.apiUrl}/bdi`
+      `${MANIFOLD_API_URL}/listar-bdis/`
     );
 
   }
 
 
+  /**
+   * Consulta um BDI pelo identificador.
+   */
   getBdi(id: number): Observable<Bdi> {
 
+    const params = new HttpParams()
+      .set('bdi_id', id);
+
     return this.http.get<Bdi>(
-      `${this.apiUrl}/bdi/${id}`
+      `${MANIFOLD_API_URL}/consultar-bdi/`,
+      { params }
     );
 
   }
 
 
+  /**
+   * Consulta os métodos de cálculo de BDI.
+   */
   getBdiMethods(): Observable<BdiMethod[]> {
 
     return this.http.get<BdiMethod[]>(
-      `${this.apiUrl}/bdi/methods`
+      `${MANIFOLD_API_URL}/listar-metodos-bdi/`
     );
 
   }
 
 
+  /**
+   * Cria um BDI com suas respectivas quotas.
+   */
   createBdi(
     request: BdiCreateRequest
   ): Observable<Bdi> {
 
     return this.http.post<Bdi>(
-      `${this.apiUrl}/bdi`,
+      `${MANIFOLD_API_URL}/criar-bdi/`,
       request
     );
 
   }
 
 
+  /**
+   * Atualiza integralmente um BDI.
+   */
   updateBdi(
     id: number,
     request: BdiUpdateRequest
   ): Observable<Bdi> {
 
+    const params = new HttpParams()
+      .set('bdi_id', id);
+
     return this.http.put<Bdi>(
-      `${this.apiUrl}/bdi/${id}`,
-      request
+      `${MANIFOLD_API_URL}/atualizar-bdi/`,
+      request,
+      { params }
     );
 
   }
 
 
+  /**
+   * Exclui um BDI.
+   */
   deleteBdi(
     id: number
   ): Observable<void> {
 
+    const params = new HttpParams()
+      .set('bdi_id', id);
+
     return this.http.delete<void>(
-      `${this.apiUrl}/bdi/${id}`
+      `${MANIFOLD_API_URL}/excluir-bdi/`,
+      { params }
     );
 
   }

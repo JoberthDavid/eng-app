@@ -36,4 +36,45 @@ describe('BdiPageComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+
+  it('deve gerar slug automaticamente a partir do nome do BDI', () => {
+
+    component.novoBdi();
+
+    component.onBdiNameChange('BDI 26,7% ON');
+
+    expect(component.selectedBdi?.name).toBe('BDI 26,7% ON');
+
+    expect(component.selectedBdi?.slug).toBe('bdi-26-7-on');
+
+  });
+
+
+  it('deve remover acentos e caracteres especiais do slug', () => {
+
+    component.novoBdi();
+
+    component.onBdiNameChange('BDI – Obras Rodoviárias');
+
+    expect(component.selectedBdi?.slug)
+      .toBe('bdi-obras-rodoviarias');
+
+  });
+
+
+  it('deve atualizar o slug quando o nome do BDI for alterado', () => {
+
+    component.novoBdi();
+
+    component.onBdiNameChange('BDI Padrão');
+
+    expect(component.selectedBdi?.slug).toBe('bdi-padrao');
+
+    component.onBdiNameChange('BDI Especial');
+
+    expect(component.selectedBdi?.slug).toBe('bdi-especial');
+
+  });
+  
 });

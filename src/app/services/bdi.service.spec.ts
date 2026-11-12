@@ -23,7 +23,7 @@ describe('BdiService', () => {
   let service: BdiService;
   let httpMock: HttpTestingController;
 
-  const apiUrl = 'http://127.0.0.1:8002';
+  const apiUrl = 'http://127.0.0.1:8000/api/integrations/budget-engine';
 
   const mockMethod: BdiMethod = {
     id: 1,
@@ -110,7 +110,7 @@ describe('BdiService', () => {
 
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/bdi`);
+    const req = httpMock.expectOne(`${apiUrl}/listar-bdis/`);
 
     expect(req.request.method).toBe('GET');
 
@@ -129,7 +129,7 @@ describe('BdiService', () => {
 
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/bdi/1`);
+    const req = httpMock.expectOne(`${apiUrl}/consultar-bdi/?bdi_id=1`);
 
     expect(req.request.method).toBe('GET');
 
@@ -148,7 +148,7 @@ describe('BdiService', () => {
 
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/bdi/methods`);
+    const req = httpMock.expectOne(`${apiUrl}/listar-metodos-bdi/`);
 
     expect(req.request.method).toBe('GET');
 
@@ -169,7 +169,7 @@ describe('BdiService', () => {
 
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/bdi`);
+    const req = httpMock.expectOne(`${apiUrl}/criar-bdi/`);
 
     expect(req.request.method).toBe('POST');
 
@@ -202,7 +202,7 @@ describe('BdiService', () => {
 
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/bdi/1`);
+    const req = httpMock.expectOne(`${apiUrl}/atualizar-bdi/?bdi_id=1`);
 
     expect(req.request.method).toBe('PUT');
 
@@ -221,7 +221,7 @@ describe('BdiService', () => {
 
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/bdi/1`);
+    const req = httpMock.expectOne(`${apiUrl}/excluir-bdi/?bdi_id=1`);
 
     expect(req.request.method).toBe('DELETE');
 

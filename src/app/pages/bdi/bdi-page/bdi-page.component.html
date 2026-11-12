@@ -127,14 +127,15 @@
           Nome do BDI
         </label>
 
-        <input
-          *ngIf="isFormEditable && selectedBdi; else nameView"
-          id="bdi-name"
-          type="text"
-          [(ngModel)]="selectedBdi!.name"
-          placeholder="Nome do BDI"
-          [disabled]="isSaving"
-        />
+          <input
+            *ngIf="isFormEditable && selectedBdi; else nameView"
+            id="bdi-name"
+            type="text"
+            [ngModel]="selectedBdi!.name"
+            (ngModelChange)="onBdiNameChange($event)"
+            placeholder="Nome do BDI"
+            [disabled]="isSaving"
+          />
 
         <ng-template #nameView>
 
@@ -170,15 +171,15 @@
           Identificador (slug)
         </label>
 
-        <input
-          *ngIf="selectedBdi; else emptySlug"
-          id="bdi-slug"
-          type="text"
-          [(ngModel)]="selectedBdi.slug"
-          [readonly]="!isFormEditable"
-          [disabled]="isSaving"
-          placeholder="identificador-do-bdi"
-        />
+          <input
+            *ngIf="selectedBdi; else emptySlug"
+            id="bdi-slug"
+            type="text"
+            [ngModel]="selectedBdi.slug"
+            readonly
+            [disabled]="isSaving"
+            placeholder="Gerado automaticamente"
+          />
 
         <ng-template #emptySlug>
           <input

@@ -56,6 +56,36 @@ export class BdiPageComponent implements OnInit {
     return this.isCreating || this.isEditing;
   }
 
+  /**
+   * Atualiza o nome e gera automaticamente o slug do BDI.
+   */
+  onBdiNameChange(name: string): void {
+
+    if (!this.selectedBdi) {
+      return;
+    }
+
+    this.selectedBdi.name = name;
+
+    this.selectedBdi.slug = this.generateSlug(name);
+
+  }
+
+
+  /**
+   * Gera um identificador compatível com o SlugField do Django.
+   */
+  private generateSlug(value: string): string {
+
+    return value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+  }
+
   ngOnInit(): void {
 
     this.loadBdiMethods();
@@ -900,8 +930,10 @@ export class BdiPageComponent implements OnInit {
     }
 
     const name = this.selectedBdi.name?.trim();
-    const slug = this.selectedBdi.slug?.trim();
+    const slug = this.generateSlug(name ?? '');
     const methodId = this.selectedBdi.method?.id;
+
+    this.selectedBdi.slug = slug;
 
     if (!name || !slug || !methodId) {
       return null;
