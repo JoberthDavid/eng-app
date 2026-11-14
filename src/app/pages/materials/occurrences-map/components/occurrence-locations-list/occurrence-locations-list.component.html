@@ -1,0 +1,334 @@
+<section class="locations-list">
+
+  <header class="list-header">
+    <div>
+      <h2>Locais cadastrados</h2>
+      <p>Consulta de jazidas, pedreiras, areais e unidades produtoras.</p>
+    </div>
+
+    <span class="record-count">
+      {{ filteredLocations.length }} registros
+    </span>
+  </header>
+
+  <!-- Indicadores -->
+
+  <section class="summary">
+
+    <article class="summary-card">
+      <span>Total de locais</span>
+      <strong>{{ totalLocations }}</strong>
+    </article>
+
+    <article class="summary-card">
+      <span>Ativos</span>
+      <strong>{{ activeLocations }}</strong>
+    </article>
+
+    <article class="summary-card">
+      <span>Georreferenciados</span>
+      <strong>{{ georeferencedLocations }}</strong>
+    </article>
+
+    <article class="summary-card">
+      <span>Sem coordenadas</span>
+      <strong>{{ withoutCoordinates }}</strong>
+    </article>
+
+  </section>
+
+  <!-- Filtros compartilhados -->
+
+  <section class="filters">
+
+    <div class="search-field">
+      <label for="location-search">Pesquisar</label>
+
+      <input
+        id="location-search"
+        type="search"
+        [ngModel]="searchTerm"
+        (ngModelChange)="searchTerm = $event; applyFilters()"
+        placeholder="Nome, fornecedor, CNPJ ou endereço">
+    </div>
+
+    <div>
+      <label for="location-state">UF</label>
+
+      <select
+        id="location-state"
+        [ngModel]="selectedState"
+        (ngModelChange)="selectedState = $event; applyFilters()">
+
+        <option value="">Todas</option>
+
+        <option
+          *ngFor="let state of states"
+          [value]="state">
+          {{ state }}
+        </option>
+
+      </select>
+    </div>
+
+    <div>
+      <label for="location-municipality">Município</label>
+
+      <select
+        id="location-municipality"
+        [ngModel]="selectedMunicipality"
+        (ngModelChange)="selectedMunicipality = $event; applyFilters()">
+
+        <option value="">Todos</option>
+
+        <option
+          *ngFor="let municipality of municipalities"
+          [value]="municipality">
+          {{ municipality }}
+        </option>
+
+      </select>
+    </div>
+
+    <div>
+      <label for="location-supplier">Fornecedor</label>
+
+      <select
+        id="location-supplier"
+        [ngModel]="selectedSupplier"
+        (ngModelChange)="selectedSupplier = $event; applyFilters()">
+
+        <option value="">Todos</option>
+
+        <option
+          *ngFor="let supplier of suppliers"
+          [value]="supplier.id">
+          {{ supplier.trade_name || supplier.legal_name }}
+        </option>
+
+      </select>
+    </div>
+
+    <div>
+      <label for="location-material">Material</label>
+
+      <select
+        id="location-material"
+        [ngModel]="selectedMaterial"
+        (ngModelChange)="selectedMaterial = $event; applyFilters()">
+
+        <option value="">Todos</option>
+
+        <option
+          *ngFor="let material of materials"
+          [value]="material.id">
+          {{ material.description }}
+        </option>
+
+      </select>
+    </div>
+
+    <div>
+      <label for="location-nature">Natureza</label>
+
+      <select
+        id="location-nature"
+        [ngModel]="selectedNature"
+        (ngModelChange)="selectedNature = $event; applyFilters()">
+
+        <option value="">Todas</option>
+
+        <option
+          *ngFor="let nature of natures"
+          [value]="nature.id">
+          {{ nature.name }}
+        </option>
+
+      </select>
+    </div>
+
+    <div>
+      <label for="location-status">Situação</label>
+
+      <select
+        id="location-status"
+        [ngModel]="selectedStatus"
+        (ngModelChange)="selectedStatus = $event; applyFilters()">
+
+        <option value="all">Todas</option>
+        <option value="active">Ativos</option>
+        <option value="inactive">Inativos</option>
+
+      </select>
+    </div>
+
+    <button
+      type="button"
+      class="clear-button"
+      (click)="clearFilters()">
+      Limpar filtros
+    </button>
+
+  </section>
+
+  <!-- Carregamento -->
+
+  <div *ngIf="loading" class="feedback">
+    Carregando locais...
+  </div>
+
+  <!-- Erro -->
+
+  <div *ngIf="!loading && errorMessage" class="feedback error">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Tabela -->
+
+  <div
+    *ngIf="!loading && !errorMessage"
+    class="table-container">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Local</th>
+          <th>Fornecedor</th>
+          <th>Município / UF</th>
+          <th>Endereço</th>
+          <th>Coordenadas</th>
+          <th>Materiais</th>
+          <th>Situação</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr
+          *ngFor="let location of paginatedLocations"
+          [class.selected]="location.id === selectedLocationId"
+          [attr.aria-selected]="location.id === selectedLocationId"
+          (click)="selectLocation(location)">
+
+          <td>
+            <strong>{{ location.name }}</strong>
+          </td>
+
+          <td>
+            {{ getSupplierName(location.supplier) }}
+          </td>
+
+          <td>
+            {{ location.municipality }} / {{ location.state }}
+          </td>
+
+          <td>
+            {{ getAddress(location) || 'Não informado' }}
+          </td>
+
+          <td>
+            {{ formatCoordinates(location) }}
+          </td>
+
+          <td>
+            <span
+              *ngFor="let material of location.materials"
+              class="tag">
+              {{ material.description }}
+            </span>
+
+            <span *ngIf="!location.materials?.length">
+              —
+            </span>
+          </td>
+
+          <td>
+            <span
+              class="status"
+              [class.active]="location.active"
+              [class.inactive]="!location.active">
+
+              {{ location.active ? 'Ativo' : 'Inativo' }}
+
+            </span>
+          </td>
+
+          <td>
+            <button
+              type="button"
+              class="map-button"
+              [disabled]="!hasCoordinates(location)"
+              (click)="selectLocation(location); $event.stopPropagation()"
+              title="Localizar no mapa">
+              Mapa
+            </button>
+          </td>
+
+        </tr>
+
+        <tr *ngIf="filteredLocations.length === 0">
+
+          <td colspan="8" class="empty-state">
+            Nenhum local encontrado para os filtros selecionados.
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <!-- Paginação -->
+
+  <footer
+    *ngIf="!loading && !errorMessage"
+    class="pagination">
+
+    <div>
+      Exibindo
+      {{ filteredLocations.length === 0 ? 0 : (currentPage - 1) * pageSize + 1 }}
+      –
+      {{ Math.min(currentPage * pageSize, filteredLocations.length) }}
+      de {{ filteredLocations.length }}
+    </div>
+
+    <div class="pagination-controls">
+
+      <label for="location-page-size">Registros:</label>
+
+      <select
+        id="location-page-size"
+        [value]="pageSize"
+        (change)="changePageSize($any($event.target).value)">
+
+        <option *ngFor="let size of pageSizes" [value]="size">
+          {{ size }}
+        </option>
+
+      </select>
+
+      <button
+        type="button"
+        (click)="previousPage()"
+        [disabled]="currentPage <= 1">
+        Anterior
+      </button>
+
+      <span>{{ currentPage }} / {{ totalPages }}</span>
+
+      <button
+        type="button"
+        (click)="nextPage()"
+        [disabled]="currentPage >= totalPages">
+        Próxima
+      </button>
+
+    </div>
+
+  </footer>
+
+</section>

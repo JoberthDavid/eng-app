@@ -1,104 +1,63 @@
 <div class="page">
 
+  <header class="page-header">
+    <div>
+      <div class="eyebrow">
+        CUSTOS REFERENCIAIS
+      </div>
 
-<header class="page-header">
+      <h1>
+        Mapa de ocorrências de materiais
+      </h1>
 
+      <p>
+        Localização espacial de fornecedores,
+        jazidas e unidades produtoras.
+      </p>
+    </div>
+  </header>
 
-<div>
+  <section class="map-status" aria-live="polite">
 
-<div class="eyebrow">
-CUSTOS REFERENCIAIS
-</div>
+    <span *ngIf="loading">
+      Carregando locais e fornecedores...
+    </span>
 
+    <span *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </span>
 
-<h1>
-Mapa de ocorrências de materiais
-</h1>
+    <ng-container *ngIf="!loading && !errorMessage">
 
+      <span>
+        Locais cadastrados: {{ locationCount }}
+      </span>
 
-<p>
-Localização espacial de fornecedores,
-jazidas e unidades produtoras.
-</p>
+      <span>
+        Locais georreferenciados: {{ mappedLocationCount }}
+      </span>
 
+      <span class="classification-notice">
+        Classificação por natureza pendente de estruturação
+        do catálogo.
+      </span>
 
-</div>
+    </ng-container>
 
+  </section>
 
-</header>
+  <section class="map-card">
 
+    <div id="map"></div>
 
+    <div
+      class="map-empty"
+      *ngIf="!loading && !errorMessage && mappedLocationCount === 0">
 
+      Nenhum local com coordenadas disponíveis.
 
-<section class="toolbar">
+    </div>
 
-
-<button
-(click)="filter('TODOS')">
-
-Todos
-
-</button>
-
-
-<button
-(click)="filter('PEDREIRA')">
-
-▲ Pedreiras
-
-</button>
-
-
-<button
-(click)="filter('AREAL')">
-
-● Areais
-
-</button>
-
-
-<button
-(click)="filter('JAZIDA')">
-
-■ Jazidas
-
-</button>
-
-
-<button
-(click)="filter('USINA')">
-
-◆ Usinas
-
-</button>
-
-
-<button
-(click)="filter('CANTEIRO')">
-
-★ Canteiros
-
-</button>
-
-
-
-</section>
-
-
-
-
-
-<section class="map-card">
-
-
-<div
-id="map">
-
-</div>
-
-
-</section>
-
-
+  </section>
 
 </div>

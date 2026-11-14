@@ -1,0 +1,208 @@
+<section class="suppliers-list">
+
+  <header class="list-header">
+    <div>
+      <h2>Fornecedores cadastrados</h2>
+      <p>Consulta de empresas e representantes legais.</p>
+    </div>
+
+    <span class="record-count">
+      {{ filteredSuppliers.length }} registros
+    </span>
+  </header>
+
+  <section class="summary">
+
+    <article class="summary-card">
+      <span>Total de fornecedores</span>
+      <strong>{{ totalSuppliers }}</strong>
+    </article>
+
+    <article class="summary-card">
+      <span>Ativos</span>
+      <strong>{{ activeSuppliers }}</strong>
+    </article>
+
+    <article class="summary-card">
+      <span>Inativos</span>
+      <strong>{{ inactiveSuppliers }}</strong>
+    </article>
+
+  </section>
+
+  <section class="filters">
+
+    <div class="search-field">
+      <label for="supplier-search">Pesquisar fornecedor</label>
+
+      <input
+        id="supplier-search"
+        type="search"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="applyFilters()"
+        placeholder="Razão social, fantasia, CNPJ ou contato">
+    </div>
+
+    <div>
+      <label for="supplier-status">Situação</label>
+
+      <select
+        id="supplier-status"
+        [(ngModel)]="selectedStatus"
+        (ngModelChange)="applyFilters()">
+
+        <option value="all">Todas</option>
+        <option value="active">Ativos</option>
+        <option value="inactive">Inativos</option>
+
+      </select>
+    </div>
+
+    <button
+      type="button"
+      class="clear-button"
+      (click)="clearFilters()">
+      Limpar filtros
+    </button>
+
+  </section>
+
+  <div *ngIf="loading" class="feedback">
+    Carregando fornecedores...
+  </div>
+
+  <div *ngIf="!loading && errorMessage" class="feedback error">
+    {{ errorMessage }}
+  </div>
+
+  <div
+    *ngIf="!loading && !errorMessage"
+    class="table-container">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Razão social</th>
+          <th>Nome fantasia</th>
+          <th>CNPJ</th>
+          <th>Telefone</th>
+          <th>E-mail</th>
+          <th>Representante legal</th>
+          <th>Situação</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let supplier of paginatedSuppliers">
+
+          <td>
+            <strong>{{ supplier.legal_name }}</strong>
+          </td>
+
+          <td>
+            {{ supplier.trade_name || '—' }}
+          </td>
+
+          <td>
+            {{ supplier.cnpj || '—' }}
+          </td>
+
+          <td>
+            {{ supplier.phone || '—' }}
+          </td>
+
+          <td>
+            {{ supplier.email || '—' }}
+          </td>
+
+          <td>
+            <div class="representative">
+              <strong>
+                {{ supplier.legal_representative || '—' }}
+              </strong>
+
+              <small *ngIf="supplier.representative_email">
+                {{ supplier.representative_email }}
+              </small>
+
+              <small *ngIf="supplier.representative_phone">
+                {{ supplier.representative_phone }}
+              </small>
+            </div>
+          </td>
+
+          <td>
+            <span
+              class="status"
+              [class.active]="supplier.active"
+              [class.inactive]="!supplier.active">
+
+              {{ supplier.active ? 'Ativo' : 'Inativo' }}
+
+            </span>
+          </td>
+
+        </tr>
+
+        <tr *ngIf="filteredSuppliers.length === 0">
+          <td colspan="7" class="empty-state">
+            Nenhum fornecedor encontrado.
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <footer
+    *ngIf="!loading && !errorMessage"
+    class="pagination">
+
+    <div>
+      Exibindo
+      {{ filteredSuppliers.length === 0 ? 0 : (currentPage - 1) * pageSize + 1 }}
+      –
+      {{ Math.min(currentPage * pageSize, filteredSuppliers.length) }}
+      de {{ filteredSuppliers.length }}
+    </div>
+
+    <div class="pagination-controls">
+
+      <label for="supplier-page-size">Registros:</label>
+
+      <select
+        id="supplier-page-size"
+        [value]="pageSize"
+        (change)="changePageSize($any($event.target).value)">
+
+        <option *ngFor="let size of pageSizes" [value]="size">
+          {{ size }}
+        </option>
+
+      </select>
+
+      <button
+        type="button"
+        (click)="previousPage()"
+        [disabled]="currentPage <= 1">
+        Anterior
+      </button>
+
+      <span>{{ currentPage }} / {{ totalPages }}</span>
+
+      <button
+        type="button"
+        (click)="nextPage()"
+        [disabled]="currentPage >= totalPages">
+        Próxima
+      </button>
+
+    </div>
+
+  </footer>
+
+</section>

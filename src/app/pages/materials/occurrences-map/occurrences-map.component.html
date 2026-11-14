@@ -1,0 +1,49 @@
+<section class="map-section">
+
+  <div class="map-status">
+
+    <div class="status-item">
+      <span class="status-label">Locais cadastrados</span>
+      <strong>{{ locationCount }}</strong>
+    </div>
+
+    <div class="status-item">
+      <span class="status-label">Locais georreferenciados</span>
+      <strong>{{ mappedLocationCount }}</strong>
+    </div>
+
+    <span class="classification-notice">
+      A classificação por natureza será exibida conforme a taxonomia
+      cadastrada no sistema.
+    </span>
+
+  </div>
+
+  <div class="map-card">
+
+    <div id="map" class="map-container"></div>
+
+    <div *ngIf="loading" class="map-overlay">
+      Carregando ocorrências...
+    </div>
+
+    <div *ngIf="errorMessage" class="map-overlay error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div
+      *ngIf="!loading && !errorMessage && mappedLocationCount === 0"
+      class="map-overlay map-empty">
+
+      <strong>Nenhum local georreferenciado</strong>
+
+      <p>
+        Quando houver locais cadastrados com coordenadas válidas,
+        eles serão exibidos no mapa.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>

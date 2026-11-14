@@ -77,8 +77,8 @@ import {
 } from './pages/abc/compositions/abc-compositions-page.component';
 
 import {
-  OccurrencesMapComponent
-} from './pages/materials/occurrences-map/occurrences-map.component';
+  OccurrencesPageComponent
+} from './pages/materials/occurrences-map/occurrences-page/occurrences-page.component';
 
 import {
   TransportsPageComponent
@@ -222,7 +222,7 @@ export const routes: Routes = [
 
   {
     path: 'occurrences',
-    component: OccurrencesMapComponent,
+    component: OccurrencesPageComponent,
     canActivate: [authGuard]
   },
 

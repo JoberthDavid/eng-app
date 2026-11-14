@@ -1,0 +1,103 @@
+<div class="page">
+
+  <!-- Cabeçalho -->
+
+  <header class="page-header">
+    <div>
+      <div class="eyebrow">CUSTOS REFERENCIAIS</div>
+
+      <h1>Ocorrências de materiais</h1>
+
+      <p>
+        Gestão e localização espacial de fornecedores,
+        jazidas e unidades produtoras.
+      </p>
+    </div>
+  </header>
+
+  <!-- Indicadores gerais -->
+
+  <section class="page-summary">
+
+    <article class="page-summary-card">
+      <span>Total de locais</span>
+      <strong>{{ totalLocations }}</strong>
+    </article>
+
+    <article class="page-summary-card">
+      <span>Locais ativos</span>
+      <strong>{{ activeLocations }}</strong>
+    </article>
+
+    <article class="page-summary-card">
+      <span>Georreferenciados</span>
+      <strong>{{ georeferencedLocations }}</strong>
+    </article>
+
+    <article class="page-summary-card">
+      <span>Fornecedores ativos</span>
+      <strong>{{ activeSuppliers }}</strong>
+    </article>
+
+  </section>
+
+  <!-- Mapa -->
+
+  <section class="occurrences-map-section">
+
+    <header class="section-header">
+      <div>
+        <h2>Distribuição geográfica</h2>
+        <p>
+          Visualização espacial dos locais conforme os filtros aplicados.
+        </p>
+      </div>
+
+      <span class="record-count">
+        {{ filteredLocations.length }} locais
+      </span>
+    </header>
+
+    <app-occurrences-map
+      [locations]="filteredLocations"
+      [suppliers]="suppliers"
+      [selectedLocationId]="selectedLocationId"
+      [loading]="loading"
+      [errorMessage]="errorMessage"
+      (locationSelected)="onMarkerSelected($event)">
+    </app-occurrences-map>
+
+  </section>
+
+  <!-- Listagem e filtros -->
+
+  <section class="occurrences-list-section">
+
+    <app-occurrence-locations-list
+      [locations]="filteredLocations"
+      [allLocations]="locations"
+      [suppliers]="suppliers"
+      [selectedLocationId]="selectedLocationId"
+      [loading]="loading"
+      [errorMessage]="errorMessage"
+
+      [states]="states"
+      [municipalities]="municipalities"
+      [materials]="materials"
+      [natures]="natures"
+
+      [searchTerm]="searchTerm"
+      [selectedState]="selectedState"
+      [selectedMunicipality]="selectedMunicipality"
+      [selectedSupplier]="selectedSupplier"
+      [selectedMaterial]="selectedMaterial"
+      [selectedNature]="selectedNature"
+      [selectedStatus]="selectedStatus"
+
+      (filtersChange)="onFiltersChange($event)"
+      (locationSelected)="onLocationSelected($event)">
+    </app-occurrence-locations-list>
+
+  </section>
+
+</div>
